@@ -11,6 +11,20 @@ CS308 Cell Society - Team 21 Design
 
 ### Overview
 
+To tackle the given problem, we intend to implement a Simulation class, a Grid class, a Cell class, an XMLParser class, an abstract Rule class with subclasses for each simulation, and an abstract State class, also with subclasses for each simulation. 
+
+The Simulation class will be responsible for controlling the flow of the simulation, including initializing it and controlling the simulation loop based on input from the user (e.g. start, stop, step, pause, resume). As such, it will also be responsible for the GUI elements.
+
+The XMLParser class will be responsible for initializing the Simulation state. The Simulation class will use the XMLParser class to parse the selected XML file, and the XMLParser class will parse the XML file and create the Rule and State subclasses that correspond to the simulation encoded by the XML. The XMLParser will also use the initial state of the Grid encoded by the ML to initialize the Grid object, then return the Rule, State, and Grid objects to the Simulation.
+
+The Grid class will hold the locations of each cell and will be responsible for the simulation logic. It will apply the rules to each of the cell it holds and update them correspondingly, then return a rendered version of the grid to the Simulation at the end of each simulation step.
+
+The Cell class will hold the current state and location for an individual cell, as well as its next state, all of which will be updated by the Grid based on the rules.
+
+The Rule subclasses will hold the rules for each particular simulation, and given a cell, its location, and its neighbors, it should be able to determine whether or not that cell must be updated and what its next state should be.
+
+The State subclasses will hold the possible states for each particular simulation as well as what updates must be applied for a cell to become a particular state (e.g. change display color).
+
 ![UML](images/UML.jpg)
 
 ### User Interface
