@@ -42,6 +42,20 @@ The State subclasses will hold the possible states for each particular simulatio
 * Whenever the XML load button is pressed, it will stop the game having the same effect as the stop button, and then load a new XML. The user interface will also say at all times what is the current game and set of rules loaded.
 
 ### Design Details
+**Classes**
+
+* Simulation class: The Simulation class will handle the visualization features required by the assignment. It will be responsible for getting the new config file, starting new simulations, as well as pausing, resuming, stopping, stepping, speeding up and slowing down the simulation. It will pass the XML filename to the XMLParser object, which will return an initialized Grid, a Rules object, and a States object specific to the simulation it is trying to run. It will then control the simulation loop as it steps through the simulation, and can be easily extended if any other UI controls are desired.
+
+* Grid class: The Grid class will be a 2D grid of Cells of a fixed size, as determined by the XMLParser. Its initial state will be determined by the XMLParser, and the Grid object itself will be responsible for managing its cells. It will handle iterating through the 2D grid and applying rules to each cell by accessing the Cell in each voxel of the grid, getting its neighbors based on its location, and passing the Cell and its neighbors to the Rules object, which will determine the Cell's next state and add it to a list of Cells to be updated. It will also handling iterating through the list of Cells to be updated, then using the State object to determine how to update them to their next state. It will then return a rendering of each Cell to the Simulation class at the end of each loop.
+
+* Cell class: The Cell class will be an object that holds a String for the current state, a location, and a String for the next state. The cells can be accessed by the Grid.
+
+* XMLParser class: The XMLParser will parse the XML using a DOM parser. It will receive an XML filename from the Simulation, then return an initialized Grid, a Rules object, and a States object specific to the current simulation. This can be extended if we ever decide that the XML file requires more information to help determine the simulation's initial state by simply having it parse more information that might affect the Grid, the Rules, or the States.
+
+* Rule class: The Rule class will be an abstract class with subclasses for each simulation. Given a Cell and its neighbors, it should be able to determine what the next state of the Cell should be (and what the next state of an adjacent Cell should be if movement is required). This class's functionality can be extended simply by adding more subclasses to run more simulations.
+
+* State class: The State class will be an abstract class with sublcasses for each simulation. Given a Cell and a nextState, it should be able to update the Cell's characteristics (e.g. color) based on its nextState. This class's functionality can also be extended by adding more sublcasses to run more simulations.
+
 **Use Cases**
 
 1. Apply the rules to a middle cell:
