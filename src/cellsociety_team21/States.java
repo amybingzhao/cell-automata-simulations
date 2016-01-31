@@ -1,5 +1,5 @@
 package cellsociety_team21;
 
-public class States {
+public abstract class States {
 
 }
