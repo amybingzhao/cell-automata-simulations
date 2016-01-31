@@ -45,7 +45,7 @@ public class Grid {
 	 * @param: c is the column o the Cell whose neighborhood is of interest.
 	 * @param: numNeighbors is the number of neighbors of interest for the simulation (4 or 8).
 	 */
-	private Cell[][] getNeighborhood(int r, int c, int numNeighbors) {
+	public Cell[][] getNeighborhood(int r, int c, int numNeighbors) {
 		Cell[][] neighborhood = new Cell[3][3];
 		neighborhood[1][1] = myGrid[r][c];
 		int numRows = getNumRows();

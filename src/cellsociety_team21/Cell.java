@@ -27,16 +27,13 @@ public class Cell extends Node {
 		return myRow;
 	}
 	
-	public void setRow(int r) {
+	public void setLocation(int r, int c) {
 		myRow = r;
+		myCol = c;
 	}
 	
 	public int getCol() {
 		return myCol;
-	}
-	
-	public void setCol(int c) {
-		myCol = c;
 	}
 	
 	public String getCurState() {
