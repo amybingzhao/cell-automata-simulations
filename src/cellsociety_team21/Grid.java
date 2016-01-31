@@ -39,17 +39,72 @@ public class Grid {
 		}
 	}
 	
-	// TODO: Do we want to return a Cell[3][3] or do we want to return a Cell[8] with some predetermined order for
-	// which neighbors are at which index (i.e. getNeighbors or getNeighborhood?)
 	/*
-	 * Returns all neighbors of a given cell.
-	 * @param: myCell is the cell whose neighbors are being returned
+	 * Returns all neighbors of a given Cell and the Cell itself in their relative orientation.
+	 * @param: r is the row of the Cell whose neighborhood is of interest.
+	 * @param: c is the column o the Cell whose neighborhood is of interest.
+	 * @param: numNeighbors is the number of neighbors of interest for the simulation (4 or 8).
 	 */
-	private Cell[] getNeighbors(Cell myCell) {
-		// get # of neighbors needed from the Rules object (i.e. 4 or 8)
+	private Cell[][] getNeighborhood(int r, int c, int numNeighbors) {
+		Cell[][] neighborhood = new Cell[3][3];
+		neighborhood[1][1] = myGrid[r][c];
+		int numRows = getNumRows();
+		int numCols = getNumCols();
 		
-		return new Cell[9];
+		if (r - 1 >= 0) {
+			neighborhood[0][1] = myGrid[r-1][c];
+		} else {
+			neighborhood[0][1] = null;
+		}
+		
+		if (r + 1 < numRows) {
+			neighborhood[2][1] = myGrid[r+1][c];
+		} else {
+			neighborhood[2][1] = null;
+		}
+		
+		if (c - 1 >= 0) {
+			neighborhood[1][0] = myGrid[r][c-1];
+		} else {
+			neighborhood[1][0] = null;
+		}
+		
+		if (c + 1 < numCols) {
+			neighborhood[1][2] = myGrid[r][c+1];
+		} else {
+			neighborhood[1][2] = null;
+		}
+		
+		if (numNeighbors == 8) {
+			if (r - 1 >= 0) {
+				if (c - 1 >= 0) {
+					neighborhood[0][0] = myGrid[r-1][c-1];
+				} else {
+					neighborhood[0][0] = null;
+				}
+				if (c + 1 < numCols) {
+					neighborhood[0][2] = myGrid[r-1][c+1];
+				} else {
+					neighborhood[0][2] = null;
+				}
+			}
+			if (r + 1 < numRows) {
+				if (c - 1 >= 0) {
+					neighborhood[2][0] = myGrid[r+1][c-1];
+				} else {
+					neighborhood[2][0] = null;
+				}
+				if (c + 1 < numCols) {
+					neighborhood[2][2] = myGrid[r+1][c+1];
+				} else {
+					neighborhood[2][2] = null;
+				}
+			}
+			
+		}
+		return neighborhood;
 	}
+	
 	// TODO: unsure how to render the grid
 	/*
 	public Image render() {
