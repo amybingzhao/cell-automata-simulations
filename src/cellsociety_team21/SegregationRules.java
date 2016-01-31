@@ -69,10 +69,12 @@ public class SegregationRules extends Rules {
 		
 		for (int r = 0; r < neighborhood.length; r++) {
 			for (int c = 0; c < neighborhood[r].length; c++) {
-				if (r != MY_CELL_ROW || c != MY_CELL_COL) {
-					numNeighbors++;
-					if (neighborhood[r][c].getCurState().equals(myCellState)) {
-						numSameNeighbors++;
+				if (neighborhood[r][c] != null) {
+					if (r != MY_CELL_ROW || c != MY_CELL_COL) {
+						numNeighbors++;
+						if (neighborhood[r][c].getCurState().equals(myCellState)) {
+							numSameNeighbors++;
+						}
 					}
 				}
 			}

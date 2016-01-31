@@ -100,7 +100,6 @@ public class Grid {
 					neighborhood[2][2] = null;
 				}
 			}
-			
 		}
 		return neighborhood;
 	}
