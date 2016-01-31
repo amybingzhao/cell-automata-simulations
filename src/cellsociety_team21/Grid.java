@@ -6,10 +6,11 @@ import java.util.List;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 
-public class Grid extends GridPane{
+public class Grid {
 	private static List<Cell> toBeUpdated;
 	private static int myRows;
 	private static int myCols;
+	private Cell[][] myGrid;
 	
 	/* 
 	 * Sets the rules, possible states, grid size, and initial states for the current simulation.
@@ -22,6 +23,7 @@ public class Grid extends GridPane{
 		toBeUpdated = new ArrayList<Cell>();
 		myRows = rows;
 		myCols = cols;
+		myGrid = new Cell[myRows][myCols];
 		init(initialStates);
 	}
 	
@@ -32,33 +34,8 @@ public class Grid extends GridPane{
 		for (int r = 0; r < getNumRows(); r++) {
 			for (int c = 0; c < getNumCols(); c++) {
 				Cell cell = new Cell(initialStates[r][c], r, c);
-				this.setRowIndex(cell, r);
-				this.setColumnIndex(cell, c);
+				myGrid[r][c] = cell;
 			}
-		}
-	}
-	
-	/*
-	 * Iterates over each Cell and applies the rules to them.
-	 */
-	public void applyRulesToCells() {
-		for (int r = 0; r < getNumRows(); r++) {
-			for (int c = 0; c < getNumCols(); c++) {
-				// this.getNeighbors(myGrid[r][c]);
-				// apply rules
-				
-				// add the ones that must be updated to the toBeUpdated list
-			}
-		}
-	}
-	
-	/*
-	 * Iterates over each Cell in the toBeUpdated list 
-	 * @param: toUpdate is the list of Cells that must be updated this generation.
-	 */
-	public void applyStateChangesToCells(List toUpdate) {
-		for (int i = 0; i < toUpdate.size(); i++) {
-			// apply state changes
 		}
 	}
 	
@@ -79,15 +56,19 @@ public class Grid extends GridPane{
 		return new Image();
 	}*/
 	
-	private int getNumRows() {
+	public int getNumRows() {
 		return myRows;
 	}
 	
-	private int getNumCols() {
+	public int getNumCols() {
 		return myCols;
 	}
 	
 	public List getToBeUpdatedList() {
 		return toBeUpdated;
+	}
+	
+	public Cell getCell(int r, int c) {
+		return myGrid[r][c];
 	}
 }
