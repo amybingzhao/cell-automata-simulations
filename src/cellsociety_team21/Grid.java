@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javafx.scene.image.Image;
+import javafx.scene.layout.GridPane;
 
-public class Grid {
+public class Grid extends GridPane{
 	private static List<Cell> toBeUpdated;
 	private static Rules mySimRules;
 	private static States mySimStates;
-	private static Cell[][] myGrid;
+	private static int myRows;
+	private static int myCols;
 	
 	/* 
 	 * Sets the rules, possible states, grid size, and initial states for the current simulation.
@@ -20,21 +22,24 @@ public class Grid {
 	 * @param: initialStates is the initialStates for the specific simulation, as determined by the XMLParser, with
 	 * each state denoted by an integer. initialStates' size should match that of the Grid.
 	 */
-	public Grid(Rules rules, States states, int rows, int cols, int[][] initialStates) {
+	public Grid(Rules rules, States states, int rows, int cols, String[][] initialStates) {
 		mySimRules = rules;
 		mySimStates = states;
 		toBeUpdated = new ArrayList<Cell>();
-		myGrid = new Cell[rows][cols];
+		myRows = rows;
+		myCols = cols;
 		init(initialStates);
 	}
 	
 	/*
 	 * Initializes the states of each cell in the grid based on XML info.
 	 */
-	private void init(int[][] initialStates) {
+	private void init(String[][] initialStates) {
 		for (int r = 0; r < getNumRows(); r++) {
 			for (int c = 0; c < getNumCols(); c++) {
-				Cell cell = new Cell(initialStates[r][c]);
+				Cell cell = new Cell(initialStates[r][c], r, c);
+				this.setRowIndex(cell, r);
+				this.setColumnIndex(cell, c);
 			}
 		}
 	}
@@ -74,18 +79,18 @@ public class Grid {
 		
 		return new Cell[9];
 	}
-	// TODO: unsure how to render the grid 
+	// TODO: unsure how to render the grid
 	/*
 	public Image render() {
 		return new Image();
 	}*/
 	
 	private int getNumRows() {
-		return myGrid.length;
+		return myRows;
 	}
 	
 	private int getNumCols() {
-		return myGrid[0].length;
+		return myCols;
 	}
 	
 	public List getToBeUpdatedList() {
