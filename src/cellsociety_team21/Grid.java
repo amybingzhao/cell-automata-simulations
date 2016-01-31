@@ -8,23 +8,17 @@ import javafx.scene.layout.GridPane;
 
 public class Grid extends GridPane{
 	private static List<Cell> toBeUpdated;
-	private static Rules mySimRules;
-	private static States mySimStates;
 	private static int myRows;
 	private static int myCols;
 	
 	/* 
 	 * Sets the rules, possible states, grid size, and initial states for the current simulation.
-	 * @param: rules is the rules for the specific simulation, as determined by the XMLParser.
-	 * @param: states is the states for the specific simulation, as determined by the XMLParser.
 	 * @param: rows is the number of rows for the specific simulation, as determined by the XMLParser.
 	 * @param: cols is the number of columns for the specific simulation, as determined by the XMLParser.
 	 * @param: initialStates is the initialStates for the specific simulation, as determined by the XMLParser, with
 	 * each state denoted by an integer. initialStates' size should match that of the Grid.
 	 */
-	public Grid(Rules rules, States states, int rows, int cols, String[][] initialStates) {
-		mySimRules = rules;
-		mySimStates = states;
+	public Grid(int rows, int cols, String[][] initialStates) {
 		toBeUpdated = new ArrayList<Cell>();
 		myRows = rows;
 		myCols = cols;
