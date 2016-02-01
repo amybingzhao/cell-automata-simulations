@@ -49,18 +49,6 @@ public class SegregationRules extends Rules {
 			toBeMoved.add(cell);
 		}
 	}
-	
-	private void switchCells(Cell emptyCell, Cell agentCell) {
-		int emptyRow = emptyCell.getRow();
-		int emptyCol = emptyCell.getCol();
-		String agentState = agentCell.getCurState();
-		
-		emptyCell.setLocation(agentCell.getRow(), agentCell.getCol());
-		emptyCell.setNextState(agentState);
-		
-		agentCell.setLocation(emptyRow, emptyCol);
-		agentCell.setNextState(EMPTY);
-	}
 
 	private boolean satisfiedWithNeighbors(Cell[][] neighborhood) {
 		int numNeighbors = 0;
