@@ -7,71 +7,86 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class XMLParser {
-	
+
 	DocumentBuilderFactory myFactory;
 	DocumentBuilder myBuilder;
-	
-	public void parse(File myFile){
-		
+	String[][] cellGrid;
+
+	public void parse(File myFile) {
+
 		try {
-			
+
 			myFactory = DocumentBuilderFactory.newInstance();
 			myBuilder = myFactory.newDocumentBuilder();
 			Document myDocument = myBuilder.parse(myFile);
 			myDocument.getDocumentElement().normalize();
-			System.out.println("Root element :" 
-		            + myDocument.getDocumentElement().getNodeName());
-		         NodeList nList = myDocument.getElementsByTagName("student");
-		         System.out.println("----------------------------");
-		         for (int temp = 0; temp < nList.getLength(); temp++) {
-		            Node nNode = nList.item(temp);
-		            System.out.println("\nCurrent Element :" 
-		               + nNode.getNodeName());
-		            if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-		               Element eElement = (Element) nNode;
-		               System.out.println("Student roll no : " 
-		                  + eElement.getAttribute("rollno"));
-		               System.out.println("First Name : " 
-		                  + eElement
-		                  .getElementsByTagName("firstname")
-		                  .item(0)
-		                  .getTextContent());
-		               System.out.println("Last Name : " 
-		               + eElement
-		                  .getElementsByTagName("lastname")
-		                  .item(0)
-		                  .getTextContent());
-		               System.out.println("Nick Name : " 
-		               + eElement
-		                  .getElementsByTagName("nickname")
-		                  .item(0)
-		                  .getTextContent());
-		               System.out.println("Marks : " 
-		               + eElement
-		                  .getElementsByTagName("marks")
-		                  .item(0)
-		                  .getTextContent());
-		            }
-		         }
-			
+
+			NodeList categories = myDocument.getDocumentElement().getChildNodes();
+			for (int i = 0; i < categories.getLength(); i++) {
+				Node entry = categories.item(i);
+				if (entry instanceof Element) {
+					Element entryElement = (Element) entry;
+					switch(entryElement.getNodeName()){
+						case "Config":
+							ArrayList<String> myConfig = extract(entryElement);
+							System.out.println(myConfig);
+							break;
+						case "Game":
+							ArrayList<String> myGame = extractGame(entryElement);
+							System.out.println(myGame);
+							break;
+						default:
+							System.out.println("Not Config");
+					}
+				}
+			}
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
+	}
+
+	public ArrayList<String> extract(Element data) {
+
+		ArrayList<String> myConfig = new ArrayList<String>();
+		NodeList dataList = data.getChildNodes();
+		for (int i = 0; i < dataList.getLength(); i++) {
+			Node dataNode = dataList.item(i);
+			if (dataNode instanceof Element){
+				Element dataElement = (Element) dataNode;
+				myConfig.add(dataElement.getNodeName() + ":" + dataElement.getTextContent());
+			}
+		}
+		return myConfig;
 	}
 	
-	public List<Cell> getCells(){
-	
-		ArrayList<Cell> myCells = new ArrayList<Cell>();
+	public ArrayList<String> extractGame(Element data){
 		
-		return myCells;
-		
+		ArrayList<String> myGame = new ArrayList<String>();
+		NodeList dataList = data.getChildNodes();
+		for (int i = 0; i < dataList.getLength(); i++){
+			Node dataNode = dataList.item(i);
+			if (dataNode instanceof Element){
+				Element dataElement = (Element) dataNode;
+				if (dataElement.getNodeName() == "Parameters"){ 
+					ArrayList<String> extractedData = extract(dataElement);
+					for (String entry : extractedData){
+						myGame.add(entry);
+					}
+				}
+				else{
+					myGame.add(dataElement.getNodeName() + ":" + dataElement.getTextContent());
+				}
+			}
+		}
+		return myGame;
 	}
-	
-	public static void main(String[] args){
+
+	public static void main(String[] args) {
 		XMLParser myParser = new XMLParser();
-		myParser.parse(new File("data/samplexml.txt"));
+		myParser.parse(new File("data/simulation.txt"));
 	}
 
 }

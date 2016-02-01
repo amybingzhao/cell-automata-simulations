@@ -29,7 +29,6 @@ public class XMLGenerator {
 			myDocument = myBuilder.newDocument();
 
 		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		xLocations = new ArrayList<Integer>();
@@ -62,7 +61,6 @@ public class XMLGenerator {
 			myTransformer.transform(mySource, myResult);
 
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
