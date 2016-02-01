@@ -1,0 +1,50 @@
+package cellsociety_team21;
+
+import com.sun.javafx.geom.BaseBounds;
+import com.sun.javafx.geom.transform.BaseTransform;
+import com.sun.javafx.jmx.MXNodeAlgorithm;
+import com.sun.javafx.jmx.MXNodeAlgorithmContext;
+import com.sun.javafx.sg.prism.NGNode;
+
+public class Cell {
+	private String myCurState;
+	private String myNextState;
+	private int myRow;
+	private int myCol;
+	
+	public Cell(String initialState, int r, int c) {
+		myCurState = initialState;
+		myRow = r;
+		myCol = c;
+		myNextState = null;
+	}
+	
+	public int getRow() {
+		return myRow;
+	}
+	
+	public void setLocation(int r, int c) {
+		myRow = r;
+		myCol = c;
+	}
+	
+	public int getCol() {
+		return myCol;
+	}
+	
+	public String getCurState() {
+		return myCurState;
+	}
+	
+	public void setCurState(String s) {
+		myCurState = s;
+	}
+	
+	public String getNextState() {
+		return myNextState;
+	}
+	
+	public void setNextState(String s) {
+		myNextState = s;
+	}
+}
