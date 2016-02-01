@@ -100,7 +100,8 @@ public class PredatorPreyRules extends Rules {
 	
 	// TODO: not sure what to do with this... should we have a nextLocation thing for cells?
 	private void undoFishMove(Cell fishToEat, Grid grid) {
-		
+		// stuff
+		//removeCellToBeUpdated(water cell that was changed)
 	}
 
 	private boolean fishAlreadyMoved(Cell shark, Cell fish) {

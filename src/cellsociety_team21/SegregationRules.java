@@ -69,7 +69,4 @@ public class SegregationRules extends Rules {
 		}
 		return (((double) numSameNeighbors)/((double) numNeighbors) >= myThreshold);
 	}
-	
-	
-	
 }

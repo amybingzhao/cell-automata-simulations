@@ -1,6 +1,10 @@
 package cellsociety_team21;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class Rules {
+	private List<Cell> toBeUpdated = new ArrayList<Cell>();
 	
 	public void applyRulesToGrid(Grid grid) {
 		for (int r = 0; r < grid.getNumRows(); r++) {
@@ -22,5 +26,20 @@ public abstract class Rules {
 		
 		cell2.setLocation(cell1Row, cell1Col);
 		cell2.setNextState(cell1State);
+		
+		addCellToBeUpdated(cell1);
+		addCellToBeUpdated(cell2);
+	}
+	
+	public List<Cell> getToBeUpdatedList() {
+		return toBeUpdated;
+	}
+	
+	public void addCellToBeUpdated(Cell cell) {
+		toBeUpdated.add(cell);
+	}
+	
+	public void removeCellToBeUpdated(Cell cell) {
+		toBeUpdated.remove(cell);
 	}
 }

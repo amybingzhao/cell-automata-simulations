@@ -41,12 +41,14 @@ public class GameOfLifeRules extends Rules {
 	private void handleAliveCells(Cell cell, int numLiveNeighbors) {
 		if (numLiveNeighbors < 2 || numLiveNeighbors > 3) {
 			cell.setNextState(DEAD);
+			addCellToBeUpdated(cell);
 		}
 	}
 
 	private void handleDeadCells(Cell cell, int numLiveNeighbors) {
 		if (numLiveNeighbors == 3) {
 			cell.setNextState(ALIVE);
+			addCellToBeUpdated(cell);
 		}
 	}
 
