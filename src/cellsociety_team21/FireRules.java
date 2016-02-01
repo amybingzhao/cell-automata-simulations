@@ -27,12 +27,14 @@ public class FireRules extends Rules {
 		if (neighborIsBurning(neighborhood)) {
 			if (Math.random() < myProbCatch) {
 				cell.setNextState(BURNING);
+				addCellToBeUpdated(cell);
 			}
 		}
 	}
 	
 	private void handleBurningCell(Cell cell) {
 		cell.setNextState(EMPTY);
+		addCellToBeUpdated(cell);
 	}
 
 	private boolean neighborIsBurning(Cell[][] neighborhood) {
