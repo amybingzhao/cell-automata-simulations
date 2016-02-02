@@ -83,4 +83,8 @@ public class SegregationRules extends Rules {
 			return ERRORCOLOR;
 		}
 	}
+	
+	public String toString(){
+		return "Segregation";
+	}
 }

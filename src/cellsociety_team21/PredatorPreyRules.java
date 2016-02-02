@@ -177,4 +177,8 @@ public class PredatorPreyRules extends Rules {
 			return ERRORCOLOR;
 		}
 	}
+	
+	public String toString(){
+		return "Predator Prey";
+	}
 }

@@ -11,9 +11,12 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 
 /**
  * @author austinwu
+ * This class takes care of overall logic and UI elements
  */
 
 public class Simulation {
@@ -21,6 +24,7 @@ public class Simulation {
 	
 	// UI variables
 	private Group boardGroup;
+	private Text titleDisplay;
 	private int boardPixelSize;
 	private int borderPixelSize = 1;
 	private int cellPixelSize;
@@ -77,12 +81,16 @@ public class Simulation {
 		boardGroup.setLayoutY(BOARDHEIGHTOFFSET);
 		group.getChildren().add(boardGroup);
 		attachButtonsToUI(group);
+		attachFieldsToUI(group);
+		/*
+		 * A text field for which config file, and a button to select files
+		 */
 		return group;
 	}
 	
 	private void attachButtonsToUI(Group group){
 		String[] buttons = {"Start", "Stop", "Step", "Speed Up", "Slow Down", "Load XML"}; 
-		HBox hbox = new HBox();
+		HBox hbox = new HBox(2);
 		for(int i = 0; i < buttons.length; i++){
 			Button button = new Button(buttons[i]);
 			button.setOnAction(new EventHandler<ActionEvent>() {
@@ -92,8 +100,20 @@ public class Simulation {
 			});
 			hbox.getChildren().add(button);
 		}
+		hbox.setMaxWidth(400);
 		hbox.setLayoutX(50);
-		hbox.setLayoutY(500);
+		hbox.setLayoutY(475);
+		group.getChildren().add(hbox);
+	}
+	
+	private void attachFieldsToUI(Group group){
+		HBox hbox = new HBox();
+		titleDisplay = new Text();
+		titleDisplay.setFont(new Font(15));
+		titleDisplay.setText("Current Simulation: None");
+		hbox.getChildren().add(titleDisplay);
+		hbox.setLayoutX(50);
+		hbox.setLayoutY(525);
 		group.getChildren().add(hbox);
 	}
 	
@@ -145,7 +165,8 @@ public class Simulation {
 		cellPixelSize = (boardPixelSize / Math.max(gridwidth, gridheight)) - 2 * borderPixelSize;
 		myGrid = new Grid(gridwidth, gridheight, inputgrid);
 		rules = parser.getRules(); 
-		currentSimulation = rules.getClass().toString();
+		currentSimulation = rules.toString();
+		titleDisplay.setText("Current Simulation: " + currentSimulation);
 	}
 	
 	/**

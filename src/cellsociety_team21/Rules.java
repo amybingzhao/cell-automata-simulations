@@ -55,4 +55,5 @@ public abstract class Rules {
 	 * could also be an image.
 	 */
 	public abstract Color getFill(String state);
+	public abstract String toString();
 }

@@ -66,5 +66,9 @@ public class GameOfLifeRules extends Rules {
 			return ERRORCOLOR;
 		}
 	}
+	
+	public String toString(){
+		return "Game of Life";
+	}
 
 }

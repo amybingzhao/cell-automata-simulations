@@ -61,4 +61,8 @@ public class FireRules extends Rules {
 			return ERRORCOLOR;
 		}
 	}
+	
+	public String toString(){
+		return "Fire";
+	}
 }
