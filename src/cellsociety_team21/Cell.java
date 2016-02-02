@@ -41,4 +41,13 @@ public class Cell {
 	public void setNextState(String s) {
 		myNextState = s;
 	}
+	
+	/**
+	 * Sets myCurState to myNextState
+	 * Sets myNextState back to null
+	 */
+	public void updateState(){
+		myCurState = myNextState;
+		myNextState = null;
+	}
 }

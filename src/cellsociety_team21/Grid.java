@@ -125,4 +125,12 @@ public class Grid {
 	public Cell getCell(int r, int c) {
 		return myGrid[r][c];
 	}
+	
+	public void updateEachState(){
+		for(int r = 0; r < myGrid.length; r++){
+			for(int c = 0; c < myGrid.length; c++){
+				myGrid[r][c].updateState();
+			}
+		}
+	}
 }

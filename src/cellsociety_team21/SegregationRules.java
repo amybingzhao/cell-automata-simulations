@@ -5,12 +5,16 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
+import javafx.scene.paint.Color;
+
 public class SegregationRules extends Rules {
 
 	private static final int NUM_NEIGHBORS = 8;
 	private static final String EMPTY = "EMPTY";
 	private static final String RED = "RED";
 	private static final String BLUE = "BLUE";
+	private static final Color REDCOLOR = Color.RED;
+	private static final Color BLUECOLOR = Color.BLUE;
 	private static final int MY_CELL_ROW = 1;
 	private static final int MY_CELL_COL = 1;
 	private Queue<Cell> toBeMoved;
@@ -68,5 +72,15 @@ public class SegregationRules extends Rules {
 			}
 		}
 		return (((double) numSameNeighbors)/((double) numNeighbors) >= myThreshold);
+	}
+	public Color getFill(String s){
+		switch(s){
+		case BLUE:
+			return BLUECOLOR;
+		case RED:
+			return REDCOLOR;
+		default:
+			return ERRORCOLOR;
+		}
 	}
 }

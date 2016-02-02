@@ -1,9 +1,13 @@
 package cellsociety_team21;
 
+import javafx.scene.paint.Color;
+
 public class GameOfLifeRules extends Rules {
 	private static final int NUM_NEIGHBORS = 8;
 	private static final String DEAD = "DEAD";
 	private static final String ALIVE = "ALIVE";
+	private static final Color DEADCOLOR = Color.RED;
+	private static final Color ALIVECOLOR = Color.GREEN;
 	private static final int MY_CELL_ROW = 1;
 	private static final int MY_CELL_COL = 1;
 	
@@ -49,6 +53,17 @@ public class GameOfLifeRules extends Rules {
 		if (numLiveNeighbors == 3) {
 			cell.setNextState(ALIVE);
 			addCellToBeUpdated(cell);
+		}
+	}
+	
+	public Color getFill(String s){
+		switch(s){
+		case DEAD:
+			return DEADCOLOR;
+		case ALIVE:
+			return ALIVECOLOR;
+		default:
+			return ERRORCOLOR;
 		}
 	}
 
