@@ -125,4 +125,16 @@ public class Grid {
 	public Cell getCell(int r, int c) {
 		return myGrid[r][c];
 	}
+	
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		for (int r = 0; r < myRows; r++) {
+			for (int c = 0; c < myCols; c++) {
+				sb.append(myGrid[r][c].toString());
+				sb.append(" ");
+			}
+			sb.append("\n");
+		}
+		return sb.toString();
+	}
 }

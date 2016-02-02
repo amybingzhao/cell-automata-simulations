@@ -12,6 +12,8 @@ public abstract class Rules {
 				applyRulesToCell(grid.getCell(r, c), grid);
 			}
 		}
+		
+		System.out.println(toBeUpdated);
 	}
 	
 	public abstract void applyRulesToCell(Cell cell, Grid grid);

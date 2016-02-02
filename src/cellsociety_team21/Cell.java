@@ -41,4 +41,8 @@ public class Cell {
 	public void setNextState(String s) {
 		myNextState = s;
 	}
+	
+	public String toString() {
+		return "(" + myCurState + ", " + myNextState + ")";
+	}
 }
