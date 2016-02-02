@@ -7,9 +7,9 @@ public abstract class Rules {
 	private List<Cell> toBeUpdated = new ArrayList<Cell>();
 	
 	public void applyRulesToGrid(Grid grid) {
-		for (int r = 0; r < grid.getNumRows(); r++) {
-			for (int c = 0; c < grid.getNumCols(); c++) {
-				applyRulesToCell(grid.getCell(r, c), grid);
+		for (int row = 0; row < grid.getNumRows(); row++) {
+			for (int col = 0; col < grid.getNumCols(); col++) {
+				applyRulesToCell(grid.getCell(row, col), grid);
 			}
 		}
 		

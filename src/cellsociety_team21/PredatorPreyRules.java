@@ -143,10 +143,10 @@ public class PredatorPreyRules extends Rules {
 		List<Cell> optionList = new ArrayList<Cell>();
 		
 		for (int r = 0; r < neighborhood.length; r++) {
-			for (int c = 0; c < neighborhood[r].length; c++) {
-				if (neighborhood[r][c] != null) {
-					Cell cell = neighborhood[r][c];
-					if ((r != MY_CELL_ROW || c != MY_CELL_COL) && cell.getCurState().equals(stateToMoveTo)) {
+			for (int col = 0; col < neighborhood[r].length; col++) {
+				if (neighborhood[r][col] != null) {
+					Cell cell = neighborhood[r][col];
+					if ((r != MY_CELL_ROW || col != MY_CELL_COL) && cell.getCurState().equals(stateToMoveTo)) {
 						optionList.add(cell);
 					}
 				}

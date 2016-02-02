@@ -73,14 +73,14 @@ public class SegregationRules extends Rules {
 		int numSameNeighbors = 0;
 		String myCellState = neighborhood[MY_CELL_ROW][MY_CELL_COL].getCurState();
 		
-		for (int r = 0; r < neighborhood.length; r++) {
-			for (int c = 0; c < neighborhood[r].length; c++) {
-				if (neighborhood[r][c] != null) {
-					if (r != MY_CELL_ROW || c != MY_CELL_COL) {
-						String neighborState = neighborhood[r][c].getCurState();
+		for (int row = 0; row < neighborhood.length; row++) {
+			for (int col = 0; col < neighborhood[row].length; col++) {
+				if (neighborhood[row][col] != null) {
+					if (row != MY_CELL_ROW || col != MY_CELL_COL) {
+						String neighborState = neighborhood[row][col].getCurState();
 						if (!neighborState.equals(EMPTY)) {
 							numNeighbors++;
-							if (neighborhood[r][c].getCurState().equals(myCellState)) {
+							if (neighborhood[row][col].getCurState().equals(myCellState)) {
 								numSameNeighbors++;
 							}
 						}

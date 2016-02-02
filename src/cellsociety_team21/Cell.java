@@ -6,10 +6,10 @@ public class Cell {
 	private int myRow;
 	private int myCol;
 	
-	public Cell(String initialState, int r, int c) {
+	public Cell(String initialState, int row, int col) {
 		myCurState = initialState;
-		myRow = r;
-		myCol = c;
+		myRow = row;
+		myCol = col;
 		myNextState = null;
 	}
 	
@@ -17,9 +17,9 @@ public class Cell {
 		return myRow;
 	}
 	
-	public void setLocation(int r, int c) {
-		myRow = r;
-		myCol = c;
+	public void setLocation(int row, int col) {
+		myRow = row;
+		myCol = col;
 	}
 	
 	public int getCol() {
@@ -30,16 +30,16 @@ public class Cell {
 		return myCurState;
 	}
 	
-	public void setCurState(String s) {
-		myCurState = s;
+	public void setCurState(String state) {
+		myCurState = state;
 	}
 	
 	public String getNextState() {
 		return myNextState;
 	}
 	
-	public void setNextState(String s) {
-		myNextState = s;
+	public void setNextState(String state) {
+		myNextState = state;
 	}
 	
 	public String toString() {

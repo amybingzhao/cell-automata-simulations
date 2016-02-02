@@ -9,7 +9,6 @@ public class GameOfLifeRules extends Rules {
 	
 	@Override
 	public void applyRulesToCell(Cell cell, Grid grid) {
-		// TODO Auto-generated method stub
 		String curState = cell.getCurState();
 		Cell[][] neighborhood = grid.getNeighborhood(cell.getRow(), cell.getCol(), NUM_NEIGHBORS);
 		int numLiveNeighbors = countNumLiveNeighbors(neighborhood);
@@ -23,11 +22,11 @@ public class GameOfLifeRules extends Rules {
 	private int countNumLiveNeighbors(Cell[][] neighborhood) {
 		int numNeighbors = 0;
 		
-		for (int r = 0; r < neighborhood.length; r++) {
-			for (int c = 0; c < neighborhood[r].length; c++) {
-				if (neighborhood[r][c] != null) {
-					if (r != MY_CELL_ROW || c != MY_CELL_COL) {
-						if (neighborhood[r][c].getCurState().equals(ALIVE)) {
+		for (int row = 0; row < neighborhood.length; row++) {
+			for (int col = 0; col < neighborhood[row].length; col++) {
+				if (neighborhood[row][col] != null) {
+					if (row != MY_CELL_ROW || col != MY_CELL_COL) {
+						if (neighborhood[row][col].getCurState().equals(ALIVE)) {
 							numNeighbors++;
 						}
 					}
