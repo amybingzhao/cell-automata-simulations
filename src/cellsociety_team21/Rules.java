@@ -7,7 +7,7 @@ import javafx.scene.paint.Color;
 
 public abstract class Rules {
 
-	protected static final Color ERRORCOLOR = Color.NAVY;
+	protected static final Color ERRORCOLOR = Color.PINK;
 	private List<Cell> toBeUpdated = new ArrayList<Cell>();
 	
 	public void applyRulesToGrid(Grid grid) {

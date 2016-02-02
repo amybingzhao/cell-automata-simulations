@@ -12,7 +12,7 @@ public class Grid {
 	private static int myCols;
 	private Cell[][] myGrid;
 	
-	/* 
+	/**
 	 * Sets the rules, possible states, grid size, and initial states for the current simulation.
 	 * @param: rows is the number of rows for the specific simulation, as determined by the XMLParser.
 	 * @param: cols is the number of columns for the specific simulation, as determined by the XMLParser.
@@ -27,7 +27,7 @@ public class Grid {
 		init(initialStates);
 	}
 	
-	/*
+	/**
 	 * Initializes the states of each cell in the grid based on XML info.
 	 */
 	private void init(String[][] initialStates) {
@@ -39,7 +39,7 @@ public class Grid {
 		}
 	}
 	
-	/*
+	/**
 	 * Returns all neighbors of a given Cell and the Cell itself in their relative orientation.
 	 * @param: r is the row of the Cell whose neighborhood is of interest.
 	 * @param: c is the column o the Cell whose neighborhood is of interest.
@@ -103,12 +103,6 @@ public class Grid {
 		}
 		return neighborhood;
 	}
-	
-	// TODO: unsure how to render the grid
-	/*
-	public Image render() {
-		return new Image();
-	}*/
 	
 	public int getNumRows() {
 		return myRows;

@@ -40,7 +40,7 @@ public class Main extends Application {
 
         // sets the simulation's loop
         KeyFrame frame = new KeyFrame(Duration.millis(MILLISECOND_DELAY),
-                                      e -> mySimulation.step(SECOND_DELAY));
+                                      e -> mySimulation.step(SECOND_DELAY, false));
         Timeline animation = new Timeline();
         animation.setCycleCount(Timeline.INDEFINITE);
         animation.getKeyFrames().add(frame);
