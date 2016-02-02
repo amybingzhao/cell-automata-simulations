@@ -205,11 +205,4 @@ public class XMLParser {
 	public Rules getRule() {
 		return myRule;
 	}
-
-	public static void main(String[] args) {
-		XMLParser tester = new XMLParser();
-		tester.parse(new File("data/simulation.txt"));
-		Rules myRule = tester.getRule();
-		System.out.println("DONE");
-	}
 }
