@@ -23,7 +23,7 @@ public class FireRules extends Rules {
 	}
 
 	private void handleTreeCell(Cell cell, Grid grid) {
-		Cell[][] neighborhood = grid.getNeighborhood(cell.getRow(), cell.getCol(), NUM_NEIGHBORS);
+		Cell[][] neighborhood = grid.getNeighborhood(cell.getCurRow(), cell.getCurCol(), NUM_NEIGHBORS);
 		if (neighborIsBurning(cell, neighborhood, grid)) {
 			double x = Math.random();
 			System.out.println("My prob catch: " + myProbCatch);
@@ -42,8 +42,8 @@ public class FireRules extends Rules {
 
 	private boolean neighborIsBurning(Cell cell, Cell[][] neighborhood, Grid grid) {
 		System.out.println(neighborhood[1][1].toString() + "\n");
-		int cellRow = cell.getRow();
-		int cellCol = cell.getCol();
+		int cellRow = cell.getCurRow();
+		int cellCol = cell.getCurCol();
 		
 		if (cellCol > 0) {
 			if (cellIsBurning(neighborhood[1][0])) {

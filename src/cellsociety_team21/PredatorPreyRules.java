@@ -9,8 +9,6 @@ public class PredatorPreyRules extends Rules {
 	private int myFishReproductionTime;
 	private int myInitSharkReproductionTime;
 	private int myInitFishReproductionTime;
-	private static final int MY_CELL_ROW = 1;
-	private static final int MY_CELL_COL = 1;
 	private static final String FISH = "FISH";
 	private static final String SHARK = "SHARK";
 	private static final String WATER = "WATER";
@@ -28,7 +26,7 @@ public class PredatorPreyRules extends Rules {
 	public void applyRulesToCell(Cell cell, Grid grid) {
 		String curState = cell.getCurState();
 		
-		if (cell.getRow() == grid.getNumRows() - 1 && cell.getCol() == grid.getNumCols() - 1) {
+		if (cell.getCurRow() == grid.getNumRows() - 1 && cell.getCurCol() == grid.getNumCols() - 1) {
 			updateReproductionTimes();
 		}
 		
@@ -54,7 +52,7 @@ public class PredatorPreyRules extends Rules {
 	}
 
 	private void handleFishCell(Cell cell, Grid grid) {
-		Cell[][] neighborhood = grid.getNeighborhood(cell.getRow(), cell.getCol(), NUM_NEIGHBORS);
+		Cell[][] neighborhood = grid.getNeighborhood(cell.getCurRow(), cell.getCurCol(), NUM_NEIGHBORS);
 		Cell nextLocation = cellToMoveTo(neighborhood, WATER);
 		
 		if (nextLocation != null) {
@@ -64,7 +62,7 @@ public class PredatorPreyRules extends Rules {
 	}
 
 	private void handleSharkCell(Cell cell, Grid grid) {
-		Cell[][] neighborhood = grid.getNeighborhood(cell.getRow(), cell.getCol(), NUM_NEIGHBORS);
+		Cell[][] neighborhood = grid.getNeighborhood(cell.getCurRow(), cell.getCurCol(), NUM_NEIGHBORS);
 		
 		Cell fishToEat = cellToMoveTo(neighborhood, FISH);
 		if (fishToEat != null) {
@@ -98,17 +96,17 @@ public class PredatorPreyRules extends Rules {
 		switchCells(fishToEat, curShark);
 	}
 	
-	// TODO: not sure what to do with this... should we have a nextLocation thing for cells?
 	private void undoFishMove(Cell fishToEat, Grid grid) {
-		// stuff
-		//removeCellToBeUpdated(water cell that was changed)
+		Cell fishNextLocation = grid.getCell(fishToEat.getNextRow(), fishToEat.getNextCol());
+		fishNextLocation.setNextState(WATER);
+		removeCellToBeUpdated(fishNextLocation);
 	}
 
 	private boolean fishAlreadyMoved(Cell shark, Cell fish) {
-		int fishRow = fish.getRow();
-		int fishCol = fish.getCol();
-		int sharkRow = shark.getRow();
-		int sharkCol = shark.getCol();
+		int fishRow = fish.getCurRow();
+		int fishCol = fish.getCurCol();
+		int sharkRow = shark.getCurRow();
+		int sharkCol = shark.getCurCol();
 		
 		return ((fishRow < sharkRow) || (fishRow == sharkRow && fishCol < sharkCol));
 	}
@@ -141,22 +139,29 @@ public class PredatorPreyRules extends Rules {
 	
 	private Cell cellToMoveTo(Cell[][] neighborhood, String stateToMoveTo) {
 		List<Cell> optionList = new ArrayList<Cell>();
-		
-		for (int row = 0; row < neighborhood.length; row++) {
-			for (int col = 0; col < neighborhood[row].length; col++) {
-				if (neighborhood[row][col] != null) {
-					Cell cell = neighborhood[row][col];
-					if ((row != MY_CELL_ROW || col != MY_CELL_COL) && cell.getCurState().equals(stateToMoveTo)) {
-						optionList.add(cell);
-					}
-				}
-			}
-		}
+
+		checkIfCanMoveTo(neighborhood[0][1], stateToMoveTo, optionList);
+		checkIfCanMoveTo(neighborhood[1][0], stateToMoveTo, optionList);
+		checkIfCanMoveTo(neighborhood[1][2], stateToMoveTo, optionList);
+		checkIfCanMoveTo(neighborhood[2][1], stateToMoveTo, optionList);
 		
 		if (optionList.size() > 0) {
 			return optionList.get(generateRandom(optionList.size()));
 		} else {
 			return null;
+		}
+	}
+	
+	private void checkIfCanMoveTo(Cell cellToCheck, String stateToMoveTo, List<Cell> optionList) {
+		if (canMoveTo(cellToCheck, stateToMoveTo)) {
+			optionList.add(cellToCheck);
+		}
+	}
+	private boolean canMoveTo(Cell cellToCheck, String stateToMoveTo) {
+		if (cellToCheck == null) {
+			return false;
+		} else {
+			return cellToCheck.getCurState().equals(stateToMoveTo);
 		}
 	}
 }

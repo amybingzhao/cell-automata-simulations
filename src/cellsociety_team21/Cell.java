@@ -3,27 +3,32 @@ package cellsociety_team21;
 public class Cell {
 	private String myCurState;
 	private String myNextState;
-	private int myRow;
-	private int myCol;
+	private int myCurRow;
+	private int myCurCol;
+	private int myNextRow;
+	private int myNextCol;
+	private static final int NULL = -1;
 	
 	public Cell(String initialState, int row, int col) {
 		myCurState = initialState;
-		myRow = row;
-		myCol = col;
+		myCurRow = row;
+		myCurCol = col;
 		myNextState = null;
+		myNextRow = NULL;
+		myNextCol = NULL;
 	}
 	
-	public int getRow() {
-		return myRow;
+	public int getCurRow() {
+		return myCurRow;
 	}
 	
 	public void setLocation(int row, int col) {
-		myRow = row;
-		myCol = col;
+		myCurRow = row;
+		myCurCol = col;
 	}
 	
-	public int getCol() {
-		return myCol;
+	public int getCurCol() {
+		return myCurCol;
 	}
 	
 	public String getCurState() {
@@ -40,6 +45,19 @@ public class Cell {
 	
 	public void setNextState(String state) {
 		myNextState = state;
+	}
+	
+	public int getNextRow() {
+		return myNextRow;
+	}
+	
+	public void setNextLocation(int row, int col) {
+		myNextRow = row;
+		myNextCol = col;
+	}
+	
+	public int getNextCol() {
+		return myNextCol;
 	}
 	
 	public String toString() {

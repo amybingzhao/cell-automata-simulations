@@ -19,14 +19,14 @@ public abstract class Rules {
 	public abstract void applyRulesToCell(Cell cell, Grid grid);
 
 	protected void switchCells(Cell cell1, Cell cell2) {
-		int cell1Row = cell1.getRow();
-		int cell1Col = cell1.getCol();
+		int cell1Row = cell1.getCurRow();
+		int cell1Col = cell1.getCurCol();
 		String cell1State = cell1.getCurState();
 		
-		cell1.setLocation(cell2.getRow(), cell2.getCol());
+		cell1.setNextLocation(cell2.getCurRow(), cell2.getCurCol());
 		cell1.setNextState(cell2.getCurState());
 		
-		cell2.setLocation(cell1Row, cell1Col);
+		cell2.setNextLocation(cell1Row, cell1Col);
 		cell2.setNextState(cell1State);
 		
 		addCellToBeUpdated(cell1);

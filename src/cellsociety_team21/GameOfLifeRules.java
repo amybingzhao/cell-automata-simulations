@@ -10,7 +10,7 @@ public class GameOfLifeRules extends Rules {
 	@Override
 	public void applyRulesToCell(Cell cell, Grid grid) {
 		String curState = cell.getCurState();
-		Cell[][] neighborhood = grid.getNeighborhood(cell.getRow(), cell.getCol(), NUM_NEIGHBORS);
+		Cell[][] neighborhood = grid.getNeighborhood(cell.getCurRow(), cell.getCurCol(), NUM_NEIGHBORS);
 		int numLiveNeighbors = countNumLiveNeighbors(neighborhood);
 		if (curState.equals(DEAD)) {
 			handleDeadCells(cell, numLiveNeighbors);

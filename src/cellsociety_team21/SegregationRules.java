@@ -32,7 +32,7 @@ public class SegregationRules extends Rules {
 			handleEmptyCell(cell);
 		} else {
 			handleAgentCell(cell, grid);
-			if ((cell.getRow() == (grid.getNumRows() - 1)) && (cell.getCol() == (grid.getNumCols() - 1))) {
+			if ((cell.getCurRow() == (grid.getNumRows() - 1)) && (cell.getCurCol() == (grid.getNumCols() - 1))) {
 				handleUnmovedCells();
 			}
 		}
@@ -61,7 +61,7 @@ public class SegregationRules extends Rules {
 	}
 	
 	private void handleAgentCell(Cell cell, Grid grid) {
-		Cell[][] neighborhood = grid.getNeighborhood(cell.getRow(), cell.getCol(), NUM_NEIGHBORS);
+		Cell[][] neighborhood = grid.getNeighborhood(cell.getCurRow(), cell.getCurCol(), NUM_NEIGHBORS);
 		if (!satisfiedWithNeighbors (neighborhood)) {
 			cell.setNextState(EMPTY);
 			toBeMoved.add(cell);
