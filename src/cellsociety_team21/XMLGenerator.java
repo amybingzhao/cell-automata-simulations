@@ -135,11 +135,10 @@ public class XMLGenerator {
 	public static void main(String[] args) {
 		XMLGenerator myGenerator = new XMLGenerator();
 		ArrayList<String> parameters = new ArrayList<String>();
-		parameters.add("Threshold:40");
 		ArrayList<String> states = new ArrayList<String>();
-		states.add("Black");
-		states.add("White");
-		myGenerator.generateFile(50, 50, "Segregation", parameters, states, 10);
+		states.add("ALIVE");
+		states.add("DEAD");
+		myGenerator.generateFile(10, 10, "GameOfLife", parameters, states, 15);
 	}
 
 }

@@ -8,11 +8,12 @@ import java.util.List;
 
 public class XMLParser {
 
-	DocumentBuilderFactory myFactory;
-	DocumentBuilder myBuilder;
-	String[][] cellGrid;
-	int rows;
-	int cols;
+	private DocumentBuilderFactory myFactory;
+	private DocumentBuilder myBuilder;
+	private String[][] cellGrid;
+	private int rows;
+	private int cols;
+	private Rules myRule;
 
 	public void parse(File myFile) {
 		try {
@@ -49,6 +50,7 @@ public class XMLParser {
 			e.printStackTrace();
 		}
 	}
+
 	public ArrayList<String> extract(Element data) {
 		ArrayList<String> myConfig = new ArrayList<String>();
 		NodeList dataList = data.getChildNodes();
@@ -79,7 +81,31 @@ public class XMLParser {
 				}
 			}
 		}
+		initializeGame(myGame);
 		return myGame;
+	}
+
+	public void initializeGame(ArrayList<String> data){
+		String game = splitEntry(data.get(0))[1];
+		switch(game){
+			case "Segregation":
+				int threshold = Integer.parseInt(splitEntry(data.get(1))[1]);
+				myRule = new SegregationRules(threshold);
+				break;
+			case "PredatorPrey":
+				int initialSharkEnergy = Integer.parseInt(splitEntry(data.get(1))[1]);
+				int sharkReproductionTime = Integer.parseInt(splitEntry(data.get(2))[1]);
+				int fishReproductionTime = Integer.parseInt(splitEntry(data.get(3))[1]);
+				myRule = new PredatorPreyRules(initialSharkEnergy, sharkReproductionTime, fishReproductionTime);
+				break;
+			case "GameOfLife":
+				myRule = new GameOfLifeRules();
+				break;
+			case "Fire":
+				double probCatch = Double.parseDouble(splitEntry(data.get(1))[1]);
+				myRule = new FireRules(probCatch);
+				break;
+		}
 	}
 
 	public void extractCells(Element data) {
@@ -95,27 +121,27 @@ public class XMLParser {
 				cellGrid[x][y] = state;
 			}
 		}
+		System.out.println("Done");
 	}
 
 	public String[] splitEntry(String entry) {
 		String[] split = entry.split(":");
 		return split;
 	}
-	
-	public int getRows(){
+
+	public int getRows() {
 		return rows;
 	}
-	
-	public int getCols(){
+
+	public int getCols() {
 		return cols;
 	}
-	
-	public String[][] getGrid(){
+
+	public String[][] getGrid() {
 		return cellGrid;
 	}
-
-	public static void main(String[] args) {
-		XMLParser myParser = new XMLParser();
-		myParser.parse(new File("data/simulation.txt"));
+	
+	public Rules getRule(){
+		return myRule;
 	}
 }
