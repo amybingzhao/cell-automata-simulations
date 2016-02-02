@@ -1,5 +1,8 @@
 package cellsociety_team21;
 
+import java.io.File;
+import java.util.Arrays;
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -114,41 +117,35 @@ public class Simulation {
 		case "Slow Down":
 			break;
 		case "Load XML":
-			gridwidth = 10;
-			gridheight = 10;
-
-			cellPixelSize = (boardPixelSize / Math.max(gridwidth, gridheight)) - 2 * borderPixelSize;
-			
-			String[][] tempArray = new String[gridwidth][gridheight];
-			for(int r = 0; r < tempArray.length; r++){
-				for(int c = 0; c < tempArray[r].length; c++){
-					if(r % 2 == 0)
-						tempArray[r][c] = "RED";
-					else
-						tempArray[r][c] = "BLUE";
-				}
-			}
-			
-			myGrid = new Grid(gridwidth, gridheight, tempArray);
-			rules = new SegregationRules(.5);
-			currentSimulation = rules.getClass().toString();
-			
-			/*
-			 * Here is where you would load in the XML, which would generate a grid and set myGrid equal to it, 
-			 * as well as set the grid width and grid height (in this case the same number, but in the future
-			 * will be different numbers).
-			 * 
-			 * Things to set:
-			 * gridwidth- width of the grid in # of cells
-			 * gridheight- height of the grid in # of cells
-			 * myGrid- instance variable, pass the 2-d String array into its constructor
-			 * rules- a new instance of whichever rules object we are using
-			 * 
-			 */
+			loadXML();
 			buildBoard();
 			displayGridToBoard();	
 			break;
 		}		
+	}
+	
+	/**
+	 * Helper method that loads XML with the parser and then sets instance variables
+	 */
+	private void loadXML(){
+		XMLParser parser = new XMLParser();
+		parser.parse(new File("data/simulation.txt"));
+		String[][] inputgrid = parser.getGrid();
+		
+
+		for(int i = 0; i < inputgrid.length; i++){
+			for(int k = 0; k < inputgrid[i].length; k++){
+				if(inputgrid[i][k] == null)
+					inputgrid[i][k] = "EMPTY";
+			}
+		}
+		
+		gridwidth = inputgrid.length;
+		gridheight = inputgrid[1].length;
+		cellPixelSize = (boardPixelSize / Math.max(gridwidth, gridheight)) - 2 * borderPixelSize;
+		myGrid = new Grid(gridwidth, gridheight, inputgrid);
+		rules = parser.getRules(); 
+		currentSimulation = rules.getClass().toString();
 	}
 	
 	/**
@@ -181,20 +178,43 @@ public class Simulation {
 			}
 		}
 	}
-
+	
 	/**
 	 * Applys rules to cells, updates their states, displays new states
 	 */
 	public void step(double elapsedTime, boolean stepping) {
 		if(running || stepping){
+//			System.out.println("STEPPING");
 //			apply rules to all cells, update state
-			applyRulesToGrid();
-//			myGrid.updateEachState();
-			System.out.println("step");
+//			applyRulesToGrid();
+
+			//temporary "state updating code" for demo purpose, DOES NOT FOLLOW RULE
+			for(int r = 0; r < myGrid.getNumRows(); r++){
+				for(int c = 0; c < myGrid.getNumCols(); c++){
+					switch(myGrid.getCell(r,c).getCurState()){
+					case "EMPTY":
+						myGrid.getCell(r,c).setNextState("TREE");
+						break;
+					case "TREE":
+						myGrid.getCell(r,c).setNextState("BURNING");
+						break;
+					case "BURNING":
+						myGrid.getCell(r,c).setNextState("EMPTY");
+						break;
+					default:
+						
+					}
+				}
+			}
+			
+			myGrid.updateEachState();
 			displayGridToBoard();	
 		}
 	}
 	
+	/**
+	 * Helper method that applies the specified rules to each method in the grid
+	 */
 	private void applyRulesToGrid(){
 		for(int r = 0; r < myGrid.getNumRows(); r++){
 			for(int c = 0; c < myGrid.getNumCols(); c++){
@@ -204,10 +224,11 @@ public class Simulation {
 	}
 	
 	
+	
 	/*
 	 * General flow:
 	 * 1. UI, board background loads
-	 * 2. Load XML is pressed, xml loads, board is populated with correctly quantity of correctly sized cells
+	 * 2. Load XML is pressed, xml loads, board is populated with correctly quantity of correctly sized cells, show initial states
 	 * 3. Start is pressed, stepping begins
 	 * 4. For each step, apply rules, update state, display grid to board, repeat
 	 * 5. End is pressed, stepping stops.
