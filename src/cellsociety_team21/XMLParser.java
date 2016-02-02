@@ -202,7 +202,7 @@ public class XMLParser {
 	 * 
 	 * @return The Rules object
 	 */
-	public Rules getRule() {
+	public Rules getRules() {
 		return myRule;
 	}
 }
