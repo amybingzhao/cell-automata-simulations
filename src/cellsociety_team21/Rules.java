@@ -13,7 +13,7 @@ public abstract class Rules {
 			}
 		}
 		
-		System.out.println(toBeUpdated);
+		System.out.println(toBeUpdated + "\n");
 	}
 	
 	public abstract void applyRulesToCell(Cell cell, Grid grid);

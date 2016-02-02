@@ -142,11 +142,11 @@ public class PredatorPreyRules extends Rules {
 	private Cell cellToMoveTo(Cell[][] neighborhood, String stateToMoveTo) {
 		List<Cell> optionList = new ArrayList<Cell>();
 		
-		for (int r = 0; r < neighborhood.length; r++) {
-			for (int col = 0; col < neighborhood[r].length; col++) {
-				if (neighborhood[r][col] != null) {
-					Cell cell = neighborhood[r][col];
-					if ((r != MY_CELL_ROW || col != MY_CELL_COL) && cell.getCurState().equals(stateToMoveTo)) {
+		for (int row = 0; row < neighborhood.length; row++) {
+			for (int col = 0; col < neighborhood[row].length; col++) {
+				if (neighborhood[row][col] != null) {
+					Cell cell = neighborhood[row][col];
+					if ((row != MY_CELL_ROW || col != MY_CELL_COL) && cell.getCurState().equals(stateToMoveTo)) {
 						optionList.add(cell);
 					}
 				}
