@@ -52,13 +52,7 @@ public class XMLGenerator {
 	 * @param numCells
 	 *            The number of cells to be randomly generated
 	 */
-	public void generateFile(int rows, int cols, String gameName, List<String> parameters, List<String> states,
-			int numCells) {
-
-		if (numCells > rows * cols) {
-			System.out.println("Too Many Cells");
-			return;
-		}
+	public void generateFile(int rows, int cols, String gameName, List<String> parameters, List<String> states) {
 
 		try {
 
@@ -67,7 +61,7 @@ public class XMLGenerator {
 
 			myRoot.appendChild(getConfig(rows, cols));
 			myRoot.appendChild(getGameType(gameName, parameters));
-			myRoot.appendChild(createRandomCells(numCells, rows, cols, states));
+			myRoot.appendChild(createRandomCells(rows, cols, states));
 
 			TransformerFactory myTransformerFactory = TransformerFactory.newInstance();
 			Transformer myTransformer = myTransformerFactory.newTransformer();
@@ -162,33 +156,23 @@ public class XMLGenerator {
 	 *            An arraylist of potential cell states
 	 * @return An Element to be included in the XML file
 	 */
-	public Element createRandomCells(int numCells, int rows, int cols, List<String> states) {
+	public Element createRandomCells(int rows, int cols, List<String> states) {
 		Element myCells = myDocument.createElement("Cells");
 		Random myRandom = new Random();
-		for (int i = 0; i < numCells; i++) {
-			Element myCell = myDocument.createElement("Cell");
-			Element xElement = myDocument.createElement("X");
-			int x;
-			int y;
-			while (true) {
-				x = myRandom.nextInt(rows);
-				if (!xLocations.contains(x))
-					break;
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < cols; j++){
+				Element myCell = myDocument.createElement("Cell");
+				Element xElement = myDocument.createElement("X");
+				xElement.appendChild(myDocument.createTextNode("" + i));
+				Element yElement = myDocument.createElement("Y");
+				yElement.appendChild(myDocument.createTextNode("" + j));
+				Element stateElement = myDocument.createElement("State");
+				stateElement.appendChild(myDocument.createTextNode(states.get(myRandom.nextInt(states.size()))));
+				myCell.appendChild(xElement);
+				myCell.appendChild(yElement);
+				myCell.appendChild(stateElement);
+				myCells.appendChild(myCell);
 			}
-			while (true) {
-				y = myRandom.nextInt(cols);
-				if (!yLocations.contains(y))
-					break;
-			}
-			xElement.appendChild(myDocument.createTextNode("" + x));
-			Element yElement = myDocument.createElement("Y");
-			yElement.appendChild(myDocument.createTextNode("" + y));
-			Element stateElement = myDocument.createElement("State");
-			stateElement.appendChild(myDocument.createTextNode(states.get(myRandom.nextInt(states.size()))));
-			myCell.appendChild(xElement);
-			myCell.appendChild(yElement);
-			myCell.appendChild(stateElement);
-			myCells.appendChild(myCell);
 		}
 		return myCells;
 	}
@@ -201,7 +185,7 @@ public class XMLGenerator {
 		states.add("TREE");
 		states.add("BURNING");
 		parameters.add("ProbCatch:15");
-		myGenerator.generateFile(10, 10, "Fire", parameters, states, 15);
+		myGenerator.generateFile(10, 10, "Fire", parameters, states);
 	}
 
 }
