@@ -35,13 +35,31 @@ public class XMLGenerator {
 		yLocations = new ArrayList<Integer>();
 	}
 
-	public void generateFile(int rows, int cols, String gameName, List<String> parameters, List<String> states, int numCells) {
+	/**
+	 * Generates an XML file containing a randomly determined starting state for
+	 * a simulation
+	 * 
+	 * @param rows
+	 *            Number of rows in the grid
+	 * @param cols
+	 *            Number of columns in the grid
+	 * @param gameName
+	 *            The name of the game in the simulation
+	 * @param parameters
+	 *            An arraylist of necessary game parameters
+	 * @param states
+	 *            An arraylist of potential game states
+	 * @param numCells
+	 *            The number of cells to be randomly generated
+	 */
+	public void generateFile(int rows, int cols, String gameName, List<String> parameters, List<String> states,
+			int numCells) {
 
-		if (numCells > rows * cols){
+		if (numCells > rows * cols) {
 			System.out.println("Too Many Cells");
 			return;
 		}
-		
+
 		try {
 
 			Element myRoot = myDocument.createElement("Simulation");
@@ -66,6 +84,15 @@ public class XMLGenerator {
 
 	}
 
+	/**
+	 * Creates the data for the Config section of the XML file
+	 * 
+	 * @param rows
+	 *            The number of rows in the grid
+	 * @param cols
+	 *            The number of columns in the grid
+	 * @return An element containing the data to be put in the file
+	 */
 	public Element getConfig(int rows, int cols) {
 
 		Element configElement = myDocument.createElement("Config");
@@ -79,8 +106,17 @@ public class XMLGenerator {
 		return configElement;
 	}
 
-	public Element getGameType(String game, List<String> params){
-		
+	/**
+	 * Creates the data for the Game section of the XML file
+	 * 
+	 * @param game
+	 *            The name of the game to be simulated
+	 * @param params
+	 *            An arraylist of provided simulation parameters
+	 * @return An element containing the data to be put into the file
+	 */
+	public Element getGameType(String game, List<String> params) {
+
 		Element gameElement = myDocument.createElement("Game");
 		Element myName = myDocument.createElement("Name");
 		myName.appendChild(myDocument.createTextNode(game));
@@ -88,36 +124,61 @@ public class XMLGenerator {
 		gameElement.appendChild(myName);
 		gameElement.appendChild(myParams);
 		return gameElement;
-		
+
 	}
-	
-	public Element parametersAsElement(List<String> parameters){
-		
+
+	/**
+	 * Converts an arraylist of string parameters into a Java Element containing
+	 * the parameters
+	 * 
+	 * @param parameters
+	 *            An arraylist of simulation parameters
+	 * @return An Element to be included in the XML file containing the
+	 *         parameters
+	 */
+	public Element parametersAsElement(List<String> parameters) {
+
 		Element paramElement = myDocument.createElement("Parameters");
-		for (String param : parameters){
+		for (String param : parameters) {
 			String[] splitParam = param.split(":");
 			Element paramType = myDocument.createElement(splitParam[0]);
 			paramType.appendChild(myDocument.createTextNode(splitParam[1]));
 			paramElement.appendChild(paramType);
-		}	
+		}
 		return paramElement;
 	}
-	
-	public Element createRandomCells(int numCells, int rows, int cols, List<String> states){	
+
+	/**
+	 * Randomly generates a provided number of cells based on the provided
+	 * states and grid size
+	 * 
+	 * @param numCells
+	 *            The desired number of generated cells
+	 * @param rows
+	 *            The number of rows in the grid
+	 * @param cols
+	 *            The number of columns in the grid
+	 * @param states
+	 *            An arraylist of potential cell states
+	 * @return An Element to be included in the XML file
+	 */
+	public Element createRandomCells(int numCells, int rows, int cols, List<String> states) {
 		Element myCells = myDocument.createElement("Cells");
 		Random myRandom = new Random();
-		for (int i = 0; i < numCells; i++){		
+		for (int i = 0; i < numCells; i++) {
 			Element myCell = myDocument.createElement("Cell");
 			Element xElement = myDocument.createElement("X");
 			int x;
 			int y;
-			while (true){
+			while (true) {
 				x = myRandom.nextInt(rows);
-				if (!xLocations.contains(x)) break;
+				if (!xLocations.contains(x))
+					break;
 			}
-			while (true){
+			while (true) {
 				y = myRandom.nextInt(cols);
-				if (!yLocations.contains(y)) break;
+				if (!yLocations.contains(y))
+					break;
 			}
 			xElement.appendChild(myDocument.createTextNode("" + x));
 			Element yElement = myDocument.createElement("Y");
@@ -129,16 +190,18 @@ public class XMLGenerator {
 			myCell.appendChild(stateElement);
 			myCells.appendChild(myCell);
 		}
-		return myCells;	
+		return myCells;
 	}
 
 	public static void main(String[] args) {
 		XMLGenerator myGenerator = new XMLGenerator();
 		ArrayList<String> parameters = new ArrayList<String>();
 		ArrayList<String> states = new ArrayList<String>();
-		states.add("ALIVE");
-		states.add("DEAD");
-		myGenerator.generateFile(10, 10, "GameOfLife", parameters, states, 15);
+		states.add("EMPTY");
+		states.add("TREE");
+		states.add("BURNING");
+		parameters.add("ProbCatch:15");
+		myGenerator.generateFile(10, 10, "Fire", parameters, states, 15);
 	}
 
 }

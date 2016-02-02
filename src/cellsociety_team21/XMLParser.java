@@ -15,6 +15,12 @@ public class XMLParser {
 	private int cols;
 	private Rules myRule;
 
+	/**
+	 * Parses a provided XML file to extract the simulation data
+	 * 
+	 * @param myFile
+	 *            A provided XML file containing the simulation data
+	 */
 	public void parse(File myFile) {
 		try {
 			myFactory = DocumentBuilderFactory.newInstance();
@@ -32,14 +38,12 @@ public class XMLParser {
 						rows = Integer.parseInt(splitEntry(myConfig.get(0))[1]);
 						cols = Integer.parseInt(splitEntry(myConfig.get(1))[1]);
 						cellGrid = new String[rows][cols];
-						System.out.println(myConfig);
-						break;
-					case "Game":
-						ArrayList<String> myGame = extractGame(entryElement);
-						System.out.println(myGame);
 						break;
 					case "Cells":
 						extractCells(entryElement);
+						break;
+					case "Game":
+						extractGame(entryElement);
 						break;
 					default:
 						System.out.println("Not Configured");
@@ -51,6 +55,14 @@ public class XMLParser {
 		}
 	}
 
+	/**
+	 * Returns a string arraylist representation of the information provided in
+	 * a particular Java Element
+	 * 
+	 * @param data
+	 *            A Java Element containing the data to be extracted
+	 * @return A string arraylist containing the extracted data
+	 */
 	public ArrayList<String> extract(Element data) {
 		ArrayList<String> myConfig = new ArrayList<String>();
 		NodeList dataList = data.getChildNodes();
@@ -64,7 +76,13 @@ public class XMLParser {
 		return myConfig;
 	}
 
-	public ArrayList<String> extractGame(Element data) {
+	/**
+	 * Extract data related to the game details
+	 * 
+	 * @param data
+	 *            A Java element containing game data
+	 */
+	public void extractGame(Element data) {
 		ArrayList<String> myGame = new ArrayList<String>();
 		NodeList dataList = data.getChildNodes();
 		for (int i = 0; i < dataList.getLength(); i++) {
@@ -82,32 +100,48 @@ public class XMLParser {
 			}
 		}
 		initializeGame(myGame);
-		return myGame;
 	}
 
-	public void initializeGame(ArrayList<String> data){
+	/**
+	 * Creates a Rules object specific to the game type with the proper
+	 * parameters
+	 * 
+	 * @param data
+	 *            A string arraylist containing the data to be interpreted
+	 */
+	public void initializeGame(ArrayList<String> data) {
 		String game = splitEntry(data.get(0))[1];
-		switch(game){
-			case "Segregation":
-				int threshold = Integer.parseInt(splitEntry(data.get(1))[1]);
-				myRule = new SegregationRules(threshold);
-				break;
-			case "PredatorPrey":
-				int initialSharkEnergy = Integer.parseInt(splitEntry(data.get(1))[1]);
-				int sharkReproductionTime = Integer.parseInt(splitEntry(data.get(2))[1]);
-				int fishReproductionTime = Integer.parseInt(splitEntry(data.get(3))[1]);
-				myRule = new PredatorPreyRules(initialSharkEnergy, sharkReproductionTime, fishReproductionTime);
-				break;
-			case "GameOfLife":
-				myRule = new GameOfLifeRules();
-				break;
-			case "Fire":
-				double probCatch = Double.parseDouble(splitEntry(data.get(1))[1]);
-				myRule = new FireRules(probCatch);
-				break;
+		switch (game) {
+		case "Segregation":
+			int threshold = Integer.parseInt(splitEntry(data.get(1))[1]);
+			myRule = new SegregationRules(threshold);
+			break;
+		case "PredatorPrey":
+			int initialSharkEnergy = Integer.parseInt(splitEntry(data.get(1))[1]);
+			int sharkReproductionTime = Integer.parseInt(splitEntry(data.get(2))[1]);
+			int fishReproductionTime = Integer.parseInt(splitEntry(data.get(3))[1]);
+			myRule = new PredatorPreyRules(initialSharkEnergy, sharkReproductionTime, fishReproductionTime);
+			break;
+		case "GameOfLife":
+			myRule = new GameOfLifeRules();
+			break;
+		case "Fire":
+			double probCatch = Double.parseDouble(splitEntry(data.get(1))[1]);
+			myRule = new FireRules(probCatch);
+			break;
+		default:
+			break;
 		}
 	}
 
+	/**
+	 * Extracts the information about the cells from the XML file and configures
+	 * the cell grid accordingly
+	 * 
+	 * @param data
+	 *            A Java element containing the data about the cells from the
+	 *            XML
+	 */
 	public void extractCells(Element data) {
 		NodeList dataList = data.getChildNodes();
 		for (int i = 0; i < dataList.getLength(); i++) {
@@ -121,27 +155,61 @@ public class XMLParser {
 				cellGrid[x][y] = state;
 			}
 		}
-		System.out.println("Done");
 	}
 
+	/**
+	 * Splits a string using the : delimiter
+	 * 
+	 * @param entry
+	 *            A string to be split
+	 * @return A string array containing the split string
+	 */
 	public String[] splitEntry(String entry) {
 		String[] split = entry.split(":");
 		return split;
 	}
 
+	/**
+	 * Provides the number of rows
+	 * 
+	 * @return The number of rows
+	 */
 	public int getRows() {
 		return rows;
 	}
 
+	/**
+	 * Provides the number of columns
+	 * 
+	 * @return The number of columns
+	 */
 	public int getCols() {
 		return cols;
 	}
 
+	/**
+	 * Provides an array containing the cell states by location in a grid
+	 * 
+	 * @return The cell state grid
+	 */
 	public String[][] getGrid() {
 		return cellGrid;
 	}
-	
-	public Rules getRule(){
+
+	/**
+	 * Provides a Rules object related to the specific game type specified in
+	 * the XML
+	 * 
+	 * @return The Rules object
+	 */
+	public Rules getRule() {
 		return myRule;
+	}
+
+	public static void main(String[] args) {
+		XMLParser tester = new XMLParser();
+		tester.parse(new File("data/simulation.txt"));
+		Rules myRule = tester.getRule();
+		System.out.println("DONE");
 	}
 }
