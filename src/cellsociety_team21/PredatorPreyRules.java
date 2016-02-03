@@ -3,6 +3,8 @@ package cellsociety_team21;
 import java.util.ArrayList;
 import java.util.List;
 
+import javafx.scene.paint.Color;
+
 public class PredatorPreyRules extends Rules {
 	private int mySharkEnergy;
 	private int mySharkReproductionTime;
@@ -12,6 +14,9 @@ public class PredatorPreyRules extends Rules {
 	private static final String FISH = "FISH";
 	private static final String SHARK = "SHARK";
 	private static final String WATER = "WATER";
+	private static final Color FISHCOLOR = Color.TEAL;
+	private static final Color SHARKCOLOR = Color.GRAY;
+	private static final Color WATERCOLOR = Color.BLUE;
 	private static final int NUM_NEIGHBORS = 4;
 	
 	public PredatorPreyRules(int initialSharkEnergy, int sharkReproductionTime, int fishReproductionTime) {
@@ -219,6 +224,23 @@ public class PredatorPreyRules extends Rules {
 		}
 	}
 	
+	public Color getFill(String s){
+		switch(s){
+		case FISH:
+			return FISHCOLOR;
+		case SHARK:
+			return SHARKCOLOR;
+		case WATER:
+			return WATERCOLOR;
+		default:
+			return ERRORCOLOR;
+		}
+	}
+	
+	public String toString(){
+		return "Predator Prey";
+	}
+
 	/**
 	 * Adds a Cell to a list of options for the current Cell to move to if it is in fact a candidate for its next location.
 	 * @param cellToCheck: Cell that you want to move to.

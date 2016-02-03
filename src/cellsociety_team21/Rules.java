@@ -3,7 +3,11 @@ package cellsociety_team21;
 import java.util.ArrayList;
 import java.util.List;
 
+import javafx.scene.paint.Color;
+
 public abstract class Rules {
+
+	protected static final Color ERRORCOLOR = Color.PINK;
 	private List<Cell> toBeUpdated = new ArrayList<Cell>();
 	
 	/**
@@ -70,4 +74,14 @@ public abstract class Rules {
 	public void removeCellToBeUpdated(Cell cell) {
 		toBeUpdated.remove(cell);
 	}
+	
+	/**
+	 * 
+	 * @param State for which the fill must be generated
+	 * @return returns the fill color to be generated
+	 * Currently it returns a Color, but in the future it 
+	 * could also be an image.
+	 */
+	public abstract Color getFill(String state);
+	public abstract String toString();
 }

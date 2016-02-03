@@ -1,10 +1,15 @@
 package cellsociety_team21;
 
+import javafx.scene.paint.Color;
+
 public class FireRules extends Rules {
 	private static final int NUM_NEIGHBORS = 4;
 	private static final String EMPTY = "EMPTY";
 	private static final String TREE = "TREE";
 	private static final String BURNING = "BURNING";
+	private static final Color EMPTYCOLOR = Color.YELLOW;
+	private static final Color TREECOLOR = Color.GREEN;
+	private static final Color BURNINGCOLOR = Color.RED;
 	private double myProbCatch;
 	
 	public FireRules(double probCatch) {
@@ -95,5 +100,22 @@ public class FireRules extends Rules {
 	 */
 	private boolean cellIsBurning(Cell cell) {
 		return cell.getCurState().equals(BURNING);
+	}
+	
+	public Color getFill(String s){
+		switch(s){
+		case EMPTY:
+			return EMPTYCOLOR;
+		case TREE:
+			return TREECOLOR;
+		case BURNING:
+			return BURNINGCOLOR;
+		default:
+			return ERRORCOLOR;
+		}
+	}
+	
+	public String toString(){
+		return "Fire";
 	}
 }

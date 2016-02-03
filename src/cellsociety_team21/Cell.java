@@ -85,7 +85,6 @@ public class Cell {
 		myNextCol = col;
 	}
 	
-	
 	/**
 	 * Gets the next state of the Cell.
 	 * @return string representing the next state of the Cell.
@@ -104,5 +103,14 @@ public class Cell {
 	
 	public String toString() {
 		return "(" + myCurState + ", " + myNextState + ")";
+	}
+	
+	/**
+	 * Sets myCurState to myNextState
+	 * Sets myNextState back to null
+	 */
+	public void updateState(){
+		myCurState = myNextState;
+		myNextState = null;
 	}
 }

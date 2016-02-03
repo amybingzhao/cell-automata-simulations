@@ -97,16 +97,6 @@ public class Grid {
 		return neighborhood;
 	}
 	
-	// TODO: unsure how to render the grid
-	/*
-	public Gridpane render() {
-		return new Gridpane();
-	}*/
-	
-	/**
-	 * Gets number of rows in the Grid.
-	 * @return number of rows in the Grid.
-	 */
 	public int getNumRows() {
 		return myRows;
 	}
@@ -142,5 +132,13 @@ public class Grid {
 			sb.append("\n");
 		}
 		return sb.toString();
+	}
+	
+	public void updateEachState(){
+		for(int r = 0; r < myGrid.length; r++){
+			for(int c = 0; c < myGrid.length; c++){
+				myGrid[r][c].updateState();
+			}
+		}
 	}
 }
