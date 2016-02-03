@@ -209,7 +209,7 @@ public class Simulation {
 //			apply rules to all cells, update state
 //			applyRulesToGrid();
 
-			//temporary "state updating code" for demo purpose, DOES NOT FOLLOW RULE
+//			temporary "state updating code" for demo purpose, DOES NOT FOLLOW ANY RULE
 			for(int r = 0; r < myGrid.getNumRows(); r++){
 				for(int c = 0; c < myGrid.getNumCols(); c++){
 					switch(myGrid.getCell(r,c).getCurState()){

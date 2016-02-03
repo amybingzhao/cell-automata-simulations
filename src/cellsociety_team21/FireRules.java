@@ -16,6 +16,9 @@ public class FireRules extends Rules {
 		myProbCatch = probCatch;
 	}
 	
+	/**
+	 * Apply the rules of the Fire simulation to a Cell based on its state.
+	 */
 	@Override
 	public void applyRulesToCell(Cell cell, Grid grid) {
 		String curState = cell.getCurState();
@@ -27,26 +30,76 @@ public class FireRules extends Rules {
 		}
 	}
 
+	/**
+	 * Determine whether or not a tree Cell catches fire based on neighbors and its probability of catching fire.
+	 * @param cell: tree Cell of interest.
+	 * @param grid: Simulation grid.
+	 */
 	private void handleTreeCell(Cell cell, Grid grid) {
-		Cell[][] neighborhood = grid.getNeighborhood(cell.getRow(), cell.getCol(), NUM_NEIGHBORS);
-		if (neighborIsBurning(neighborhood)) {
-			if (Math.random() < myProbCatch) {
+		Cell[][] neighborhood = grid.getNeighborhood(cell.getCurRow(), cell.getCurCol(), NUM_NEIGHBORS);
+		if (neighborIsBurning(cell, neighborhood, grid)) {
+			double x = Math.random();
+			System.out.println("My prob catch: " + myProbCatch);
+			System.out.println("My random: " + x + "\n");
+			if (x < myProbCatch) {
 				cell.setNextState(BURNING);
 				addCellToBeUpdated(cell);
 			}
 		}
 	}
 	
+	/**
+	 * Burning Cell should become empty next round.
+	 * @param cell: burning Cell of interest.
+	 */
 	private void handleBurningCell(Cell cell) {
 		cell.setNextState(EMPTY);
 		addCellToBeUpdated(cell);
 	}
 
-	private boolean neighborIsBurning(Cell[][] neighborhood) {
-		return (neighborhood[0][1].getCurState().equals(BURNING) ||
-				neighborhood[1][0].getCurState().equals(BURNING) ||
-				neighborhood[1][2].getCurState().equals(BURNING) ||
-				neighborhood[2][1].getCurState().equals(BURNING));
+	/**
+	 * Checks if an adjacent neighbor Cell is burning.
+	 * @param cell: Cell of interest.
+	 * @param neighborhood: 3x3 array of Cells with the Cell of interest in the center and its neighbors surrounding it.
+	 * @param grid: Simulation grid.
+	 * @return true if an adjacent neighbor is burning; false if none are burning.
+	 */
+	private boolean neighborIsBurning(Cell cell, Cell[][] neighborhood, Grid grid) {
+		System.out.println(neighborhood[1][1].toString() + "\n");
+		int cellRow = cell.getCurRow();
+		int cellCol = cell.getCurCol();
+		
+		if (cellCol > 0) {
+			if (cellIsBurning(neighborhood[1][0])) {
+				return true;
+			}
+		}
+		if (cellRow > 0) {
+			if (cellIsBurning(neighborhood[0][1])) {
+				return true;
+			}
+		}
+		if (cellCol < (grid.getNumCols() - 1)) {
+			if (cellIsBurning(neighborhood[1][2])) {
+				return true;
+			}
+		}
+		if (cellRow < (grid.getNumRows() - 1)) {
+			if (cellIsBurning(neighborhood[2][1])) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Check if a Cell is burning.
+	 * @param cell: Cell to check.
+	 * @return true if Cell is burning; false otherwise.
+	 */
+	private boolean cellIsBurning(Cell cell) {
+		return cell.getCurState().equals(BURNING);
 	}
 	
 	public Color getFill(String s){
