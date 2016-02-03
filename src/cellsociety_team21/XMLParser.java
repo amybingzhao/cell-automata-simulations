@@ -113,7 +113,7 @@ public class XMLParser {
 		String game = splitEntry(data.get(0))[1];
 		switch (game) {
 		case "Segregation":
-			int threshold = Integer.parseInt(splitEntry(data.get(1))[1]);
+			double threshold = Double.parseDouble(splitEntry(data.get(1))[1]);
 			myRule = new SegregationRules(threshold);
 			break;
 		case "PredatorPrey":

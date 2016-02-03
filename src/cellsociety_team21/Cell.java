@@ -110,7 +110,9 @@ public class Cell {
 	 * Sets myNextState back to null
 	 */
 	public void updateState(){
-		myCurState = myNextState;
-		myNextState = null;
+		if (myNextState != null) {
+			myCurState = myNextState;
+			myNextState = null;
+		}
 	}
 }
