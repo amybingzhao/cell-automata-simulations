@@ -24,6 +24,12 @@ public class SegregationRules extends Rules {
 		emptyCellList = new LinkedList<Cell>();
 	}
 	
+	/**
+	 * Apply the rules of the Segregation simulation to a Cell based on its state. If the cell is the last Cell in the grid,
+	 * handle the dissatisfied Cells that could not be moved this simulation.
+	 * @param cell: Cell to apply rules to.
+	 * @param grid: Simulation grid. 
+	 */
 	@Override
 	public void applyRulesToCell(Cell cell, Grid grid) {
 		String curState = cell.getCurState();
@@ -38,6 +44,9 @@ public class SegregationRules extends Rules {
 		}
 	}
 	
+	/**
+	 * Move dissatisfied Cells to empty Cells if any are available, otherwise do not move them for this round. 
+	 */
 	private void handleUnmovedCells() {
 		while (!toBeMoved.isEmpty() && !emptyCellList.isEmpty()) {
 			Cell agentCell = toBeMoved.poll();
@@ -52,6 +61,10 @@ public class SegregationRules extends Rules {
 		}
 	}
 
+	/**
+	 * Handle empty Cells by either moving dissatisfied agent Cells into them or by adding them to a list of empty Cells.
+	 * @param cell: empty Cell that's being handled.
+	 */
 	private void handleEmptyCell(Cell cell) {
 		if (toBeMoved.size() == 0) {
 			emptyCellList.add(cell);
@@ -60,6 +73,11 @@ public class SegregationRules extends Rules {
 		}
 	}
 	
+	/**
+	 * Move dissatisfied agent Cells.
+	 * @param cell: agent Cell that's being handled.
+	 * @param grid: Simulation grid.
+	 */
 	private void handleAgentCell(Cell cell, Grid grid) {
 		Cell[][] neighborhood = grid.getNeighborhood(cell.getCurRow(), cell.getCurCol(), NUM_NEIGHBORS);
 		if (!satisfiedWithNeighbors (neighborhood)) {
@@ -68,6 +86,11 @@ public class SegregationRules extends Rules {
 		}
 	}
 
+	/**
+	 * Checks if a cell is satisfied with its neighborhood.
+	 * @param neighborhood: 3x3 array of Cells with the Cell of interest in the center and its neighbors surrounding it.
+	 * @return true if satisfied; false if dissatisfied.
+	 */
 	private boolean satisfiedWithNeighbors(Cell[][] neighborhood) {
 		int numNeighbors = 0;
 		int numSameNeighbors = 0;
