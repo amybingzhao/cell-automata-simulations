@@ -18,7 +18,7 @@ public class Main extends Application {
     public static final int HEIGHT = 600;
     public static final int BOARDSIZE = 400;
     public static final int FRAMES_PER_SECOND = 60;
-    private static final int MILLISECOND_DELAY = 1000;
+    private static final int MILLISECOND_DELAY = 500;
     private static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND; 
     
     private Simulation mySimulation;
@@ -28,13 +28,12 @@ public class Main extends Application {
      */
     @Override
     public void start (Stage s) {
-    	int gridsize = 10;
         // create your own simulation here
         mySimulation = new Simulation();
         s.setTitle(mySimulation.getTitle());
 
         // attach simulation to the stage and display it
-        Scene scene = mySimulation.init(BOARDSIZE, WIDTH, HEIGHT);
+        Scene scene = mySimulation.init(BOARDSIZE, WIDTH, HEIGHT, s);
         s.setScene(scene);
         s.show();
 

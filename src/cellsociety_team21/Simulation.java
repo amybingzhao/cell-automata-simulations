@@ -5,6 +5,7 @@ import java.util.Arrays;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -13,6 +14,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 /**
  * @author austinwu
@@ -23,13 +26,19 @@ public class Simulation {
 	public static final String TITLE = "Cell Society Simulation";
 	
 	// UI variables
+	private Stage myStage;
 	private Group boardGroup;
 	private Text titleDisplay;
+	private Text speedDisplay;
 	private int boardPixelSize;
 	private int borderPixelSize = 1;
 	private int cellPixelSize;
 	private static final int BOARDWIDTHOFFSET = 50;
 	private static final int BOARDHEIGHTOFFSET = 50;
+
+	private boolean running;
+	private int speed;
+	private int tick;
 	
 	//xml determined variables
 	private int gridwidth;
@@ -38,9 +47,6 @@ public class Simulation {
 	private Grid myGrid;
 	private Rules rules;
 	private String currentSimulation; 
-	
-	private boolean running;
-	private int speed;
 	
 	/**
 	 * Returns name of the game.
@@ -52,10 +58,13 @@ public class Simulation {
 	/**
 	 * Create the game's scene
 	 */
-	public Scene init(int ps, int ww, int wh) {
-		Group root = buildUI();
+	public Scene init(int ps, int ww, int wh, Stage s) {
+		myStage = s;
+		speed = 10;
+		tick = 0;
 		boardPixelSize = ps;
 		currentSimulation = "NONE";
+		Group root = buildUI();
 		Scene myScene = new Scene(root, ww, wh, Color.WHITE);
 		return myScene;
 	}
@@ -107,11 +116,15 @@ public class Simulation {
 	}
 	
 	private void attachFieldsToUI(Group group){
-		HBox hbox = new HBox();
+		HBox hbox = new HBox(2);
 		titleDisplay = new Text();
 		titleDisplay.setFont(new Font(15));
 		titleDisplay.setText("Current Simulation: None");
 		hbox.getChildren().add(titleDisplay);
+		speedDisplay = new Text();
+		speedDisplay.setFont(new Font(15));
+		speedDisplay.setText("    Current Speed: " + speed);
+		hbox.getChildren().add(speedDisplay);
 		hbox.setLayoutX(50);
 		hbox.setLayoutY(525);
 		group.getChildren().add(hbox);
@@ -128,18 +141,26 @@ public class Simulation {
 			running = false;
 			break;
 		case "Step":
-			if(!currentSimulation.equals("NONE")){
+			if(!currentSimulation.equals("NONE"))
 				step(0.0, true);
-			}
 			break;
 		case "Speed Up":
+			if(speed < 20)
+				speedDisplay.setText("    Current Speed: " + ++speed);
 			break;
 		case "Slow Down":
+			if(speed > 1)
+				speedDisplay.setText("    Current Speed: " + --speed);
 			break;
 		case "Load XML":
-			loadXML();
-			buildBoard();
-			displayGridToBoard();	
+			FileChooser fileChooser = new FileChooser();
+			fileChooser.setTitle("Load XML File");
+			File file = fileChooser.showOpenDialog(myStage);
+			if(file != null){
+				loadXML(file);
+				buildBoard();
+				displayGridToBoard();	
+			}
 			break;
 		}		
 	}
@@ -147,9 +168,9 @@ public class Simulation {
 	/**
 	 * Helper method that loads XML with the parser and then sets instance variables
 	 */
-	private void loadXML(){
+	private void loadXML(File file){
 		XMLParser parser = new XMLParser();
-		parser.parse(new File("data/simulation.txt"));
+		parser.parse(file);
 		String[][] inputgrid = parser.getGrid();
 		
 
@@ -204,33 +225,16 @@ public class Simulation {
 	 * Applys rules to cells, updates their states, displays new states
 	 */
 	public void step(double elapsedTime, boolean stepping) {
+		if(tick % (11 - speed) != 0){
+			tick++;
+			return;
+		}
 		if(running || stepping){
-//			System.out.println("STEPPING");
-//			apply rules to all cells, update state
-//			applyRulesToGrid();
-
-//			temporary "state updating code" for demo purpose, DOES NOT FOLLOW ANY RULE
-			for(int r = 0; r < myGrid.getNumRows(); r++){
-				for(int c = 0; c < myGrid.getNumCols(); c++){
-					switch(myGrid.getCell(r,c).getCurState()){
-					case "EMPTY":
-						myGrid.getCell(r,c).setNextState("TREE");
-						break;
-					case "TREE":
-						myGrid.getCell(r,c).setNextState("BURNING");
-						break;
-					case "BURNING":
-						myGrid.getCell(r,c).setNextState("EMPTY");
-						break;
-					default:
-						
-					}
-				}
-			}
-			
-			myGrid.updateEachState();
+			applyRulesToGrid();
+			updateEachState();
 			displayGridToBoard();	
 		}
+		tick++;
 	}
 	
 	/**
@@ -244,14 +248,14 @@ public class Simulation {
 		}
 	}
 	
-	
-	
-	/*
-	 * General flow:
-	 * 1. UI, board background loads
-	 * 2. Load XML is pressed, xml loads, board is populated with correctly quantity of correctly sized cells, show initial states
-	 * 3. Start is pressed, stepping begins
-	 * 4. For each step, apply rules, update state, display grid to board, repeat
-	 * 5. End is pressed, stepping stops.
+	/**
+	 * Helper method that updates each state that needs to be updated
+	 * Then clears the 
 	 */
+	private void updateEachState(){
+		for(Cell c: rules.getToBeUpdatedList()){
+			c.updateState();
+		}
+		rules.clearToBeUpdatedList();
+	}
 }
