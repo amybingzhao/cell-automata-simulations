@@ -1,34 +1,27 @@
 package cellsociety_team21;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javafx.scene.image.Image;
-import javafx.scene.layout.GridPane;
-
 public class Grid {
-	private static List<Cell> toBeUpdated;
 	private static int myRows;
 	private static int myCols;
 	private Cell[][] myGrid;
 	
-	/* 
+	/**
 	 * Sets the rules, possible states, grid size, and initial states for the current simulation.
-	 * @param: rows is the number of rows for the specific simulation, as determined by the XMLParser.
-	 * @param: cols is the number of columns for the specific simulation, as determined by the XMLParser.
-	 * @param: initialStates is the initialStates for the specific simulation, as determined by the XMLParser, with
+	 * @param rows: the number of rows for the specific simulation, as determined by the XMLParser.
+	 * @param cols: the number of columns for the specific simulation, as determined by the XMLParser.
+	 * @param initialStates: the initialStates for the specific simulation, as determined by the XMLParser, with
 	 * each state denoted by an integer. initialStates' size should match that of the Grid.
 	 */
 	public Grid(int rows, int cols, String[][] initialStates) {
-		toBeUpdated = new ArrayList<Cell>();
 		myRows = rows;
 		myCols = cols;
 		myGrid = new Cell[myRows][myCols];
 		init(initialStates);
 	}
 	
-	/*
+	/**
 	 * Initializes the states of each cell in the grid based on XML info.
+	 * @param initialStates: String array representing the initial states of each Cell in the array.
 	 */
 	private void init(String[][] initialStates) {
 		for (int row = 0; row < getNumRows(); row++) {
@@ -39,11 +32,11 @@ public class Grid {
 		}
 	}
 	
-	/*
+	/**
 	 * Returns all neighbors of a given Cell and the Cell itself in their relative orientation.
-	 * @param: r is the row of the Cell whose neighborhood is of interest.
-	 * @param: c is the column o the Cell whose neighborhood is of interest.
-	 * @param: numNeighbors is the number of neighbors of interest for the simulation (4 or 8).
+	 * @param r: the row of the Cell whose neighborhood is of interest.
+	 * @param c: the column o the Cell whose neighborhood is of interest.
+	 * @param numNeighbors: the number of neighbors of interest for the simulation (4 or 8).
 	 */
 	public Cell[][] getNeighborhood(int row, int col, int numNeighbors) {
 		Cell[][] neighborhood = new Cell[3][3];
@@ -106,26 +99,39 @@ public class Grid {
 	
 	// TODO: unsure how to render the grid
 	/*
-	public Image render() {
-		return new Image();
+	public Gridpane render() {
+		return new Gridpane();
 	}*/
 	
+	/**
+	 * Gets number of rows in the Grid.
+	 * @return number of rows in the Grid.
+	 */
 	public int getNumRows() {
 		return myRows;
 	}
 	
+	/**
+	 * Gets number of columns in the Grid.
+	 * @return number of columns in the Grid.
+	 */
 	public int getNumCols() {
 		return myCols;
 	}
 	
-	public List getToBeUpdatedList() {
-		return toBeUpdated;
-	}
-	
+	/**
+	 * Gets the Cell at a specific location within the Grid.
+	 * @param row: row of the Cell of interest.
+	 * @param col: column of the Cell of interest.
+	 * @return Cell at [row, col] of the Grid.
+	 */
 	public Cell getCell(int row, int col) {
 		return myGrid[row][col];
 	}
 	
+	/**
+	 * Returns a representation of the Cells in the Grid.
+	 */
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		for (int row = 0; row < myRows; row++) {
