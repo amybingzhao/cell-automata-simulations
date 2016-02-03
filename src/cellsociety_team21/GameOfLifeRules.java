@@ -8,7 +8,7 @@ public class GameOfLifeRules extends Rules {
 	private static final int MY_CELL_COL = 1;
 	
 	/**
-	 * Apply the rules of the Game of Life simulation to each Cell based on its state.
+	 * Apply the rules of the Game of Life simulation to a Cell based on its state.
 	 */
 	@Override
 	public void applyRulesToCell(Cell cell, Grid grid) {

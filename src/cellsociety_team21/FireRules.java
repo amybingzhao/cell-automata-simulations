@@ -12,7 +12,7 @@ public class FireRules extends Rules {
 	}
 	
 	/**
-	 * Apply the rules of the Fire simulation to each Cell based on its state.
+	 * Apply the rules of the Fire simulation to a Cell based on its state.
 	 */
 	@Override
 	public void applyRulesToCell(Cell cell, Grid grid) {

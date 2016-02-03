@@ -25,7 +25,7 @@ public class SegregationRules extends Rules {
 	}
 	
 	/**
-	 * Apply the rules of the Segregation simulation to each Cell based on its state. If the cell is the last Cell in the grid,
+	 * Apply the rules of the Segregation simulation to a Cell based on its state. If the cell is the last Cell in the grid,
 	 * handle the dissatisfied Cells that could not be moved this simulation.
 	 * @param cell: Cell to apply rules to.
 	 * @param grid: Simulation grid. 
