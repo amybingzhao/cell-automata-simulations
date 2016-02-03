@@ -11,6 +11,9 @@ public class FireRules extends Rules {
 		myProbCatch = probCatch;
 	}
 	
+	/**
+	 * Apply the rules of the Fire simulation to each Cell based on its state.
+	 */
 	@Override
 	public void applyRulesToCell(Cell cell, Grid grid) {
 		String curState = cell.getCurState();
@@ -22,6 +25,11 @@ public class FireRules extends Rules {
 		}
 	}
 
+	/**
+	 * Determine whether or not a tree Cell catches fire based on neighbors and its probability of catching fire.
+	 * @param cell: tree Cell of interest.
+	 * @param grid: Simulation grid.
+	 */
 	private void handleTreeCell(Cell cell, Grid grid) {
 		Cell[][] neighborhood = grid.getNeighborhood(cell.getCurRow(), cell.getCurCol(), NUM_NEIGHBORS);
 		if (neighborIsBurning(cell, neighborhood, grid)) {
@@ -35,11 +43,22 @@ public class FireRules extends Rules {
 		}
 	}
 	
+	/**
+	 * Burning Cell should become empty next round.
+	 * @param cell: burning Cell of interest.
+	 */
 	private void handleBurningCell(Cell cell) {
 		cell.setNextState(EMPTY);
 		addCellToBeUpdated(cell);
 	}
 
+	/**
+	 * Checks if an adjacent neighbor Cell is burning.
+	 * @param cell: Cell of interest.
+	 * @param neighborhood: 3x3 array of Cells with the Cell of interest in the center and its neighbors surrounding it.
+	 * @param grid: Simulation grid.
+	 * @return true if an adjacent neighbor is burning; false if none are burning.
+	 */
 	private boolean neighborIsBurning(Cell cell, Cell[][] neighborhood, Grid grid) {
 		System.out.println(neighborhood[1][1].toString() + "\n");
 		int cellRow = cell.getCurRow();
@@ -69,6 +88,11 @@ public class FireRules extends Rules {
 		return false;
 	}
 	
+	/**
+	 * Check if a Cell is burning.
+	 * @param cell: Cell to check.
+	 * @return true if Cell is burning; false otherwise.
+	 */
 	private boolean cellIsBurning(Cell cell) {
 		return cell.getCurState().equals(BURNING);
 	}
