@@ -76,6 +76,13 @@ public abstract class Rules {
 	}
 	
 	/**
+	 * Clears the "toBeUpdated" list.
+	 */
+	public void clearToBeUpdatedList(){
+		toBeUpdated.clear();
+	}
+	
+	/**
 	 * 
 	 * @param State for which the fill must be generated
 	 * @return returns the fill color to be generated
@@ -83,5 +90,9 @@ public abstract class Rules {
 	 * could also be an image.
 	 */
 	public abstract Color getFill(String state);
+	
+	/**
+	 * Returns string name of the Simulation
+	 */
 	public abstract String toString();
 }
