@@ -73,6 +73,7 @@ public class PredatorPreyRules extends Rules {
 			mySharkEnergy--;
 			if (noMoreEnergy(cell)) {
 				cell.setNextState(WATER);
+				addCellToBeUpdated(cell);
 			} else {
 				Cell nextLocation = cellToMoveTo(neighborhood, WATER);
 				if (nextLocation != null) {
@@ -81,6 +82,9 @@ public class PredatorPreyRules extends Rules {
 				}
 			}
 		}
+		
+		System.out.println("handled shark cell:");
+		System.out.println("energy left: " + mySharkEnergy);
 	}
 	
 	private boolean noMoreEnergy(Cell cell) {
@@ -92,13 +96,15 @@ public class PredatorPreyRules extends Rules {
 			undoFishMove(fishToEat, grid);
 		}
 		
-		fishToEat.setCurState(WATER);
-		switchCells(fishToEat, curShark);
+		fishToEat.setNextState(SHARK);
+		curShark.setNextState(WATER);
+		addCellToBeUpdated(fishToEat);
+		addCellToBeUpdated(curShark);
 	}
 	
 	private void undoFishMove(Cell fishToEat, Grid grid) {
 		Cell fishNextLocation = grid.getCell(fishToEat.getNextRow(), fishToEat.getNextCol());
-		fishNextLocation.setNextState(WATER);
+		fishNextLocation.setNextState(null);
 		removeCellToBeUpdated(fishNextLocation);
 	}
 
@@ -134,7 +140,7 @@ public class PredatorPreyRules extends Rules {
 	}
 
 	private int generateRandom(int max) {
-		return (int) Math.round(Math.random() * max);
+		return (int) Math.round(Math.random() * (max-1));
 	}
 	
 	private Cell cellToMoveTo(Cell[][] neighborhood, String stateToMoveTo) {
@@ -158,7 +164,7 @@ public class PredatorPreyRules extends Rules {
 		}
 	}
 	private boolean canMoveTo(Cell cellToCheck, String stateToMoveTo) {
-		if (cellToCheck == null) {
+		if (cellToCheck == null || cellToCheck.getNextState() == FISH) {
 			return false;
 		} else {
 			return cellToCheck.getCurState().equals(stateToMoveTo);
