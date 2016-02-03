@@ -63,20 +63,25 @@ public class PredatorPreyRules extends Rules {
 	}
 
 	/**
-	 * Try to move fish if possible.
+	 * Try to move fish if possible. If the fish has already been eaten by a shark then do nothing.
 	 * @param cell: fish Cell of interest.
 	 * @param grid: Simulation grid.
 	 */
 	private void handleFishCell(Cell cell, Grid grid) {
-		Cell[][] neighborhood = grid.getNeighborhood(cell.getCurRow(), cell.getCurCol(), NUM_NEIGHBORS);
-		Cell nextLocation = cellToMoveTo(neighborhood, WATER);
-		
-		if (nextLocation != null) {
-			switchCells(cell, nextLocation);
-			checkForReproduction(cell);
+		if (!fishHasAlreadyBeenEaten(cell)) {
+			Cell[][] neighborhood = grid.getNeighborhood(cell.getCurRow(), cell.getCurCol(), NUM_NEIGHBORS);
+			Cell nextLocation = cellToMoveTo(neighborhood, WATER);
+
+			if (nextLocation != null) {
+				switchCells(cell, nextLocation);
+				checkForReproduction(cell);
+			}
 		}
 	}
 
+	private boolean fishHasAlreadyBeenEaten(Cell fish) {
+		return (fish.getNextState() == SHARK);
+	}
 	/**
 	 * Try to eat a fish, otherwise try to move the shark.
 	 * @param cell: shark Cell of interest.
@@ -128,6 +133,9 @@ public class PredatorPreyRules extends Rules {
 			undoFishMove(fishToEat, grid);
 		}
 		
+		System.out.println(fishToEat.getCurRow());
+		System.out.println(fishToEat.getCurCol())
+		;
 		fishToEat.setNextState(SHARK);
 		curShark.setNextState(WATER);
 		addCellToBeUpdated(fishToEat);
@@ -157,7 +165,7 @@ public class PredatorPreyRules extends Rules {
 		int sharkRow = shark.getCurRow();
 		int sharkCol = shark.getCurCol();
 		
-		return ((fishRow < sharkRow) || (fishRow == sharkRow && fishCol < sharkCol));
+		return ((fishRow < sharkRow) || (fishRow == sharkRow && fishCol < sharkCol)) && (fish.getNextRow() != -1 && fish.getNextCol() != -1);
 	}
 	
 	/**
