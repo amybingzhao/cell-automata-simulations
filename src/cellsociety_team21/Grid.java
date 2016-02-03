@@ -31,10 +31,10 @@ public class Grid {
 	 * Initializes the states of each cell in the grid based on XML info.
 	 */
 	private void init(String[][] initialStates) {
-		for (int r = 0; r < getNumRows(); r++) {
-			for (int c = 0; c < getNumCols(); c++) {
-				Cell cell = new Cell(initialStates[r][c], r, c);
-				myGrid[r][c] = cell;
+		for (int row = 0; row < getNumRows(); row++) {
+			for (int col = 0; col < getNumCols(); col++) {
+				Cell cell = new Cell(initialStates[row][col], row, col);
+				myGrid[row][col] = cell;
 			}
 		}
 	}
@@ -45,57 +45,57 @@ public class Grid {
 	 * @param: c is the column o the Cell whose neighborhood is of interest.
 	 * @param: numNeighbors is the number of neighbors of interest for the simulation (4 or 8).
 	 */
-	public Cell[][] getNeighborhood(int r, int c, int numNeighbors) {
+	public Cell[][] getNeighborhood(int row, int col, int numNeighbors) {
 		Cell[][] neighborhood = new Cell[3][3];
-		neighborhood[1][1] = myGrid[r][c];
+		neighborhood[1][1] = myGrid[row][col];
 		int numRows = getNumRows();
 		int numCols = getNumCols();
 		
-		if (r - 1 >= 0) {
-			neighborhood[0][1] = myGrid[r-1][c];
+		if (row - 1 >= 0) {
+			neighborhood[0][1] = myGrid[row-1][col];
 		} else {
 			neighborhood[0][1] = null;
 		}
 		
-		if (r + 1 < numRows) {
-			neighborhood[2][1] = myGrid[r+1][c];
+		if (row + 1 < numRows) {
+			neighborhood[2][1] = myGrid[row+1][col];
 		} else {
 			neighborhood[2][1] = null;
 		}
 		
-		if (c - 1 >= 0) {
-			neighborhood[1][0] = myGrid[r][c-1];
+		if (col - 1 >= 0) {
+			neighborhood[1][0] = myGrid[row][col-1];
 		} else {
 			neighborhood[1][0] = null;
 		}
 		
-		if (c + 1 < numCols) {
-			neighborhood[1][2] = myGrid[r][c+1];
+		if (col + 1 < numCols) {
+			neighborhood[1][2] = myGrid[row][col+1];
 		} else {
 			neighborhood[1][2] = null;
 		}
 		
 		if (numNeighbors == 8) {
-			if (r - 1 >= 0) {
-				if (c - 1 >= 0) {
-					neighborhood[0][0] = myGrid[r-1][c-1];
+			if (row - 1 >= 0) {
+				if (col - 1 >= 0) {
+					neighborhood[0][0] = myGrid[row-1][col-1];
 				} else {
 					neighborhood[0][0] = null;
 				}
-				if (c + 1 < numCols) {
-					neighborhood[0][2] = myGrid[r-1][c+1];
+				if (col + 1 < numCols) {
+					neighborhood[0][2] = myGrid[row-1][col+1];
 				} else {
 					neighborhood[0][2] = null;
 				}
 			}
-			if (r + 1 < numRows) {
-				if (c - 1 >= 0) {
-					neighborhood[2][0] = myGrid[r+1][c-1];
+			if (row + 1 < numRows) {
+				if (col - 1 >= 0) {
+					neighborhood[2][0] = myGrid[row+1][col-1];
 				} else {
 					neighborhood[2][0] = null;
 				}
-				if (c + 1 < numCols) {
-					neighborhood[2][2] = myGrid[r+1][c+1];
+				if (col + 1 < numCols) {
+					neighborhood[2][2] = myGrid[row+1][col+1];
 				} else {
 					neighborhood[2][2] = null;
 				}
@@ -122,7 +122,19 @@ public class Grid {
 		return toBeUpdated;
 	}
 	
-	public Cell getCell(int r, int c) {
-		return myGrid[r][c];
+	public Cell getCell(int row, int col) {
+		return myGrid[row][col];
+	}
+	
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		for (int row = 0; row < myRows; row++) {
+			for (int col = 0; col < myCols; col++) {
+				sb.append(myGrid[row][col].toString());
+				sb.append(" ");
+			}
+			sb.append("\n");
+		}
+		return sb.toString();
 	}
 }

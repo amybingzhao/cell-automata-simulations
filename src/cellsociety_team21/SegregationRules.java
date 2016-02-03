@@ -1,6 +1,7 @@
 package cellsociety_team21;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
@@ -14,13 +15,13 @@ public class SegregationRules extends Rules {
 	private static final int MY_CELL_ROW = 1;
 	private static final int MY_CELL_COL = 1;
 	private Queue<Cell> toBeMoved;
-	private List<Cell> emptyCellList;
+	private Queue<Cell> emptyCellList;
 	private double myThreshold;
 	
 	public SegregationRules(double thresh) {
 		myThreshold = thresh;
-		toBeMoved = new PriorityQueue<Cell>();
-		emptyCellList = new ArrayList<Cell>();
+		toBeMoved = new LinkedList<Cell>();
+		emptyCellList = new LinkedList<Cell>();
 	}
 	
 	@Override
@@ -31,9 +32,26 @@ public class SegregationRules extends Rules {
 			handleEmptyCell(cell);
 		} else {
 			handleAgentCell(cell, grid);
+			if ((cell.getCurRow() == (grid.getNumRows() - 1)) && (cell.getCurCol() == (grid.getNumCols() - 1))) {
+				handleUnmovedCells();
+			}
 		}
 	}
 	
+	private void handleUnmovedCells() {
+		while (!toBeMoved.isEmpty() && !emptyCellList.isEmpty()) {
+			Cell agentCell = toBeMoved.poll();
+			Cell emptyCell = emptyCellList.poll();
+			switchCells(agentCell, emptyCell);
+		}
+		
+		while (!toBeMoved.isEmpty()) {
+			Cell cell = toBeMoved.poll();
+			cell.setNextState(null);
+			removeCellToBeUpdated(cell);
+		}
+	}
+
 	private void handleEmptyCell(Cell cell) {
 		if (toBeMoved.size() == 0) {
 			emptyCellList.add(cell);
@@ -43,7 +61,7 @@ public class SegregationRules extends Rules {
 	}
 	
 	private void handleAgentCell(Cell cell, Grid grid) {
-		Cell[][] neighborhood = grid.getNeighborhood(cell.getRow(), cell.getCol(), NUM_NEIGHBORS);
+		Cell[][] neighborhood = grid.getNeighborhood(cell.getCurRow(), cell.getCurCol(), NUM_NEIGHBORS);
 		if (!satisfiedWithNeighbors (neighborhood)) {
 			cell.setNextState(EMPTY);
 			toBeMoved.add(cell);
@@ -55,18 +73,27 @@ public class SegregationRules extends Rules {
 		int numSameNeighbors = 0;
 		String myCellState = neighborhood[MY_CELL_ROW][MY_CELL_COL].getCurState();
 		
-		for (int r = 0; r < neighborhood.length; r++) {
-			for (int c = 0; c < neighborhood[r].length; c++) {
-				if (neighborhood[r][c] != null) {
-					if (r != MY_CELL_ROW || c != MY_CELL_COL) {
-						numNeighbors++;
-						if (neighborhood[r][c].getCurState().equals(myCellState)) {
-							numSameNeighbors++;
+		for (int row = 0; row < neighborhood.length; row++) {
+			for (int col = 0; col < neighborhood[row].length; col++) {
+				if (neighborhood[row][col] != null) {
+					if (row != MY_CELL_ROW || col != MY_CELL_COL) {
+						String neighborState = neighborhood[row][col].getCurState();
+						if (!neighborState.equals(EMPTY)) {
+							numNeighbors++;
+							if (neighborhood[row][col].getCurState().equals(myCellState)) {
+								numSameNeighbors++;
+							}
 						}
 					}
 				}
 			}
 		}
-		return (((double) numSameNeighbors)/((double) numNeighbors) >= myThreshold);
+		System.out.println("numNeighbors: " + numNeighbors);
+		System.out.println("numSameNeighbors: " + numSameNeighbors);
+
+		System.out.println(((((double) numSameNeighbors)/((double) numNeighbors) >= myThreshold) || numNeighbors == 0));
+		System.out.println();
+		
+		return ((((double) numSameNeighbors)/((double) numNeighbors) >= myThreshold) || numNeighbors == 0);
 	}
 }
