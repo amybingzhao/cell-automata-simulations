@@ -1,6 +1,6 @@
 package cellsociety_team21;
 
-public class Cell {
+public abstract class Cell {
 	private String myCurState;
 	private String myNextState;
 	private int myCurRow;

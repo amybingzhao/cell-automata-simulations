@@ -186,6 +186,7 @@ public class Simulation {
 		cellPixelSize = (boardPixelSize / Math.max(gridwidth, gridheight)) - 2 * borderPixelSize;
 		myGrid = new Grid(gridwidth, gridheight, inputgrid);
 		rules = parser.getRules(); 
+		rules.initGrid(myGrid, inputgrid);
 		currentSimulation = rules.toString();
 		titleDisplay.setText("Current Simulation: " + currentSimulation);
 	}
@@ -253,6 +254,7 @@ public class Simulation {
 	 * Then clears the 
 	 */
 	private void updateEachState(){
+		System.out.println(rules.getToBeUpdatedList());
 		for(Cell c: rules.getToBeUpdatedList()){
 			c.updateState();
 		}

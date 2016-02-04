@@ -16,20 +16,24 @@ public class Grid {
 		myRows = rows;
 		myCols = cols;
 		myGrid = new Cell[myRows][myCols];
-		init(initialStates);
+		//init(initialStates);
 	}
 	
 	/**
 	 * Initializes the states of each cell in the grid based on XML info.
 	 * @param initialStates: String array representing the initial states of each Cell in the array.
 	 */
-	private void init(String[][] initialStates) {
+	/*private void init(String[][] initialStates) {
 		for (int row = 0; row < getNumRows(); row++) {
 			for (int col = 0; col < getNumCols(); col++) {
 				Cell cell = new Cell(initialStates[row][col], row, col);
 				myGrid[row][col] = cell;
 			}
 		}
+	}
+	*/
+	public void addCellToGrid(int row, int col, Cell cell) {
+		myGrid[row][col] = cell;
 	}
 	
 	/**
