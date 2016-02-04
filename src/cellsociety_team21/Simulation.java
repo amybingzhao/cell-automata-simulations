@@ -153,6 +153,7 @@ public class Simulation {
 				speedDisplay.setText("    Current Speed: " + --speed);
 			break;
 		case "Load XML":
+			running = false;
 			FileChooser fileChooser = new FileChooser();
 			fileChooser.setTitle("Load XML File");
 			File file = fileChooser.showOpenDialog(myStage);
@@ -162,8 +163,9 @@ public class Simulation {
 				displayGridToBoard();	
 			}
 			break;
-		}		
+		}	
 	}
+	
 	
 	/**
 	 * Helper method that loads XML with the parser and then sets instance variables
@@ -194,6 +196,7 @@ public class Simulation {
 	 * builds board by adding rectangles, with the size and quantity based on xml input
 	 */
 	private void buildBoard(){
+		boardGroup.getChildren().clear();
 		myBoard = new Rectangle[gridwidth][gridheight];
 		for (int r = 0; r < myGrid.getNumRows(); r++) {
 			for (int c = 0; c < myGrid.getNumCols(); c++) {
