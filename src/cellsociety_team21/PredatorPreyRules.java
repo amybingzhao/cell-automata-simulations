@@ -6,7 +6,7 @@ import java.util.List;
 import javafx.scene.paint.Color;
 
 public class PredatorPreyRules extends Rules {
-	private int mySharkEnergy;
+	private int myInitialSharkEnergy;
 	private int mySharkReproductionTime;
 	private int myFishReproductionTime;
 	private int myInitSharkReproductionTime;
@@ -20,18 +20,17 @@ public class PredatorPreyRules extends Rules {
 	private static final int NUM_NEIGHBORS = 4;
 	
 	public PredatorPreyRules(int initialSharkEnergy, int sharkReproductionTime, int fishReproductionTime) {
-		mySharkEnergy = initialSharkEnergy;
 		mySharkReproductionTime = sharkReproductionTime;
 		myFishReproductionTime = fishReproductionTime;
 		myInitSharkReproductionTime = sharkReproductionTime;
 		myInitFishReproductionTime = fishReproductionTime;
+		myInitialSharkEnergy = initialSharkEnergy;
 	}
 	
 	/**
 	 * Apply the rules of the Predator-Prey simulation to a Cell based on its state.
 	 */
-	@Override
-	public void applyRulesToCell(Cell cell, Grid grid) {
+	public void applyRulesToCell(PredatorPreyCell cell, Grid grid) {
 		String curState = cell.getCurState();
 		
 		if (cell.getCurRow() == grid.getNumRows() - 1 && cell.getCurCol() == grid.getNumCols() - 1) {
@@ -67,7 +66,7 @@ public class PredatorPreyRules extends Rules {
 	 * @param cell: fish Cell of interest.
 	 * @param grid: Simulation grid.
 	 */
-	private void handleFishCell(Cell cell, Grid grid) {
+	private void handleFishCell(PredatorPreyCell cell, Grid grid) {
 		if (!fishHasAlreadyBeenEaten(cell)) {
 			Cell[][] neighborhood = grid.getNeighborhood(cell.getCurRow(), cell.getCurCol(), NUM_NEIGHBORS);
 			Cell nextLocation = cellToMoveTo(neighborhood, WATER);
@@ -87,17 +86,18 @@ public class PredatorPreyRules extends Rules {
 	 * @param cell: shark Cell of interest.
 	 * @param grid: Simulation grid.
 	 */
-	private void handleSharkCell(Cell cell, Grid grid) {
+	private void handleSharkCell(PredatorPreyCell cell, Grid grid) {
 		Cell[][] neighborhood = grid.getNeighborhood(cell.getCurRow(), cell.getCurCol(), NUM_NEIGHBORS);
 		
 		Cell fishToEat = cellToMoveTo(neighborhood, FISH);
 		if (fishToEat != null) {
 			eatFish(fishToEat, cell, grid);
 			checkForReproduction(cell);
-			mySharkEnergy++;
+			//mySharkEnergy++;
+			cell.increaseEnergy();
 		} else {
 			if (noMoreEnergy(cell)) {
-				cell.setNextState(WATER);
+				cell.sharkDies();
 				addCellToBeUpdated(cell);
 			} else {
 				Cell nextLocation = cellToMoveTo(neighborhood, WATER);
@@ -105,12 +105,12 @@ public class PredatorPreyRules extends Rules {
 					switchCells(cell, nextLocation);
 					checkForReproduction(cell);
 				}
+				cell.decreaseEnergy();
 			}
-			mySharkEnergy--;
 		}
 		
 		System.out.println("handled shark cell:");
-		System.out.println("energy left: " + mySharkEnergy);
+		System.out.println("energy left: " + cell.getSharkEnergy());
 	}
 	
 	/**
@@ -118,8 +118,8 @@ public class PredatorPreyRules extends Rules {
 	 * @param cell: shark Cell of interest.
 	 * @return true if shark has no more energy; false otherwise.
 	 */
-	private boolean noMoreEnergy(Cell cell) {
-		return mySharkEnergy == 0;
+	private boolean noMoreEnergy(PredatorPreyCell cell) {
+		return cell.getSharkEnergy() == 0;
 	}
 
 	/**
@@ -172,7 +172,7 @@ public class PredatorPreyRules extends Rules {
 	 * Check if Cell can reproduce based on state.
 	 * @param cell: Cell to check for reproduction.
 	 */
-	private void checkForReproduction(Cell cell) {
+	private void checkForReproduction(PredatorPreyCell cell) {
 		switch (cell.getCurState()) {
 			case FISH:
 				if (fishCanReproduce()) {
@@ -181,7 +181,7 @@ public class PredatorPreyRules extends Rules {
 				break;
 			case SHARK:
 				if (sharkCanReproduce()) {
-					cell.setNextState(SHARK);
+					cell.initShark();
 				}
 		}
 	}
@@ -273,5 +273,16 @@ public class PredatorPreyRules extends Rules {
 		} else {
 			return cellToCheck.getCurState().equals(stateToMoveTo);
 		}
+	}
+
+	@Override
+	protected Cell createCell(String initialState, int row, int col) {
+		return new PredatorPreyCell(initialState, row, col, myInitialSharkEnergy);
+	}
+
+	@Override
+	public void applyRulesToCell(Cell cell, Grid grid) {
+		// TODO Auto-generated method stub
+		applyRulesToCell(cell, grid);
 	}
 }
