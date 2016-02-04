@@ -1,6 +1,7 @@
 package cellsociety_team21;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
@@ -16,15 +17,16 @@ public class SegregationRules extends Rules {
 	private static final String BLUE = "BLUE";
 	private static final Color REDCOLOR = Color.RED;
 	private static final Color BLUECOLOR = Color.BLUE;
+	private static final Color EMPTYCOLOR = Color.WHITE;
 	private static final int MY_CELL_ROW = 1;
 	private static final int MY_CELL_COL = 1;
-	private Queue<Cell> toBeMoved;
+	private ArrayList<Cell> toBeMoved;
 	private Queue<Cell> emptyCellList;
 	private double myThreshold;
 	
 	public SegregationRules(double thresh) {
 		myThreshold = thresh;
-		toBeMoved = new LinkedList<Cell>();
+		toBeMoved = new ArrayList<Cell>();
 		emptyCellList = new LinkedList<Cell>();
 	}
 	
@@ -37,14 +39,13 @@ public class SegregationRules extends Rules {
 	@Override
 	public void applyRulesToCell(Cell cell, Grid grid) {
 		String curState = cell.getCurState();
-		
 		if (curState.equals(EMPTY)) {
 			handleEmptyCell(cell);
 		} else {
 			handleAgentCell(cell, grid);
-			if ((cell.getCurRow() == (grid.getNumRows() - 1)) && (cell.getCurCol() == (grid.getNumCols() - 1))) {
-				handleUnmovedCells();
-			}
+		}
+		if ((cell.getCurRow() == (grid.getNumRows() - 1)) && (cell.getCurCol() == (grid.getNumCols() - 1))) {
+			handleUnmovedCells();
 		}
 	}
 	
@@ -52,16 +53,22 @@ public class SegregationRules extends Rules {
 	 * Move dissatisfied Cells to empty Cells if any are available, otherwise do not move them for this round. 
 	 */
 	private void handleUnmovedCells() {
-		while (!toBeMoved.isEmpty() && !emptyCellList.isEmpty()) {
-			Cell agentCell = toBeMoved.poll();
+		Collections.shuffle(toBeMoved);
+		while (toBeMoved.size() > 0 && !emptyCellList.isEmpty()) {
+			Cell agentCell = toBeMoved.get(0);
+			toBeMoved.remove(0);
 			Cell emptyCell = emptyCellList.poll();
 			switchCells(agentCell, emptyCell);
+			System.out.println();
 		}
 		
 		while (!toBeMoved.isEmpty()) {
-			Cell cell = toBeMoved.poll();
-			cell.setNextState(null);
-			removeCellToBeUpdated(cell);
+			Cell cell = toBeMoved.get(0);
+			toBeMoved.remove(0);
+		}
+		
+		while (!emptyCellList.isEmpty()){
+			emptyCellList.poll();
 		}
 	}
 
@@ -70,11 +77,7 @@ public class SegregationRules extends Rules {
 	 * @param cell: empty Cell that's being handled.
 	 */
 	private void handleEmptyCell(Cell cell) {
-		if (toBeMoved.size() == 0) {
-			emptyCellList.add(cell);
-		} else {
-			switchCells(cell, toBeMoved.poll());
-		}
+		emptyCellList.add(cell);
 	}
 	
 	/**
@@ -85,7 +88,6 @@ public class SegregationRules extends Rules {
 	private void handleAgentCell(Cell cell, Grid grid) {
 		Cell[][] neighborhood = grid.getNeighborhood(cell.getCurRow(), cell.getCurCol(), NUM_NEIGHBORS);
 		if (!satisfiedWithNeighbors (neighborhood)) {
-			cell.setNextState(EMPTY);
 			toBeMoved.add(cell);
 		}
 	}
@@ -129,6 +131,8 @@ public class SegregationRules extends Rules {
 			return BLUECOLOR;
 		case RED:
 			return REDCOLOR;
+		case EMPTY:
+			return EMPTYCOLOR;
 		default:
 			return ERRORCOLOR;
 		}
