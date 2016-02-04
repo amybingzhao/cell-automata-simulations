@@ -123,6 +123,7 @@ public class SegregationRules extends Rules {
 		
 		return ((((double) numSameNeighbors)/((double) numNeighbors) >= myThreshold) || numNeighbors == 0);
 	}
+	
 	public Color getFill(String s){
 		switch(s){
 		case BLUE:
@@ -136,5 +137,10 @@ public class SegregationRules extends Rules {
 	
 	public String toString(){
 		return "Segregation";
+	}
+
+	@Override
+	protected Cell createCell(String initialState, int row, int col) {
+		return new StandardCell(initialState, row, col);
 	}
 }

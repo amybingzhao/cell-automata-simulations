@@ -118,4 +118,9 @@ public class FireRules extends Rules {
 	public String toString(){
 		return "Fire";
 	}
+
+	@Override
+	protected Cell createCell(String initialState, int row, int col) {
+		return new StandardCell(initialState, row, col);
+	}
 }

@@ -89,4 +89,9 @@ public class GameOfLifeRules extends Rules {
 		return "Game of Life";
 	}
 
+	@Override
+	protected Cell createCell(String initialState, int row, int col) {
+		return new StandardCell(initialState, row, col);
+	}
+
 }
