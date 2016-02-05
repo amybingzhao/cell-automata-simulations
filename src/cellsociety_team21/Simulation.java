@@ -43,6 +43,7 @@ public class Simulation {
 	//xml determined variables
 	private int myGridWidth;
 	private int myGridHeight;
+	private File xmlFile;
 	private Rectangle[][] myBoard;
 	private Grid myGrid;
 	private Rules myRules;
@@ -99,21 +100,36 @@ public class Simulation {
 	 * Attach buttons to the UI display.
 	 */
 	private void attachButtonsToUI(Group group){
-		String[] buttons = {"Start", "Stop", "Step", "Speed Up", "Slow Down", "Load XML"}; 
-		HBox hbox = new HBox(2);
-		for(int i = 0; i < buttons.length; i++){
-			Button button = new Button(buttons[i]);
-			button.setOnAction(new EventHandler<ActionEvent>() {
-			    @Override public void handle(ActionEvent e) {
-			        respondToButton(e.toString().split("'")[1]);
-			    }
-			});
-			hbox.getChildren().add(button);
+		String[] firstrow = {"Start", "Stop", "Step", "Load XML"};
+		String[] secondrow= {"Speed Up", "Slow Down", "Restart"};
+		HBox hbox1 = new HBox(firstrow.length);
+		HBox hbox2 = new HBox(secondrow.length);
+		for(int i = 0; i < firstrow.length; i++){
+			addButtonToHbox(firstrow[i], hbox1);
 		}
-		hbox.setMaxWidth(400);
-		hbox.setLayoutX(50);
-		hbox.setLayoutY(475);
-		group.getChildren().add(hbox);
+		for(int i = 0; i < secondrow.length; i++){
+			addButtonToHbox(secondrow[i], hbox2);
+		}
+		hbox1.setMaxWidth(400);
+		hbox1.setLayoutX(50);
+		hbox1.setLayoutY(460);
+		hbox2.setMaxWidth(400);
+		hbox2.setLayoutX(50);
+		hbox2.setLayoutY(490);
+		
+		group.getChildren().add(hbox1);
+		group.getChildren().add(hbox2);
+	}
+	
+	private Button addButtonToHbox(String name, HBox hbox){
+		Button button = new Button(name);
+		button.setOnAction(new EventHandler<ActionEvent>() {
+		    @Override public void handle(ActionEvent e) {
+		        respondToButton(e.toString().split("'")[1]);
+		    }
+		});
+		hbox.getChildren().add(button);
+		return button;
 	}
 	
 	/**
@@ -131,7 +147,7 @@ public class Simulation {
 		mySpeedDisplay.setText("    Current Speed: " + speed);
 		hbox.getChildren().add(mySpeedDisplay);
 		hbox.setLayoutX(50);
-		hbox.setLayoutY(525);
+		hbox.setLayoutY(520);
 		group.getChildren().add(hbox);
 	}
 	
@@ -164,13 +180,19 @@ public class Simulation {
 			running = false;
 			FileChooser fileChooser = new FileChooser();
 			fileChooser.setTitle("Load XML File");
-			File file = fileChooser.showOpenDialog(myStage);
-			if(file != null){
-				loadXML(file);
+			xmlFile = fileChooser.showOpenDialog(myStage);
+			if(xmlFile != null){
+				loadXML(xmlFile);
 				buildBoard();
 				displayGridToBoard();	
 			}
 			break;
+		case "Restart":
+			if(xmlFile != null){
+				loadXML(xmlFile);
+				buildBoard();
+				displayGridToBoard();	
+			}
 		}	
 	}
 	
