@@ -43,8 +43,6 @@ public abstract class Rules {
 				applyRulesToCell(grid.getCell(row, col), grid);
 			}
 		}
-		
-		System.out.println(toBeUpdated + "\n");
 	}
 	
 	/**

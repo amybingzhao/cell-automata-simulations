@@ -59,7 +59,6 @@ public class SegregationRules extends Rules {
 			toBeMoved.remove(0);
 			Cell emptyCell = emptyCellList.poll();
 			switchCells(agentCell, emptyCell);
-			System.out.println();
 		}
 		
 		while (!toBeMoved.isEmpty()) {
@@ -136,10 +135,6 @@ public class SegregationRules extends Rules {
 			return ERRORCOLOR;
 		}
 	}
-	
-	public String toString(){
-		return "Segregation";
-	}
 
 	/**
 	 * Creates a Standard Cell for this simulation.
@@ -147,5 +142,10 @@ public class SegregationRules extends Rules {
 	@Override
 	protected Cell createCell(String initialState, int row, int col) {
 		return new StandardCell(initialState, row, col);
+	}
+	
+	
+	public String toString(){
+		return "Segregation";
 	}
 }
