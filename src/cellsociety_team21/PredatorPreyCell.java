@@ -15,33 +15,44 @@ public class PredatorPreyCell extends Cell {
 		myInitialSharkEnergy = initialEnergy;
 	}
 	
-	public void increaseEnergy() {
-		if (getCurState().equals(SHARK)) {
-			myEnergy++;
-		}
-	}
-	
+	/**
+	 * Decreases the shark's energy by 1.
+	 */
 	public void decreaseEnergy() {
 		if (getCurState().equals(SHARK) && myEnergy > 0) {
 			myEnergy--;
 		}
 	}
 	
+	/**
+	 * Changes the shark's state to water as though it died.
+	 */
 	public void sharkDies() {
 		if (getCurState().equals(SHARK)) {
 			setCurState(WATER);
 		}
 	}
 	
+	/**
+	 * Initializes a shark to be born next round with the correct state and energy.
+	 */
 	public void initShark() {
 		setNextState(SHARK);
 		myEnergy = myInitialSharkEnergy;
 	}
 	
+	/**
+	 * Gets the shark's current amount of energy.
+	 * @return int representing shark's energy.
+	 */
 	public int getSharkEnergy() {
 		return myEnergy;
 	}
 	
+	/**
+	 * Sets the shark's energy to a new amount.
+	 * @param energy: amount of energy that shark should be updated to have.
+	 */
 	public void setSharkEnergy(int energy) {
 		myEnergy = energy;
 	}
