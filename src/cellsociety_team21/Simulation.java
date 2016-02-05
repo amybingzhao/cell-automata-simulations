@@ -229,7 +229,7 @@ public class Simulation {
 	 * Applys rules to cells, updates their states, displays new states
 	 */
 	public void step(double elapsedTime, boolean stepping) {
-		if(tick % (21 - speed) != 0){
+		if(tick % (21 - speed) != 0 && !stepping){
 			tick++;
 			return;
 		}
