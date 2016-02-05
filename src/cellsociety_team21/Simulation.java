@@ -91,9 +91,7 @@ public class Simulation {
 		group.getChildren().add(myBoardGroup);
 		attachButtonsToUI(group);
 		attachFieldsToUI(group);
-		/*
-		 * A text field for which config file, and a button to select files
-		 */
+
 		return group;
 	}
 	
