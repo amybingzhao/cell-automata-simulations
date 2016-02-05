@@ -27,26 +27,26 @@ public class Simulation {
 	
 	// UI variables
 	private Stage myStage;
-	private Group boardGroup;
-	private Text titleDisplay;
-	private Text speedDisplay;
+	private Group myBoardGroup;
+	private Text myTitleDisplay;
+	private Text mySpeedDisplay;
 	private int boardPixelSize;
 	private int borderPixelSize = 1;
 	private int cellPixelSize;
-	private static final int BOARDWIDTHOFFSET = 50;
-	private static final int BOARDHEIGHTOFFSET = 50;
+	private static final int BOARD_WIDTH_OFFSET = 50;
+	private static final int BOARD_HEIGHT_OFFSET = 50;
 
 	private boolean running;
 	private int speed;
 	private int tick;
 	
 	//xml determined variables
-	private int gridwidth;
-	private int gridheight;
+	private int myGridWidth;
+	private int myGridHeight;
 	private Rectangle[][] myBoard;
 	private Grid myGrid;
-	private Rules rules;
-	private String currentSimulation; 
+	private Rules myRules;
+	private String myCurrentSimulation; 
 	
 	/**
 	 * Returns name of the game.
@@ -58,14 +58,14 @@ public class Simulation {
 	/**
 	 * Create the game's scene
 	 */
-	public Scene init(int ps, int ww, int wh, Stage s) {
-		myStage = s;
+	public Scene init(int pixelSize, int width, int height, Stage stage) {
+		myStage = stage;
 		speed = 10;
 		tick = 0;
-		boardPixelSize = ps;
-		currentSimulation = "NONE";
+		boardPixelSize = pixelSize;
+		myCurrentSimulation = "NONE";
 		Group root = buildUI();
-		Scene myScene = new Scene(root, ww, wh, Color.WHITE);
+		Scene myScene = new Scene(root, width, height, Color.WHITE);
 		return myScene;
 	}
 
@@ -85,10 +85,10 @@ public class Simulation {
 		group.getChildren().add(boardBackground);
 		
 		//set boardGroup instance variable
-		boardGroup = new Group();
-		boardGroup.setLayoutX(BOARDWIDTHOFFSET);
-		boardGroup.setLayoutY(BOARDHEIGHTOFFSET);
-		group.getChildren().add(boardGroup);
+		myBoardGroup = new Group();
+		myBoardGroup.setLayoutX(BOARD_WIDTH_OFFSET);
+		myBoardGroup.setLayoutY(BOARD_HEIGHT_OFFSET);
+		group.getChildren().add(myBoardGroup);
 		attachButtonsToUI(group);
 		attachFieldsToUI(group);
 		/*
@@ -97,6 +97,9 @@ public class Simulation {
 		return group;
 	}
 	
+	/**
+	 * Attach buttons to the UI display.
+	 */
 	private void attachButtonsToUI(Group group){
 		String[] buttons = {"Start", "Stop", "Step", "Speed Up", "Slow Down", "Load XML"}; 
 		HBox hbox = new HBox(2);
@@ -115,25 +118,32 @@ public class Simulation {
 		group.getChildren().add(hbox);
 	}
 	
+	/**
+	 * Attach title and speed display to UI.
+	 * @param group
+	 */
 	private void attachFieldsToUI(Group group){
 		HBox hbox = new HBox(2);
-		titleDisplay = new Text();
-		titleDisplay.setFont(new Font(15));
-		titleDisplay.setText("Current Simulation: None");
-		hbox.getChildren().add(titleDisplay);
-		speedDisplay = new Text();
-		speedDisplay.setFont(new Font(15));
-		speedDisplay.setText("    Current Speed: " + speed);
-		hbox.getChildren().add(speedDisplay);
+		myTitleDisplay = new Text();
+		myTitleDisplay.setFont(new Font(15));
+		myTitleDisplay.setText("Current Simulation: None");
+		hbox.getChildren().add(myTitleDisplay);
+		mySpeedDisplay = new Text();
+		mySpeedDisplay.setFont(new Font(15));
+		mySpeedDisplay.setText("    Current Speed: " + speed);
+		hbox.getChildren().add(mySpeedDisplay);
 		hbox.setLayoutX(50);
 		hbox.setLayoutY(525);
 		group.getChildren().add(hbox);
 	}
 	
-	private void respondToButton(String s){
-		switch(s) {
+	/**
+	 * Determines response to button press based on the button.
+	 */
+	private void respondToButton(String button){
+		switch(button) {
 		case "Start":
-			if(!currentSimulation.equals("NONE")){
+			if(!myCurrentSimulation.equals("NONE")){
 				running = true;
 			}
 			break;
@@ -141,16 +151,16 @@ public class Simulation {
 			running = false;
 			break;
 		case "Step":
-			if(!currentSimulation.equals("NONE"))
+			if(!myCurrentSimulation.equals("NONE"))
 				step(0.0, true);
 			break;
 		case "Speed Up":
 			if(speed < 20)
-				speedDisplay.setText("    Current Speed: " + ++speed);
+				mySpeedDisplay.setText("    Current Speed: " + ++speed);
 			break;
 		case "Slow Down":
 			if(speed > 1)
-				speedDisplay.setText("    Current Speed: " + --speed);
+				mySpeedDisplay.setText("    Current Speed: " + --speed);
 			break;
 		case "Load XML":
 			running = false;
@@ -183,22 +193,22 @@ public class Simulation {
 			}
 		}
 		
-		gridwidth = inputgrid.length;
-		gridheight = inputgrid[1].length;
-		cellPixelSize = (boardPixelSize / Math.max(gridwidth, gridheight)) - 2 * borderPixelSize;
-		myGrid = new Grid(gridwidth, gridheight, inputgrid);
-		rules = parser.getRules(); 
-		rules.initGrid(myGrid, inputgrid);
-		currentSimulation = rules.toString();
-		titleDisplay.setText("Current Simulation: " + currentSimulation);
+		myGridWidth = inputgrid.length;
+		myGridHeight = inputgrid[1].length;
+		cellPixelSize = (boardPixelSize / Math.max(myGridWidth, myGridHeight)) - 2 * borderPixelSize;
+		myGrid = new Grid(myGridWidth, myGridHeight, inputgrid);
+		myRules = parser.getRules(); 
+		myRules.initGrid(myGrid, inputgrid);
+		myCurrentSimulation = myRules.toString();
+		myTitleDisplay.setText("Current Simulation: " + myCurrentSimulation);
 	}
 	
 	/**
 	 * builds board by adding rectangles, with the size and quantity based on xml input
 	 */
 	private void buildBoard(){
-		boardGroup.getChildren().clear();
-		myBoard = new Rectangle[gridwidth][gridheight];
+		myBoardGroup.getChildren().clear();
+		myBoard = new Rectangle[myGridWidth][myGridHeight];
 		for (int r = 0; r < myGrid.getNumRows(); r++) {
 			for (int c = 0; c < myGrid.getNumCols(); c++) {
 				Rectangle rect = new Rectangle();
@@ -208,7 +218,7 @@ public class Simulation {
 				rect.setWidth(cellPixelSize);
 				rect.setHeight(cellPixelSize);
 				myBoard[r][c] = rect;
-				boardGroup.getChildren().add(rect);
+				myBoardGroup.getChildren().add(rect);
 			}
 		}
 	}
@@ -219,14 +229,14 @@ public class Simulation {
 	private void displayGridToBoard(){
 		for(int r = 0; r < myGrid.getNumRows(); r++){
 			for(int c = 0; c < myGrid.getNumCols(); c++){
-				Color color = rules.getFill(myGrid.getCell(r,c).getCurState());
+				Color color = myRules.getFill(myGrid.getCell(r,c).getCurState());
 				myBoard[r][c].setFill(color);
 			}
 		}
 	}
 	
 	/**
-	 * Applys rules to cells, updates their states, displays new states
+	 * Applyies rules to cells, updates their states, displays new states
 	 */
 	public void step(double elapsedTime, boolean stepping) {
 		if(tick % (21 - speed) != 0 && !stepping){
@@ -247,7 +257,7 @@ public class Simulation {
 	private void applyRulesToGrid(){
 		for(int r = 0; r < myGrid.getNumRows(); r++){
 			for(int c = 0; c < myGrid.getNumCols(); c++){
-				rules.applyRulesToCell(myGrid.getCell(r,c), myGrid);
+				myRules.applyRulesToCell(myGrid.getCell(r,c), myGrid);
 			}
 		}
 	}
@@ -257,10 +267,9 @@ public class Simulation {
 	 * Then clears the 
 	 */
 	private void updateEachState(){
-		System.out.println(rules.getToBeUpdatedList());
-		for(Cell c: rules.getToBeUpdatedList()){
+		for(Cell c: myRules.getToBeUpdatedList()){
 			c.updateState();
 		}
-		rules.clearToBeUpdatedList();
+		myRules.clearToBeUpdatedList();
 	}
 }
