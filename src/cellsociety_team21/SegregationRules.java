@@ -117,16 +117,15 @@ public class SegregationRules extends Rules {
 				}
 			}
 		}
-		System.out.println("numNeighbors: " + numNeighbors);
-		System.out.println("numSameNeighbors: " + numSameNeighbors);
-
-		System.out.println(((((double) numSameNeighbors)/((double) numNeighbors) >= myThreshold) || numNeighbors == 0));
-		System.out.println();
 		
 		return ((((double) numSameNeighbors)/((double) numNeighbors) >= myThreshold) || numNeighbors == 0);
 	}
-	public Color getFill(String s){
-		switch(s){
+	
+	/**
+	 * Returns the color corresponding to the state.
+	 */
+	public Color getFill(String state){
+		switch(state){
 		case BLUE:
 			return BLUECOLOR;
 		case RED:
@@ -140,5 +139,13 @@ public class SegregationRules extends Rules {
 	
 	public String toString(){
 		return "Segregation";
+	}
+
+	/**
+	 * Creates a Standard Cell for this simulation.
+	 */
+	@Override
+	protected Cell createCell(String initialState, int row, int col) {
+		return new StandardCell(initialState, row, col);
 	}
 }

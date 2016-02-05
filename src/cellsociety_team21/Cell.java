@@ -17,7 +17,7 @@ public class Cell {
 		myNextRow = NULL;
 		myNextCol = NULL;
 	}
-	
+
 	/**
 	 * Gets the current row of the Cell.
 	 * @return current row of Cell.
@@ -25,7 +25,7 @@ public class Cell {
 	public int getCurRow() {
 		return myCurRow;
 	}
-	
+
 	/**
 	 * Sets the current row and column of the Cell.
 	 * @param row: current row of the Cell.
@@ -84,7 +84,7 @@ public class Cell {
 		myNextRow = row;
 		myNextCol = col;
 	}
-	
+
 	/**
 	 * Gets the next state of the Cell.
 	 * @return string representing the next state of the Cell.
@@ -100,15 +100,11 @@ public class Cell {
 	public void setNextState(String state) {
 		myNextState = state;
 	}
-	
+
 	public String toString() {
 		return "(" + myCurState + ", " + myNextState + ")";
 	}
 	
-	/**
-	 * Sets myCurState to myNextState
-	 * Sets myNextState back to null
-	 */
 	public void updateState(){
 		if (myNextState != null) {
 			myCurState = myNextState;

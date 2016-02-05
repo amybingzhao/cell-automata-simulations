@@ -6,7 +6,7 @@ import java.util.List;
 import javafx.scene.paint.Color;
 
 public class PredatorPreyRules extends Rules {
-	private int mySharkEnergy;
+	private int myInitialSharkEnergy;
 	private int mySharkReproductionTime;
 	private int myFishReproductionTime;
 	private int myInitSharkReproductionTime;
@@ -20,28 +20,27 @@ public class PredatorPreyRules extends Rules {
 	private static final int NUM_NEIGHBORS = 4;
 	
 	public PredatorPreyRules(int initialSharkEnergy, int sharkReproductionTime, int fishReproductionTime) {
-		mySharkEnergy = initialSharkEnergy;
 		mySharkReproductionTime = sharkReproductionTime;
 		myFishReproductionTime = fishReproductionTime;
 		myInitSharkReproductionTime = sharkReproductionTime;
 		myInitFishReproductionTime = fishReproductionTime;
+		myInitialSharkEnergy = initialSharkEnergy;
 	}
 	
 	/**
 	 * Apply the rules of the Predator-Prey simulation to a Cell based on its state.
 	 */
-	@Override
-	public void applyRulesToCell(Cell cell, Grid grid) {
+	public void applyRulesToCell(PredatorPreyCell cell, Grid grid) {
 		String curState = cell.getCurState();
-		
-		if (cell.getCurRow() == grid.getNumRows() - 1 && cell.getCurCol() == grid.getNumCols() - 1) {
-			updateReproductionTimes();
-		}
 		
 		if (curState.equals(FISH)) {
 			handleFishCell(cell, grid);
 		} else if (curState.equals(SHARK)) {
 			handleSharkCell(cell, grid);
+		}
+
+		if (cell.getCurRow() == grid.getNumRows() - 1 && cell.getCurCol() == grid.getNumCols() - 1) {
+			updateReproductionTimes();
 		}
 	}
 
@@ -49,13 +48,13 @@ public class PredatorPreyRules extends Rules {
 	 * Reduce the number of moves left for each Cell type to reproduce; reset reproduction times if they reproduced this round.
 	 */
 	private void updateReproductionTimes() {
-		if (mySharkReproductionTime > 0) {
+		if (mySharkReproductionTime == 0) {
 			mySharkReproductionTime = myInitSharkReproductionTime;
 		} else {
 			mySharkReproductionTime--;
 		}
 		
-		if (myFishReproductionTime > 0) {
+		if (myFishReproductionTime == 0) {
 			myFishReproductionTime = myInitFishReproductionTime;
 		} else {
 			myFishReproductionTime--;
@@ -67,7 +66,7 @@ public class PredatorPreyRules extends Rules {
 	 * @param cell: fish Cell of interest.
 	 * @param grid: Simulation grid.
 	 */
-	private void handleFishCell(Cell cell, Grid grid) {
+	private void handleFishCell(PredatorPreyCell cell, Grid grid) {
 		if (!fishHasAlreadyBeenEaten(cell)) {
 			Cell[][] neighborhood = grid.getNeighborhood(cell.getCurRow(), cell.getCurCol(), NUM_NEIGHBORS);
 			Cell nextLocation = cellToMoveTo(neighborhood, WATER);
@@ -87,30 +86,26 @@ public class PredatorPreyRules extends Rules {
 	 * @param cell: shark Cell of interest.
 	 * @param grid: Simulation grid.
 	 */
-	private void handleSharkCell(Cell cell, Grid grid) {
+	private void handleSharkCell(PredatorPreyCell cell, Grid grid) {
 		Cell[][] neighborhood = grid.getNeighborhood(cell.getCurRow(), cell.getCurCol(), NUM_NEIGHBORS);
 		
-		Cell fishToEat = cellToMoveTo(neighborhood, FISH);
+		PredatorPreyCell fishToEat = (PredatorPreyCell) cellToMoveTo(neighborhood, FISH);
 		if (fishToEat != null) {
 			eatFish(fishToEat, cell, grid);
 			checkForReproduction(cell);
-			mySharkEnergy++;
 		} else {
 			if (noMoreEnergy(cell)) {
-				cell.setNextState(WATER);
+				cell.sharkDies();
 				addCellToBeUpdated(cell);
 			} else {
-				Cell nextLocation = cellToMoveTo(neighborhood, WATER);
-				if (nextLocation != null) {
-					switchCells(cell, nextLocation);
+				PredatorPreyCell newSharkLocation = (PredatorPreyCell) cellToMoveTo(neighborhood, WATER);
+				if (newSharkLocation != null) {
+					moveShark(cell, newSharkLocation, WATER);
 					checkForReproduction(cell);
 				}
+				cell.decreaseEnergy();
 			}
-			mySharkEnergy--;
 		}
-		
-		System.out.println("handled shark cell:");
-		System.out.println("energy left: " + mySharkEnergy);
 	}
 	
 	/**
@@ -118,8 +113,8 @@ public class PredatorPreyRules extends Rules {
 	 * @param cell: shark Cell of interest.
 	 * @return true if shark has no more energy; false otherwise.
 	 */
-	private boolean noMoreEnergy(Cell cell) {
-		return mySharkEnergy == 0;
+	private boolean noMoreEnergy(PredatorPreyCell cell) {
+		return cell.getSharkEnergy() == 0;
 	}
 
 	/**
@@ -128,18 +123,34 @@ public class PredatorPreyRules extends Rules {
 	 * @param curShark: shark Cell eating the fish.
 	 * @param grid: Simulation grid.
 	 */
-	private void eatFish(Cell fishToEat, Cell curShark, Grid grid) {
+	private void eatFish(PredatorPreyCell fishToEat, PredatorPreyCell curShark, Grid grid) {
 		if (fishAlreadyMoved(curShark, fishToEat)) {
 			undoFishMove(fishToEat, grid);
 		}
 		
 		System.out.println(fishToEat.getCurRow());
-		System.out.println(fishToEat.getCurCol())
-		;
-		fishToEat.setNextState(SHARK);
-		curShark.setNextState(WATER);
-		addCellToBeUpdated(fishToEat);
-		addCellToBeUpdated(curShark);
+		System.out.println(fishToEat.getCurCol());
+		
+		moveShark(curShark, fishToEat, FISH);
+		}
+	
+	/**
+	 * Move the shark to a given Cell's location and update its energy based on whether the Cell is a fish or water.
+	 * @param shark: shark that is being moved.
+	 * @param nextLocation: Cell that the shark is to swap locations with.
+	 * @param nextLocationState: state of the Cell that the shark is to swap locations with.
+	 */
+	private void moveShark(PredatorPreyCell shark, PredatorPreyCell nextLocation, String nextLocationState) {
+		nextLocation.setNextState(SHARK);
+		if (nextLocationState.equals(FISH)) {
+			nextLocation.setSharkEnergy(shark.getSharkEnergy() + 1);
+		} else {
+			nextLocation.setSharkEnergy(shark.getSharkEnergy() - 1);
+		}
+		shark.setSharkEnergy(0);
+		shark.setNextState(WATER);
+		addCellToBeUpdated(shark);
+		addCellToBeUpdated(nextLocation);
 	}
 	
 	/**
@@ -172,34 +183,38 @@ public class PredatorPreyRules extends Rules {
 	 * Check if Cell can reproduce based on state.
 	 * @param cell: Cell to check for reproduction.
 	 */
-	private void checkForReproduction(Cell cell) {
+	private void checkForReproduction(PredatorPreyCell cell) {
+		System.out.println(cell);
 		switch (cell.getCurState()) {
 			case FISH:
 				if (fishCanReproduce()) {
 					cell.setNextState(FISH);
+					addCellToBeUpdated(cell);
 				}
 				break;
 			case SHARK:
 				if (sharkCanReproduce()) {
-					cell.setNextState(SHARK);
+					cell.initShark();
+					addCellToBeUpdated(cell);
 				}
 		}
+		System.out.println(cell);
 	}
 	
 	/**
-	 * Checks if the fish has lived for enough rounds to reproduce.
+	 * Checks if the fish can reproduce after this round.
 	 * @return true if the fish can reproduce; false otherwise.
 	 */
 	private boolean fishCanReproduce() {
-		return (myFishReproductionTime == 0);
+		return (myFishReproductionTime == 1);
 	}
 	
 	/**
-	 * Checks if the shark has lived for enough rounds to reproduce.
+	 * Checks if the shark can reproduce after this round.
 	 * @return true if the shark can reproduce; false otherwise.
 	 */
 	private boolean sharkCanReproduce() {
-		return (mySharkReproductionTime == 0);
+		return (mySharkReproductionTime == 1);
 	}
 
 	/**
@@ -232,8 +247,11 @@ public class PredatorPreyRules extends Rules {
 		}
 	}
 	
-	public Color getFill(String s){
-		switch(s){
+	/**
+	 * Returns the color corresponding to the state.
+	 */
+	public Color getFill(String state){
+		switch(state){
 		case FISH:
 			return FISHCOLOR;
 		case SHARK:
@@ -273,5 +291,22 @@ public class PredatorPreyRules extends Rules {
 		} else {
 			return cellToCheck.getCurState().equals(stateToMoveTo);
 		}
+	}
+
+	/**
+	 * Creates a PredatorPreyCell for the Predator Prey simulation.
+	 */
+	@Override
+	protected Cell createCell(String initialState, int row, int col) {
+		return new PredatorPreyCell(initialState, row, col, myInitialSharkEnergy);
+	}
+
+	/**
+	 * Applies the Predator Prey simulation's rules to the PredatorPreyCell.
+	 */
+	@Override
+	public void applyRulesToCell(Cell cell, Grid grid) {
+		// TODO Auto-generated method stub
+		applyRulesToCell((PredatorPreyCell) cell, grid);
 	}
 }

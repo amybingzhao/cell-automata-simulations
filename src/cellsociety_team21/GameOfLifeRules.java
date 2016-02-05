@@ -74,8 +74,11 @@ public class GameOfLifeRules extends Rules {
 		}
 	}
 	
-	public Color getFill(String s){
-		switch(s){
+	/**
+	 * Returns the color corresponding to the state.
+	 */
+	public Color getFill(String state){
+		switch(state){
 		case DEAD:
 			return DEADCOLOR;
 		case ALIVE:
@@ -87,6 +90,14 @@ public class GameOfLifeRules extends Rules {
 	
 	public String toString(){
 		return "Game of Life";
+	}
+
+	/**
+	 * Creates a Standard Cell for this simulation.
+	 */
+	@Override
+	protected Cell createCell(String initialState, int row, int col) {
+		return new StandardCell(initialState, row, col);
 	}
 
 }

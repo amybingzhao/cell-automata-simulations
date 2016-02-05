@@ -11,6 +11,29 @@ public abstract class Rules {
 	private List<Cell> toBeUpdated = new ArrayList<Cell>();
 	
 	/**
+	 * Initialize the Grid with the Cells corresponding to this simulation.
+	 * @param grid: Simulation grid.
+	 * @param initialStates: String 2D array with the initial states of each cell.
+	 */
+	public void initGrid(Grid grid, String[][] initialStates) {
+		for (int row = 0; row < grid.getNumRows(); row++) {
+			for (int col = 0; col < grid.getNumCols(); col++) {
+				Cell cell = createCell(initialStates[row][col], row, col);
+				grid.addCellToGrid(row, col, cell);
+			}
+		}
+	}
+	
+	/**
+	 * Creates the type of Cell corresponding to the correct simulation.
+	 * @param initialState: initial state of the Cell.
+	 * @param row: row of the initial location of the Cell.
+	 * @param col: column of the initial location of the Cell.
+	 * @return
+	 */
+	protected abstract Cell createCell(String initialState, int row, int col);
+	
+	/**
 	 * Applies the simulation rules to each cell in the grid.
 	 * @param grid: Simulation grid.
 	 */
