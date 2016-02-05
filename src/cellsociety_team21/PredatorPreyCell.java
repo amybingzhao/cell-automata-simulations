@@ -41,4 +41,12 @@ public class PredatorPreyCell extends Cell {
 	public int getSharkEnergy() {
 		return myEnergy;
 	}
+	
+	public void setSharkEnergy(int energy) {
+		myEnergy = energy;
+	}
+	
+	public String toString() {
+		return "(" + getCurState() + ", " + getNextState() + ")";
+	}
 }
