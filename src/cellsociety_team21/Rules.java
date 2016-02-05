@@ -10,6 +10,17 @@ public abstract class Rules {
 	protected static final Color ERRORCOLOR = Color.PINK;
 	private List<Cell> toBeUpdated = new ArrayList<Cell>();
 	
+	public void initGrid(Grid grid, String[][] initialStates) {
+		for (int row = 0; row < grid.getNumRows(); row++) {
+			for (int col = 0; col < grid.getNumCols(); col++) {
+				Cell cell = createCell(initialStates[row][col], row, col);
+				grid.addCellToGrid(row, col, cell);
+			}
+		}
+	}
+	
+	protected abstract Cell createCell(String initialState, int row, int col);
+	
 	/**
 	 * Applies the simulation rules to each cell in the grid.
 	 * @param grid: Simulation grid.
