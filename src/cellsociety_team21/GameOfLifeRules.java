@@ -87,10 +87,6 @@ public class GameOfLifeRules extends Rules {
 			return ERRORCOLOR;
 		}
 	}
-	
-	public String toString(){
-		return "Game of Life";
-	}
 
 	/**
 	 * Creates a Standard Cell for this simulation.
@@ -99,5 +95,8 @@ public class GameOfLifeRules extends Rules {
 	protected Cell createCell(String initialState, int row, int col) {
 		return new StandardCell(initialState, row, col);
 	}
-
+	
+	public String toString(){
+		return "Game of Life";
+	}
 }
