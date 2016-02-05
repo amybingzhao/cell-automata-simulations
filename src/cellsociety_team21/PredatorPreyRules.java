@@ -93,11 +93,8 @@ public class PredatorPreyRules extends Rules {
 		if (fishToEat != null) {
 			eatFish(fishToEat, cell, grid);
 			checkForReproduction(cell);
-			//mySharkEnergy++;
 		} else {
-			System.out.println("HI");
 			if (noMoreEnergy(cell)) {
-				System.out.println("HI2");
 				cell.sharkDies();
 				addCellToBeUpdated(cell);
 			} else {
@@ -109,9 +106,6 @@ public class PredatorPreyRules extends Rules {
 				cell.decreaseEnergy();
 			}
 		}
-		
-		System.out.println("handled shark cell:");
-		System.out.println("energy left: " + cell.getSharkEnergy());
 	}
 	
 	/**
@@ -120,7 +114,6 @@ public class PredatorPreyRules extends Rules {
 	 * @return true if shark has no more energy; false otherwise.
 	 */
 	private boolean noMoreEnergy(PredatorPreyCell cell) {
-		System.out.println("energy check: " + cell.getSharkEnergy());
 		return cell.getSharkEnergy() == 0;
 	}
 
@@ -141,12 +134,16 @@ public class PredatorPreyRules extends Rules {
 		moveShark(curShark, fishToEat, FISH);
 		}
 	
+	/**
+	 * Move the shark to a given Cell's location and update its energy based on whether the Cell is a fish or water.
+	 * @param shark: shark that is being moved.
+	 * @param nextLocation: Cell that the shark is to swap locations with.
+	 * @param nextLocationState: state of the Cell that the shark is to swap locations with.
+	 */
 	private void moveShark(PredatorPreyCell shark, PredatorPreyCell nextLocation, String nextLocationState) {
 		nextLocation.setNextState(SHARK);
 		if (nextLocationState.equals(FISH)) {
-			System.out.println("cur energy: " + shark.getSharkEnergy());
 			nextLocation.setSharkEnergy(shark.getSharkEnergy() + 1);
-			System.out.println("new energy: " + nextLocation.getSharkEnergy());
 		} else {
 			nextLocation.setSharkEnergy(shark.getSharkEnergy() - 1);
 		}
@@ -250,8 +247,11 @@ public class PredatorPreyRules extends Rules {
 		}
 	}
 	
-	public Color getFill(String s){
-		switch(s){
+	/**
+	 * Returns the color corresponding to the state.
+	 */
+	public Color getFill(String state){
+		switch(state){
 		case FISH:
 			return FISHCOLOR;
 		case SHARK:
@@ -293,11 +293,17 @@ public class PredatorPreyRules extends Rules {
 		}
 	}
 
+	/**
+	 * Creates a PredatorPreyCell for the Predator Prey simulation.
+	 */
 	@Override
 	protected Cell createCell(String initialState, int row, int col) {
 		return new PredatorPreyCell(initialState, row, col, myInitialSharkEnergy);
 	}
 
+	/**
+	 * Applies the Predator Prey simulation's rules to the PredatorPreyCell.
+	 */
 	@Override
 	public void applyRulesToCell(Cell cell, Grid grid) {
 		// TODO Auto-generated method stub

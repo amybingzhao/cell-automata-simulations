@@ -102,8 +102,11 @@ public class FireRules extends Rules {
 		return cell.getCurState().equals(BURNING);
 	}
 	
-	public Color getFill(String s){
-		switch(s){
+	/**
+	 * Returns the color corresponding to the state.
+	 */
+	public Color getFill(String state){
+		switch(state){
 		case EMPTY:
 			return EMPTYCOLOR;
 		case TREE:
@@ -119,6 +122,9 @@ public class FireRules extends Rules {
 		return "Fire";
 	}
 
+	/**
+	 * Creates a Standard Cell for this simulation.
+	 */
 	@Override
 	protected Cell createCell(String initialState, int row, int col) {
 		return new StandardCell(initialState, row, col);
