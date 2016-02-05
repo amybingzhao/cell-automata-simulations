@@ -128,9 +128,6 @@ public class PredatorPreyRules extends Rules {
 			undoFishMove(fishToEat, grid);
 		}
 		
-		System.out.println(fishToEat.getCurRow());
-		System.out.println(fishToEat.getCurCol());
-		
 		moveShark(curShark, fishToEat, FISH);
 		}
 	
@@ -184,7 +181,6 @@ public class PredatorPreyRules extends Rules {
 	 * @param cell: Cell to check for reproduction.
 	 */
 	private void checkForReproduction(PredatorPreyCell cell) {
-		System.out.println(cell);
 		switch (cell.getCurState()) {
 			case FISH:
 				if (fishCanReproduce()) {
@@ -198,7 +194,6 @@ public class PredatorPreyRules extends Rules {
 					addCellToBeUpdated(cell);
 				}
 		}
-		System.out.println(cell);
 	}
 	
 	/**
@@ -262,10 +257,6 @@ public class PredatorPreyRules extends Rules {
 			return ERRORCOLOR;
 		}
 	}
-	
-	public String toString(){
-		return "Predator Prey";
-	}
 
 	/**
 	 * Adds a Cell to a list of options for the current Cell to move to if it is in fact a candidate for its next location.
@@ -308,5 +299,9 @@ public class PredatorPreyRules extends Rules {
 	public void applyRulesToCell(Cell cell, Grid grid) {
 		// TODO Auto-generated method stub
 		applyRulesToCell((PredatorPreyCell) cell, grid);
+	}
+	
+	public String toString(){
+		return "Predator Prey";
 	}
 }

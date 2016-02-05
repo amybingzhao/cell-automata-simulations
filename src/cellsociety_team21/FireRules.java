@@ -39,8 +39,6 @@ public class FireRules extends Rules {
 		Cell[][] neighborhood = grid.getNeighborhood(cell.getCurRow(), cell.getCurCol(), NUM_NEIGHBORS);
 		if (neighborIsBurning(cell, neighborhood, grid)) {
 			double x = Math.random();
-			System.out.println("My prob catch: " + myProbCatch);
-			System.out.println("My random: " + x + "\n");
 			if (x < myProbCatch) {
 				cell.setNextState(BURNING);
 				addCellToBeUpdated(cell);
@@ -65,7 +63,6 @@ public class FireRules extends Rules {
 	 * @return true if an adjacent neighbor is burning; false if none are burning.
 	 */
 	private boolean neighborIsBurning(Cell cell, Cell[][] neighborhood, Grid grid) {
-		System.out.println(neighborhood[1][1].toString() + "\n");
 		int cellRow = cell.getCurRow();
 		int cellCol = cell.getCurCol();
 		
@@ -117,10 +114,6 @@ public class FireRules extends Rules {
 			return ERRORCOLOR;
 		}
 	}
-	
-	public String toString(){
-		return "Fire";
-	}
 
 	/**
 	 * Creates a Standard Cell for this simulation.
@@ -128,5 +121,9 @@ public class FireRules extends Rules {
 	@Override
 	protected Cell createCell(String initialState, int row, int col) {
 		return new StandardCell(initialState, row, col);
+	}
+	
+	public String toString(){
+		return "Fire";
 	}
 }

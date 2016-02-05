@@ -18,14 +18,20 @@ public class Grid {
 		myGrid = new Cell[myRows][myCols];
 	}
 	
+	/**
+	 * Adds a new Cell to the Grid.
+	 * @param row: the row that the Cell belongs in.
+	 * @param col: the column that the Cell belongs in.
+	 * @param cell: the Cell to be added.
+	 */
 	public void addCellToGrid(int row, int col, Cell cell) {
 		myGrid[row][col] = cell;
 	}
 	
 	/**
 	 * Returns all neighbors of a given Cell and the Cell itself in their relative orientation.
-	 * @param r: the row of the Cell whose neighborhood is of interest.
-	 * @param c: the column o the Cell whose neighborhood is of interest.
+	 * @param row: the row of the Cell whose neighborhood is of interest.
+	 * @param col: the column o the Cell whose neighborhood is of interest.
 	 * @param numNeighbors: the number of neighbors of interest for the simulation (4 or 8).
 	 */
 	public Cell[][] getNeighborhood(int row, int col, int numNeighbors) {
