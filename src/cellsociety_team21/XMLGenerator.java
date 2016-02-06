@@ -52,7 +52,7 @@ public class XMLGenerator {
 	 * @param numCells
 	 *            The number of cells to be randomly generated
 	 */
-	public void generateFile(int rows, int cols, String gameName, List<String> parameters, List<String> states) {
+	public void generateFile(int rows, int cols, String gameName, List<String> parameters, List<String> states, String filename) {
 
 		try {
 
@@ -69,7 +69,7 @@ public class XMLGenerator {
 			myTransformer.setOutputProperty(OutputKeys.METHOD, "xml");
 			myTransformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
 			DOMSource mySource = new DOMSource(myDocument);
-			StreamResult myResult = new StreamResult(new File("data/simulation.txt"));
+			StreamResult myResult = new StreamResult(new File("data/" + filename));
 			myTransformer.transform(mySource, myResult);
 
 		} catch (Exception e) {
@@ -181,11 +181,32 @@ public class XMLGenerator {
 		XMLGenerator myGenerator = new XMLGenerator();
 		ArrayList<String> parameters = new ArrayList<String>();
 		ArrayList<String> states = new ArrayList<String>();
-		states.add("EMPTY");
-		states.add("TREE");
-		states.add("BURNING");
-		parameters.add("ProbCatch:15");
-		myGenerator.generateFile(10, 10, "Fire", parameters, states);
+		
+		//GAME OF LIFE
+		states.add("ALIVE");
+		states.add("DEAD");
+		
+		//FIRE
+//		states.add("EMPTY");
+//		states.add("TREE");
+//		states.add("BURNING");
+//		parameters.add("ProbCatch:10");
+		
+		//Segregation
+//		states.add("RED");
+//		states.add("BLUE");
+//		states.add("EMPTY");
+//		parameters.add("Threshold:30");
+		
+		//Predator Prey
+//		states.add("WATER");
+//		states.add("FISH");
+//		states.add("SHARK");
+//		parameters.add("InitialSharkEngery:15");
+//		parameters.add("SharkReproductionTime:10");
+//		parameters.add("FishReproductionTime:10");
+		
+		myGenerator.generateFile(20, 20, "GameOfLife", parameters, states, "GameOfLife3.xml");
 	}
 
 }
