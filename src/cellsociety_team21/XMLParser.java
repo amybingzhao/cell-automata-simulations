@@ -1,10 +1,14 @@
+/**
+ * @author Blake Kaplan
+ * Parses simulation XML files that define the initial simulation setup
+ */
+
 package cellsociety_team21;
 
 import org.w3c.dom.*;
 import javax.xml.parsers.*;
 import java.io.*;
 import java.util.ArrayList;
-import java.util.List;
 
 public class XMLParser {
 

@@ -1,3 +1,9 @@
+/**
+ * @author Amy Zhao
+ * @author Austin Wu
+ * Defines the rules of the Predator Prey Simulation
+ */
+
 package cellsociety_team21;
 
 import java.util.ArrayList;

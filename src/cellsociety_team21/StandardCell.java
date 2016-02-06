@@ -1,3 +1,7 @@
+/**
+ * @author Amy Zhao
+ */
+
 package cellsociety_team21;
 
 public class StandardCell extends Cell {

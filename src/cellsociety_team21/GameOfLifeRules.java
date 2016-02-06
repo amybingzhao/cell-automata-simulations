@@ -1,3 +1,9 @@
+/**
+ * @author Amy Zhao
+ * @author Austin Wu
+ * Defines the rules for the Game of Life simulation
+ */
+
 package cellsociety_team21;
 
 import javafx.scene.paint.Color;

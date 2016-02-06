@@ -1,5 +1,9 @@
+/**
+ * @author Austin Wu
+ * The Main file that starts the simulation
+ */
+
 package cellsociety_team21;
-import java.util.Arrays;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -8,11 +12,6 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-
-/**
- * 
- * @author Austin Wu
- */
 public class Main extends Application {
     public static final int WIDTH = 500;
     public static final int HEIGHT = 600;

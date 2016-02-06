@@ -1,3 +1,8 @@
+/**
+ * @author Amy Zhao
+ * An abstract class that specific simulation rules class are based off of
+ */
+
 package cellsociety_team21;
 
 import java.util.ArrayList;
