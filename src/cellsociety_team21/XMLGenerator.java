@@ -1,17 +1,20 @@
+/**
+ * @author Blake Kaplan
+ * Generates XML files to be used to initialize simulations
+ */
+
 package cellsociety_team21;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
 import javax.xml.parsers.*;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-
 import org.w3c.dom.*;
 
 public class XMLGenerator {
@@ -19,8 +22,6 @@ public class XMLGenerator {
 	private DocumentBuilderFactory myFactory;
 	private DocumentBuilder myBuilder;
 	private Document myDocument;
-	private List<Integer> xLocations;
-	private List<Integer> yLocations;
 
 	public XMLGenerator() {
 		try {
@@ -31,8 +32,6 @@ public class XMLGenerator {
 		} catch (ParserConfigurationException e) {
 			e.printStackTrace();
 		}
-		xLocations = new ArrayList<Integer>();
-		yLocations = new ArrayList<Integer>();
 	}
 
 	/**
@@ -181,6 +180,8 @@ public class XMLGenerator {
 		XMLGenerator myGenerator = new XMLGenerator();
 		ArrayList<String> parameters = new ArrayList<String>();
 		ArrayList<String> states = new ArrayList<String>();
+		
+		//Uncomment sections below according to desired simulation type
 		
 		//GAME OF LIFE
 		states.add("ALIVE");

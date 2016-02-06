@@ -1,3 +1,9 @@
+/**
+ * @author Amy Zhao
+ * @author Austin Wu
+ * The class responsible for maintaining the grid of Cell objects
+ */
+
 package cellsociety_team21;
 
 public class Grid {

@@ -1,10 +1,14 @@
+/**
+ * @author Amy Zhao
+ * @autho Austin Wu
+ * Defines the rules of the Segregation simulation
+ */
+
 package cellsociety_team21;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.PriorityQueue;
 import java.util.Queue;
 
 import javafx.scene.paint.Color;
@@ -62,7 +66,6 @@ public class SegregationRules extends Rules {
 		}
 		
 		while (!toBeMoved.isEmpty()) {
-			Cell cell = toBeMoved.get(0);
 			toBeMoved.remove(0);
 		}
 		

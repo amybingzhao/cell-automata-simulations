@@ -1,3 +1,8 @@
+/**
+ * @author Amy Zhao
+ * Defines the variables and methods for each cell object
+ */
+
 package cellsociety_team21;
 
 public class Cell {

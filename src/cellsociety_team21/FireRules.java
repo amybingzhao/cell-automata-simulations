@@ -1,3 +1,8 @@
+/**
+ * @author Amy Zhao
+ * Defines the rules for the Fire simulation
+ */
+
 package cellsociety_team21;
 
 import javafx.scene.paint.Color;

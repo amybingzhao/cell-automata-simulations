@@ -1,11 +1,13 @@
+/**
+ * @author Autin Wu
+ * This class takes care of overall logic and UI elements
+ */
+
 package cellsociety_team21;
 
 import java.io.File;
-import java.util.Arrays;
-
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -17,10 +19,6 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-/**
- * @author austinwu
- * This class takes care of overall logic and UI elements
- */
 
 public class Simulation {
 	public static final String TITLE = "Cell Society Simulation";
