@@ -3,11 +3,13 @@
  * An abstract class that specific simulation rules class are based off of
  */
 
-package cellsociety_team21;
+package Rules;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import Model.Cell;
+import Model.Grid;
 import javafx.scene.paint.Color;
 
 public abstract class Rules {

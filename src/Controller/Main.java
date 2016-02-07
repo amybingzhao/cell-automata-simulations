@@ -3,7 +3,7 @@
  * The Main file that starts the simulation
  */
 
-package cellsociety_team21;
+package Controller;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;

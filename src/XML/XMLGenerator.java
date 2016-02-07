@@ -3,7 +3,7 @@
  * Generates XML files to be used to initialize simulations
  */
 
-package cellsociety_team21;
+package XML;
 
 import java.io.*;
 import java.util.ArrayList;

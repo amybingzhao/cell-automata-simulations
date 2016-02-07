@@ -4,7 +4,7 @@
  * The class responsible for the cell objects used in the Predatory Prey simulation
  */
 
-package cellsociety_team21;
+package Model;
 
 public class PredatorPreyCell extends Cell {
 	private int myEnergy;

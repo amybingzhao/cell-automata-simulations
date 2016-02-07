@@ -3,7 +3,7 @@
  * Defines the variables and methods for each cell object
  */
 
-package cellsociety_team21;
+package Model;
 
 public class Cell {
 	private String myCurState;
