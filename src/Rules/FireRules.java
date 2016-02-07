@@ -3,8 +3,11 @@
  * Defines the rules for the Fire simulation
  */
 
-package cellsociety_team21;
+package Rules;
 
+import Model.Cell;
+import Model.Grid;
+import Model.StandardCell;
 import javafx.scene.paint.Color;
 
 public class FireRules extends Rules {

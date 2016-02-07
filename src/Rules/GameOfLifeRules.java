@@ -4,8 +4,11 @@
  * Defines the rules for the Game of Life simulation
  */
 
-package cellsociety_team21;
+package Rules;
 
+import Model.Cell;
+import Model.Grid;
+import Model.StandardCell;
 import javafx.scene.paint.Color;
 
 public class GameOfLifeRules extends Rules {

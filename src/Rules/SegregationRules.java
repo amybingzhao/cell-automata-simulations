@@ -4,13 +4,16 @@
  * Defines the rules of the Segregation simulation
  */
 
-package cellsociety_team21;
+package Rules;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import Model.Cell;
+import Model.Grid;
+import Model.StandardCell;
 import javafx.scene.paint.Color;
 
 public class SegregationRules extends Rules {

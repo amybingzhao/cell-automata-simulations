@@ -3,9 +3,16 @@
  * Parses simulation XML files that define the initial simulation setup
  */
 
-package cellsociety_team21;
+package XML;
 
 import org.w3c.dom.*;
+
+import Rules.FireRules;
+import Rules.GameOfLifeRules;
+import Rules.PredatorPreyRules;
+import Rules.Rules;
+import Rules.SegregationRules;
+
 import javax.xml.parsers.*;
 import java.io.*;
 import java.util.ArrayList;

@@ -3,9 +3,14 @@
  * This class takes care of overall logic and UI elements
  */
 
-package cellsociety_team21;
+package Controller;
 
 import java.io.File;
+
+import Model.Cell;
+import Model.Grid;
+import Rules.Rules;
+import XML.XMLParser;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;

@@ -4,11 +4,14 @@
  * Defines the rules of the Predator Prey Simulation
  */
 
-package cellsociety_team21;
+package Rules;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import Model.Cell;
+import Model.Grid;
+import Model.PredatorPreyCell;
 import javafx.scene.paint.Color;
 
 public class PredatorPreyRules extends Rules {

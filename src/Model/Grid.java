@@ -4,7 +4,7 @@
  * The class responsible for maintaining the grid of Cell objects
  */
 
-package cellsociety_team21;
+package Model;
 
 public class Grid {
 	private static int myRows;

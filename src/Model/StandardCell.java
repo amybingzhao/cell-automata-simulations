@@ -2,7 +2,7 @@
  * @author Amy Zhao
  */
 
-package cellsociety_team21;
+package Model;
 
 public class StandardCell extends Cell {
 
