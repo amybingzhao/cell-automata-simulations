@@ -135,4 +135,8 @@ public class Grid {
 		}
 		return sb.toString();
 	}
+	
+	public Cell[][] getGrid(){
+		return myGrid;
+	}
 }

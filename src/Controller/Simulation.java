@@ -1,17 +1,19 @@
 /**
- * @author Autin Wu
+ * @author Austin Wu
+ * @author Blake Kaplan
  * This class takes care of overall logic and UI elements
  */
 
 package Controller;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
-
 import Model.Cell;
 import Model.Grid;
 import Rules.Rules;
 import View.CSView;
+import XML.XMLGenerator;
 import XML.XMLParser;
 
 /*
@@ -121,6 +123,7 @@ public class Simulation {
 	/**
 	 * returns the current speed
 	 */
+
 	public int getSpeed(){
 		return mySpeed;
 	}
@@ -140,6 +143,13 @@ public class Simulation {
 	 */
 	public String getCurrent(){
 		return current;
+	}
+	
+	public void saveXML(){
+		XMLGenerator myGenerator = new XMLGenerator();
+		ArrayList<String> parameters = new ArrayList<String>();
+		String myRulesName = current.replaceAll(" ", "");
+		myGenerator.save(myRulesName, myGrid.getNumRows(), myGrid.getNumCols(), myGrid.getGrid(), myRules.getParameters());
 	}
 	
 	/**

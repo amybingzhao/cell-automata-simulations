@@ -5,6 +5,8 @@
 
 package Rules;
 
+import java.util.ArrayList;
+
 import Model.Cell;
 import Model.Grid;
 import Model.StandardCell;
@@ -133,5 +135,12 @@ public class FireRules extends Rules {
 	
 	public String toString(){
 		return "Fire";
+	}
+
+	@Override
+	public ArrayList<String> getParameters() {
+		ArrayList<String> parameters = new ArrayList<String>();
+		parameters.add("ProbCatch:" + myProbCatch);
+		return parameters;
 	}
 }

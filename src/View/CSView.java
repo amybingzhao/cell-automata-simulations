@@ -5,7 +5,6 @@ import java.util.ResourceBundle;
 
 import Controller.Simulation;
 import Model.Grid;
-import Rules.Rules;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -16,7 +15,6 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -108,7 +106,7 @@ public class CSView {
 	 */
 	private void attachButtonsToVBox(VBox vbox){
 		String[] firstrow = {"Start", "Stop", "Step", "Load XML"};
-		String[] secondrow= {"Speed Up", "Slow Down", "Restart"};
+		String[] secondrow= {"Speed Up", "Slow Down", "Restart", "Save"};
 		HBox hbox1 = new HBox(firstrow.length);
 		HBox hbox2 = new HBox(secondrow.length);
 		for(int i = 0; i < firstrow.length; i++){
@@ -183,7 +181,10 @@ public class CSView {
 			break;
 		case "Restart":
 			restartPressed();
-		}	
+		case "Save":
+			mySimulation.saveXML();
+			break;
+		}
 	}
 	
 	/**
