@@ -12,10 +12,13 @@ import java.util.Random;
 import javax.xml.parsers.*;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.*;
+
+import Model.Cell;
 
 public class XMLGenerator {
 
@@ -51,7 +54,7 @@ public class XMLGenerator {
 	 * @param numCells
 	 *            The number of cells to be randomly generated
 	 */
-	public void generateFile(int rows, int cols, String gameName, List<String> parameters, List<String> states, String filename) {
+	public void generateFile(int rows, int cols, String rules, List<String> parameters, List<String> states, String filename) {
 
 		try {
 
@@ -59,7 +62,7 @@ public class XMLGenerator {
 			myDocument.appendChild(myRoot);
 
 			myRoot.appendChild(getConfig(rows, cols));
-			myRoot.appendChild(getGameType(gameName, parameters));
+			myRoot.appendChild(getRules(rules, parameters));
 			myRoot.appendChild(createRandomCells(rows, cols, states));
 
 			TransformerFactory myTransformerFactory = TransformerFactory.newInstance();
@@ -108,11 +111,11 @@ public class XMLGenerator {
 	 *            An arraylist of provided simulation parameters
 	 * @return An element containing the data to be put into the file
 	 */
-	public Element getGameType(String game, List<String> params) {
+	public Element getRules(String rules, List<String> params) {
 
 		Element gameElement = myDocument.createElement("Game");
 		Element myName = myDocument.createElement("Name");
-		myName.appendChild(myDocument.createTextNode(game));
+		myName.appendChild(myDocument.createTextNode(rules));
 		Element myParams = parametersAsElement(params);
 		gameElement.appendChild(myName);
 		gameElement.appendChild(myParams);
@@ -158,22 +161,63 @@ public class XMLGenerator {
 	public Element createRandomCells(int rows, int cols, List<String> states) {
 		Element myCells = myDocument.createElement("Cells");
 		Random myRandom = new Random();
-		for (int i = 0; i < rows; i++) {
-			for (int j = 0; j < cols; j++){
-				Element myCell = myDocument.createElement("Cell");
-				Element xElement = myDocument.createElement("X");
-				xElement.appendChild(myDocument.createTextNode("" + i));
-				Element yElement = myDocument.createElement("Y");
-				yElement.appendChild(myDocument.createTextNode("" + j));
-				Element stateElement = myDocument.createElement("State");
-				stateElement.appendChild(myDocument.createTextNode(states.get(myRandom.nextInt(states.size()))));
-				myCell.appendChild(xElement);
-				myCell.appendChild(yElement);
-				myCell.appendChild(stateElement);
+		for (int row = 0; row < rows; row++) {
+			for (int col = 0; col < cols; col++){
+				Element myCell = makeCellEntry(row, col, states.get(myRandom.nextInt(states.size())));
 				myCells.appendChild(myCell);
 			}
 		}
 		return myCells;
+	}
+	
+	public void save(String rulesType, int rows, int cols, Cell[][] gameGrid, ArrayList<String> params){
+		myDocument = myBuilder.newDocument();
+		Element saveConfig = getConfig(rows,cols);
+		Element saveRules = getRules(rulesType, params);
+		Element saveCells = myDocument.createElement("Cells");
+		for (int row = 0; row < gameGrid.length; row++){
+			for (int col = 0; col < gameGrid[row].length; col++){
+				Element myCell = makeCellEntry(row, col, gameGrid[row][col].getCurState());
+				saveCells.appendChild(myCell);
+			}
+		}
+		Element myRoot = myDocument.createElement("Simulation");
+		myDocument.appendChild(myRoot);
+
+		myRoot.appendChild(saveConfig);
+		myRoot.appendChild(saveRules);
+		myRoot.appendChild(saveCells);
+
+		TransformerFactory myTransformerFactory = TransformerFactory.newInstance();
+		Transformer myTransformer;
+		try {
+			
+			myTransformer = myTransformerFactory.newTransformer();
+			myTransformer.setOutputProperty(OutputKeys.INDENT, "yes");
+			myTransformer.setOutputProperty(OutputKeys.METHOD, "xml");
+			myTransformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+			DOMSource mySource = new DOMSource(myDocument);
+			StreamResult myResult = new StreamResult(new File("data/SavedGame.xml"));
+			myTransformer.transform(mySource, myResult);
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	Element makeCellEntry(int row, int col, String state){
+		Element myCell = myDocument.createElement("Cell");
+		Element xElement = myDocument.createElement("X");
+		xElement.appendChild(myDocument.createTextNode("" + row));
+		Element yElement = myDocument.createElement("Y");
+		yElement.appendChild(myDocument.createTextNode("" + col));
+		Element stateElement = myDocument.createElement("State");
+		stateElement.appendChild(myDocument.createTextNode(state));
+		myCell.appendChild(xElement);
+		myCell.appendChild(yElement);
+		myCell.appendChild(stateElement);
+		return myCell;
 	}
 
 	public static void main(String[] args) {
@@ -207,7 +251,7 @@ public class XMLGenerator {
 //		parameters.add("SharkReproductionTime:10");
 //		parameters.add("FishReproductionTime:10");
 		
-		myGenerator.generateFile(20, 20, "GameOfLife", parameters, states, "GameOfLife3.xml");
+		myGenerator.generateFile(20, 20, "GameOfLife", parameters, states, "GameOfLife4.xml");
 	}
 
 }

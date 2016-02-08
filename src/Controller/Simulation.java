@@ -1,16 +1,18 @@
 /**
- * @author Autin Wu
+ * @author Austin Wu
+ * @author Blake Kaplan
  * This class takes care of overall logic and UI elements
  */
 
 package Controller;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import Model.Cell;
 import Model.Grid;
 import Rules.Rules;
-import XML.XMLParser;
+import XML.*;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -166,6 +168,7 @@ public class Simulation {
 			break;
 		case "Stop":
 			running = false;
+			saveXML();
 			break;
 		case "Step":
 			if(!myCurrentSimulation.equals("NONE"))
@@ -178,6 +181,7 @@ public class Simulation {
 		case "Slow Down":
 			if(speed > 1)
 				mySpeedDisplay.setText("    Current Speed: " + --speed);
+			saveXML();
 			break;
 		case "Load XML":
 			running = false;
@@ -224,6 +228,13 @@ public class Simulation {
 		myRules.initGrid(myGrid, inputgrid);
 		myCurrentSimulation = myRules.toString();
 		myTitleDisplay.setText("Current Simulation: " + myCurrentSimulation);
+	}
+	
+	private void saveXML(){
+		XMLGenerator myGenerator = new XMLGenerator();
+		ArrayList<String> parameters = new ArrayList<String>();
+		String myRules = myCurrentSimulation.replaceAll(" ", "");
+		myGenerator.save(myRules, myGridHeight, myGridWidth, myGrid.getGrid(), parameters);
 	}
 	
 	/**

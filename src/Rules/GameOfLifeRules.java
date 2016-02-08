@@ -106,6 +106,6 @@ public class GameOfLifeRules extends Rules {
 	}
 	
 	public String toString(){
-		return "Game of Life";
+		return "Game Of Life";
 	}
 }
