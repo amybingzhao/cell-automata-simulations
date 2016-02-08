@@ -4,10 +4,15 @@ public class ForagingAntsCell extends Cell {
 	private int myFoodPheromones;
 	private int myHomePheromones;
 	private int myNumAnts;
+	private static final String HOME = "HOME";
 	
-	public ForagingAntsCell(String initialState, int row, int col, int numAnts) {
+	public ForagingAntsCell(String initialState, int row, int col, int numTotalAnts) {
 		super(initialState, row, col);
-		myNumAnts = numAnts;
+		if (getCurState().equals(HOME)) {
+			myNumAnts = numTotalAnts;
+		} else {
+			myNumAnts = 0;
+		}
 		myFoodPheromones = 0;
 		myHomePheromones = 0;
 	}

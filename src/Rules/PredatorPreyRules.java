@@ -306,7 +306,6 @@ public class PredatorPreyRules extends Rules {
 	 */
 	@Override
 	public void applyRulesToCell(Cell cell, Grid grid) {
-		// TODO Auto-generated method stub
 		applyRulesToCell((PredatorPreyCell) cell, grid);
 	}
 	
