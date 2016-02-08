@@ -259,7 +259,7 @@ public class Simulation {
 	}
 	
 	/**
-	 * Applyies rules to cells, updates their states, displays new states
+	 * Applies rules to cells, updates their states, displays new states
 	 */
 	public void step(double elapsedTime, boolean stepping) {
 		if(tick % (21 - speed) != 0 && !stepping){
@@ -291,6 +291,7 @@ public class Simulation {
 	 */
 	private void updateEachState(){
 		for(Cell c: myRules.getToBeUpdatedList()){
+			myRules.updateStateCount(c);
 			c.updateState();
 		}
 		myRules.clearToBeUpdatedList();

@@ -35,7 +35,7 @@ public class PredatorPreyCell extends Cell {
 	 */
 	public void sharkDies() {
 		if (getCurState().equals(SHARK)) {
-			setCurState(WATER);
+			setNextState(WATER);
 		}
 	}
 	
