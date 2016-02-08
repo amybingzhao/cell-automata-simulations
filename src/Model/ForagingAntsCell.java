@@ -5,9 +5,11 @@ public class ForagingAntsCell extends Cell {
 	private int myHomePheromones;
 	private int myNumAnts;
 	
-	public ForagingAntsCell(String initialState, int row, int col) {
+	public ForagingAntsCell(String initialState, int row, int col, int numAnts) {
 		super(initialState, row, col);
-		// TODO Auto-generated constructor stub
+		myNumAnts = numAnts;
+		myFoodPheromones = 0;
+		myHomePheromones = 0;
 	}
 
 	public int getNumAnts() {
