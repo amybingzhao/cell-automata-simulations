@@ -159,6 +159,7 @@ public class Simulation {
 	
 	/**
 	 * @return returns the rules that this simulation is using
+	 * Applies rules to cells, updates their states, displays new states
 	 */
 	public Rules getRules(){
 		return myRules;

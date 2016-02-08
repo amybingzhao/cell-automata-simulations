@@ -160,7 +160,7 @@ public class PredatorPreyRules extends Rules {
 	}
 	
 	/**
-	 * Undos a fish move if it's already moved but a shark who moves later wants to eat it.
+	 * Undoes a fish move if it's already moved but a shark who moves later wants to eat it.
 	 * @param fishToEat: fish Cell that's to be eaten.
 	 * @param grid: Simulation grid.
 	 */
@@ -306,7 +306,6 @@ public class PredatorPreyRules extends Rules {
 	 */
 	@Override
 	public void applyRulesToCell(Cell cell, Grid grid) {
-		// TODO Auto-generated method stub
 		applyRulesToCell((PredatorPreyCell) cell, grid);
 	}
 	
