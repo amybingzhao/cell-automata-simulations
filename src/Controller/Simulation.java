@@ -13,19 +13,6 @@ import Model.Grid;
 import Rules.Rules;
 import View.CSView;
 import XML.XMLParser;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.Group;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.HBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
-
 
 /*
  * Todos:
@@ -48,9 +35,6 @@ import javafx.stage.Stage;
  */
 
 public class Simulation {
-	public static final String TITLE = "Cell Society Simulation";
-	
-	
 	private boolean running;
 	private int mySpeed;
 	private int tick;
@@ -69,13 +53,14 @@ public class Simulation {
 	public Simulation(){
 		myControllerResources = ResourceBundle.getBundle(DEFAULT_CONTROLLER_RESOURCE);
 		mySpeed = Integer.parseInt(myControllerResources.getString("InitialSpeed"));
+		tick = 0;
 	}
 	
 	/**
-	 * Returns name of the game.
+	 * Returns name of the program.
 	 */
 	public String getTitle() {
-		return TITLE;
+		return myControllerResources.getString("Title");
 	}
 
 
@@ -92,7 +77,7 @@ public class Simulation {
 		myGrid = new Grid(inputgrid[1].length, inputgrid[1].length, inputgrid);
 		myRules.initGrid(myGrid, inputgrid);
 		current = myRules.toString();
-		myView.setGridDimensions(inputgrid.length, inputgrid[1].length, current);
+		myView.setGridInfo(inputgrid.length, inputgrid[1].length, current);
 	}
 	
 	/**
@@ -140,31 +125,55 @@ public class Simulation {
 		return mySpeed;
 	}
 	
+	/**
+	 * setter method to change current speed by del
+	 * @param del
+	 * @return returns new speed
+	 */
 	public int changeSpeed(int del){
 		mySpeed += del;
 		return mySpeed;
 	}
 	
+	/**
+	 * @return returns the current speed
+	 */
 	public String getCurrent(){
 		return current;
 	}
 	
+	/**
+	 * sets the current state of running to the value of b
+	 * @param b a boolean indicating running or not
+	 */
 	public void setRunning(boolean b){
 		running = b;
 	}
 	
+	/**
+	 * @return returns the grid that this simulation is using
+	 */
 	public Grid getGrid(){
 		return myGrid;
 	}
 	
+	/**
+	 * @return returns the rules that this simulation is using
+	 */
 	public Rules getRules(){
 		return myRules;
 	}
 	
+	/**
+	 * @return returns the XMLFile that this simulation is using
+	 */
 	public File getXML(){
 		return xmlFile;
 	}
 	
+	/**
+	 * @param sets the myView instance variable equal to v
+	 */
 	public void setView(CSView v){
 		myView = v;
 	}
