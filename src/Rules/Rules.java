@@ -6,7 +6,9 @@
 package Rules;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import Model.Cell;
 import Model.Grid;
@@ -16,6 +18,7 @@ public abstract class Rules {
 
 	protected static final Color ERRORCOLOR = Color.PINK;
 	private List<Cell> toBeUpdated = new ArrayList<Cell>();
+	private Map<String, Integer> myStatesCount = new HashMap<String, Integer>();
 	
 	/**
 	 * Initialize the Grid with the Cells corresponding to this simulation.
@@ -27,6 +30,7 @@ public abstract class Rules {
 			for (int col = 0; col < grid.getNumCols(); col++) {
 				Cell cell = createCell(initialStates[row][col], row, col);
 				grid.addCellToGrid(row, col, cell);
+				increaseStateCount(cell.getCurState());
 			}
 		}
 	}
@@ -39,18 +43,6 @@ public abstract class Rules {
 	 * @return
 	 */
 	protected abstract Cell createCell(String initialState, int row, int col);
-	
-	/**
-	 * Applies the simulation rules to each cell in the grid.
-	 * @param grid: Simulation grid.
-	 */
-	public void applyRulesToGrid(Grid grid) {
-		for (int row = 0; row < grid.getNumRows(); row++) {
-			for (int col = 0; col < grid.getNumCols(); col++) {
-				applyRulesToCell(grid.getCell(row, col), grid);
-			}
-		}
-	}
 	
 	/**
 	 * Rules for each simulation to be implemented by simulation-specific subclasses.
@@ -108,6 +100,55 @@ public abstract class Rules {
 	 */
 	public void clearToBeUpdatedList(){
 		toBeUpdated.clear();
+	}
+	
+	/**
+	 * Gets a map containing the number cells in each state.
+	 * @return map mapping state to number of cells in that state.
+	 */
+	public Map<String, Integer> getMyStatesCount() {
+		return myStatesCount;
+	}
+	
+	/**
+	 * Increases the count for the number of cells in a particular state by 1.
+	 * @param state: state whose count to increase.
+	 */
+	protected void increaseStateCount(String state) {
+		if (!myStatesCount.containsKey(state)) {
+			myStatesCount.put(state, 1);
+		} else {
+			myStatesCount.put(state, myStatesCount.get(state) + 1);
+		}
+	}
+	
+	/**
+	 * Decreases the count for the number of cells in a particular state by 1.
+	 * @param state: state whose count to decrease.
+	 */
+	protected void decreaseStateCount(String state) {
+		if (myStatesCount.containsKey(state)) {
+			int num = myStatesCount.get(state);
+			if (num > 0) {
+				myStatesCount.put(state, num - 1);
+			}
+		}
+	}
+
+	/**
+	 * Updates the state counts when a cell switches state.
+	 * @param cell: cell that is switching states.
+	 */
+	public void updateStateCount(Cell cell) {
+		if (cell.getNextState() != null) {
+			decreaseStateCount(cell.getCurState());
+			increaseStateCount(cell.getNextState());
+		}
+		//addCellToBeUpdated(cell);
+	}
+	
+	protected boolean isLastCellInGrid(Cell cell, Grid grid) {
+		return (cell.getCurRow() == (grid.getNumRows() - 1)) && (cell.getCurCol() == (grid.getNumCols() - 1));
 	}
 	
 	/**
