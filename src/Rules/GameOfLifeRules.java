@@ -6,6 +6,8 @@
 
 package Rules;
 
+import java.util.ArrayList;
+
 import Model.Cell;
 import Model.Grid;
 import Model.StandardCell;
@@ -107,5 +109,11 @@ public class GameOfLifeRules extends Rules {
 	
 	public String toString(){
 		return "Game Of Life";
+	}
+
+	@Override
+	public ArrayList<String> getParameters() {
+		ArrayList<String> parameters = new ArrayList<String>();
+		return parameters;
 	}
 }

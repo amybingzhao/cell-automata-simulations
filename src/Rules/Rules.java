@@ -164,4 +164,11 @@ public abstract class Rules {
 	 * Returns string name of the Simulation
 	 */
 	public abstract String toString();
+	
+	/**
+	 * Retrieves a list of all the rule parameters
+	 * @return
+	 * An ArrayList of Strings containing the game parameters
+	 */
+	public abstract ArrayList<String> getParameters();
 }

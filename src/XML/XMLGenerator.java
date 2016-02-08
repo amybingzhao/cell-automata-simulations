@@ -12,7 +12,6 @@ import java.util.Random;
 import javax.xml.parsers.*;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
@@ -36,6 +35,13 @@ public class XMLGenerator {
 			e.printStackTrace();
 		}
 	}
+	
+//	Element myRoot = myDocument.createElement("Simulation");
+//	myDocument.appendChild(myRoot);
+//	myRoot.appendChild(saveConfig);
+//	myRoot.appendChild(saveRules);
+//	myRoot.appendChild(saveCells);
+//	createFile();
 
 	/**
 	 * Generates an XML file containing a randomly determined starting state for
@@ -54,30 +60,20 @@ public class XMLGenerator {
 	 * @param numCells
 	 *            The number of cells to be randomly generated
 	 */
-	public void generateFile(int rows, int cols, String rules, List<String> parameters, List<String> states, String filename) {
-
+	public void generateFile(int rows, int cols, String rules, List<String> parameters, List<String> states,
+			String fileName) {
 		try {
-
+			myDocument = myBuilder.newDocument();
 			Element myRoot = myDocument.createElement("Simulation");
 			myDocument.appendChild(myRoot);
-
 			myRoot.appendChild(getConfig(rows, cols));
 			myRoot.appendChild(getRules(rules, parameters));
 			myRoot.appendChild(createRandomCells(rows, cols, states));
-
-			TransformerFactory myTransformerFactory = TransformerFactory.newInstance();
-			Transformer myTransformer = myTransformerFactory.newTransformer();
-			myTransformer.setOutputProperty(OutputKeys.INDENT, "yes");
-			myTransformer.setOutputProperty(OutputKeys.METHOD, "xml");
-			myTransformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
-			DOMSource mySource = new DOMSource(myDocument);
-			StreamResult myResult = new StreamResult(new File("data/" + filename));
-			myTransformer.transform(mySource, myResult);
-
+			createFile("data/" + fileName);
 		} catch (Exception e) {
+			System.out.println("OOPS");
 			e.printStackTrace();
 		}
-
 	}
 
 	/**
@@ -133,7 +129,6 @@ public class XMLGenerator {
 	 *         parameters
 	 */
 	public Element parametersAsElement(List<String> parameters) {
-
 		Element paramElement = myDocument.createElement("Parameters");
 		for (String param : parameters) {
 			String[] splitParam = param.split(":");
@@ -162,51 +157,52 @@ public class XMLGenerator {
 		Element myCells = myDocument.createElement("Cells");
 		Random myRandom = new Random();
 		for (int row = 0; row < rows; row++) {
-			for (int col = 0; col < cols; col++){
+			for (int col = 0; col < cols; col++) {
 				Element myCell = makeCellEntry(row, col, states.get(myRandom.nextInt(states.size())));
 				myCells.appendChild(myCell);
 			}
 		}
 		return myCells;
 	}
-	
-	public void save(String rulesType, int rows, int cols, Cell[][] gameGrid, ArrayList<String> params){
+
+	public void save(String rulesType, int rows, int cols, Cell[][] gameGrid, ArrayList<String> params) {
 		myDocument = myBuilder.newDocument();
-		Element saveConfig = getConfig(rows,cols);
+		Element saveConfig = getConfig(rows, cols);
 		Element saveRules = getRules(rulesType, params);
 		Element saveCells = myDocument.createElement("Cells");
-		for (int row = 0; row < gameGrid.length; row++){
-			for (int col = 0; col < gameGrid[row].length; col++){
+		for (int row = 0; row < gameGrid.length; row++) {
+			for (int col = 0; col < gameGrid[row].length; col++) {
 				Element myCell = makeCellEntry(row, col, gameGrid[row][col].getCurState());
 				saveCells.appendChild(myCell);
 			}
 		}
 		Element myRoot = myDocument.createElement("Simulation");
 		myDocument.appendChild(myRoot);
-
 		myRoot.appendChild(saveConfig);
 		myRoot.appendChild(saveRules);
 		myRoot.appendChild(saveCells);
+		createFile("data/SavedGame.xml");
+	}
 
+	public void createFile(String fileName) {
 		TransformerFactory myTransformerFactory = TransformerFactory.newInstance();
 		Transformer myTransformer;
 		try {
-			
 			myTransformer = myTransformerFactory.newTransformer();
 			myTransformer.setOutputProperty(OutputKeys.INDENT, "yes");
 			myTransformer.setOutputProperty(OutputKeys.METHOD, "xml");
 			myTransformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
 			DOMSource mySource = new DOMSource(myDocument);
-			StreamResult myResult = new StreamResult(new File("data/SavedGame.xml"));
+			StreamResult myResult = new StreamResult(new File(fileName));
 			myTransformer.transform(mySource, myResult);
-			
+			System.out.println("DONE");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-	
-	Element makeCellEntry(int row, int col, String state){
+
+	Element makeCellEntry(int row, int col, String state) {
 		Element myCell = myDocument.createElement("Cell");
 		Element xElement = myDocument.createElement("X");
 		xElement.appendChild(myDocument.createTextNode("" + row));
@@ -224,34 +220,34 @@ public class XMLGenerator {
 		XMLGenerator myGenerator = new XMLGenerator();
 		ArrayList<String> parameters = new ArrayList<String>();
 		ArrayList<String> states = new ArrayList<String>();
-		
-		//Uncomment sections below according to desired simulation type
-		
-		//GAME OF LIFE
+
+		// Uncomment sections below according to desired simulation type
+
+		// GAME OF LIFE
 		states.add("ALIVE");
 		states.add("DEAD");
-		
-		//FIRE
-//		states.add("EMPTY");
-//		states.add("TREE");
-//		states.add("BURNING");
-//		parameters.add("ProbCatch:10");
-		
-		//Segregation
-//		states.add("RED");
-//		states.add("BLUE");
-//		states.add("EMPTY");
-//		parameters.add("Threshold:30");
-		
-		//Predator Prey
-//		states.add("WATER");
-//		states.add("FISH");
-//		states.add("SHARK");
-//		parameters.add("InitialSharkEngery:15");
-//		parameters.add("SharkReproductionTime:10");
-//		parameters.add("FishReproductionTime:10");
-		
-		myGenerator.generateFile(20, 20, "GameOfLife", parameters, states, "GameOfLife4.xml");
+
+		// FIRE
+		// states.add("EMPTY");
+		// states.add("TREE");
+		// states.add("BURNING");
+		// parameters.add("ProbCatch:10");
+
+		// Segregation
+		// states.add("RED");
+		// states.add("BLUE");
+		// states.add("EMPTY");
+		// parameters.add("Threshold:30");
+
+		// Predator Prey
+		// states.add("WATER");
+		// states.add("FISH");
+		// states.add("SHARK");
+		// parameters.add("InitialSharkEngery:15");
+		// parameters.add("SharkReproductionTime:10");
+		// parameters.add("FishReproductionTime:10");
+
+		myGenerator.generateFile(20, 20, "GameOfLife", parameters, states, "TEST.xml");
 	}
 
 }

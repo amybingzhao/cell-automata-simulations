@@ -1,5 +1,7 @@
 package Rules;
 
+import java.util.ArrayList;
+
 import Model.Cell;
 import Model.ForagingAntsCell;
 import Model.Grid;
@@ -43,6 +45,12 @@ public class ForagingAntsRules extends Rules {
 	@Override
 	public String toString() {
 		return "Foraging Ants";
+	}
+
+	@Override
+	public ArrayList<String> getParameters() {
+		ArrayList<String> parameters = new ArrayList<String>();
+		return parameters;
 	}
 
 }

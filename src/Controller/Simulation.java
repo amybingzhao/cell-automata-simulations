@@ -145,11 +145,11 @@ public class Simulation {
 		return current;
 	}
 	
-	private void saveXML(){
+	public void saveXML(){
 		XMLGenerator myGenerator = new XMLGenerator();
 		ArrayList<String> parameters = new ArrayList<String>();
-		String myRules = current.replaceAll(" ", "");
-		myGenerator.save(myRules, myGrid.getNumRows(), myGrid.getNumCols(), myGrid.getGrid(), parameters);
+		String myRulesName = current.replaceAll(" ", "");
+		myGenerator.save(myRulesName, myGrid.getNumRows(), myGrid.getNumCols(), myGrid.getGrid(), myRules.getParameters());
 	}
 	
 	/**

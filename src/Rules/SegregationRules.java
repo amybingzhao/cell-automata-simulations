@@ -154,4 +154,11 @@ public class SegregationRules extends Rules {
 	public String toString(){
 		return "Segregation";
 	}
+
+	@Override
+	public ArrayList<String> getParameters() {
+		ArrayList<String> parameters = new ArrayList<String>();
+		parameters.add("Threshold:" + myThreshold);
+		return parameters;
+	}
 }
