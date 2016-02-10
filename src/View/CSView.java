@@ -1,44 +1,58 @@
 package View;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.ResourceBundle;
 
 import Controller.Simulation;
 import Model.Grid;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Side;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 public class CSView {
 	
-	//View Objects
+	//UI Objects
 	private Stage myStage;
 	private Group myBoardGroup;
 	private Rectangle[][] myBoard;
 	private Text myTitleDisplay;
 	private Text mySpeedDisplay;
-
-	//View Dimensions
+	private LineChart<Number,Number> lineChart;
+	private Map<String, XYChart.Series> seriesMap;
+	
+	
+	//UI Metrics
 	private int myGridWidth;
 	private int myGridHeight;
 	private int boardHeightOffset;
 	private int boardWidthOffset;
 	private int boardPixelSize;
 	private int cellPixelSize;
-		
+	private int chartHeightOffset;
+	
+	//resources
 	public static final String DEFAULT_VIEW_RESOURCE = "View/View";
 	private ResourceBundle myViewResources;
 	
+
 	private Simulation mySimulation;;
 	
 	/**
@@ -60,6 +74,7 @@ public class CSView {
 		boardPixelSize = Integer.parseInt(myViewResources.getString("BoardPixelSize"));
 		boardWidthOffset = Integer.parseInt(myViewResources.getString("BoardWidthOffset"));
 		boardHeightOffset = Integer.parseInt(myViewResources.getString("BoardHeightOffset"));
+		chartHeightOffset = Integer.parseInt(myViewResources.getString("ChartHeightOffset"));
 	}
 	
 	public Scene getScene(Stage stage){
@@ -77,14 +92,15 @@ public class CSView {
 	 */
 	private Group buildUIRoot(){
 		Group group = new Group();
+		group.getChildren().add(getBackground());
 		
-		Rectangle boardBackground = new Rectangle();
-		boardBackground.setFill(Color.BLACK);
-		boardBackground.setX(boardWidthOffset);
-		boardBackground.setY(boardHeightOffset);
-		boardBackground.setWidth(boardPixelSize);
-		boardBackground.setHeight(boardPixelSize);
-		group.getChildren().add(boardBackground);
+		//add chart
+		VBox vbox1 = new VBox();
+		vbox1.setPrefWidth(boardPixelSize);
+		vbox1.setMaxHeight(100);
+		vbox1.setLayoutX(boardWidthOffset);
+		vbox1.setLayoutY(chartHeightOffset);
+		buildChart(vbox1);
 		
 		//set boardGroup instance variable
 		myBoardGroup = new Group();
@@ -92,13 +108,28 @@ public class CSView {
 		myBoardGroup.setLayoutY(boardHeightOffset);
 		group.getChildren().add(myBoardGroup);
 		
-		VBox vbox = new VBox(3);
-		attachButtonsToVBox(vbox);
-		attachFieldsToVBox(vbox);
-		vbox.setLayoutX(boardWidthOffset);
-		vbox.setLayoutY(boardPixelSize + boardHeightOffset + 20);
-		group.getChildren().add(vbox);
+		VBox vbox2 = new VBox(3);
+		attachButtonsToVBox(vbox2);
+		attachFieldsToVBox(vbox2);
+		vbox2.setPrefWidth(boardPixelSize);
+		vbox2.setLayoutX(boardWidthOffset);
+		vbox2.setLayoutY(boardPixelSize + boardHeightOffset + 20);
+		group.getChildren().addAll(vbox1, vbox2);
 		return group;
+	}
+	
+	/**
+	 * Generates the background rectangle for the board
+	 * @return a Rectangle object
+	 */
+	private Rectangle getBackground(){
+		Rectangle boardBackground = new Rectangle();
+		boardBackground.setFill(Color.BLACK);
+		boardBackground.setX(boardWidthOffset);
+		boardBackground.setY(boardHeightOffset);
+		boardBackground.setWidth(boardPixelSize);
+		boardBackground.setHeight(boardPixelSize);
+		return boardBackground;
 	}
 	
 	/**
@@ -115,14 +146,17 @@ public class CSView {
 		for(int i = 0; i < secondrow.length; i++){
 			addButtonToHbox(secondrow[i], hbox2);
 		}
-		
-		hbox1.setPrefWidth(boardPixelSize);
-		hbox2.setPrefWidth(boardPixelSize);
+
 		vbox.getChildren().add(hbox1);
 		vbox.getChildren().add(hbox2);
 	}
 	
-	private Button addButtonToHbox(String name, HBox hbox){
+	/**
+	 * Adds buttons of a certain name to some hbox
+	 * @param name name of button
+	 * @param hbox hbox to be added to
+	 */
+	private void addButtonToHbox(String name, HBox hbox){
 		Button button = new Button(name);
 		button.setOnAction(new EventHandler<ActionEvent>() {
 		    @Override public void handle(ActionEvent e) {
@@ -132,7 +166,6 @@ public class CSView {
 		HBox.setHgrow(button, Priority.ALWAYS);
 	    button.setMaxWidth(Double.MAX_VALUE);
 		hbox.getChildren().add(button);
-		return button;
 	}
 	
 	/**
@@ -143,12 +176,15 @@ public class CSView {
 		HBox hbox = new HBox(2);
 		myTitleDisplay = new Text();
 		myTitleDisplay.setText("Current Simulation: None");
+		myTitleDisplay.setFont(new Font(14));
 		mySpeedDisplay = new Text();
+		mySpeedDisplay.setFont(new Font(14));
 		mySpeedDisplay.setText("    Current Speed: " + mySimulation.getSpeed());		
 	    hbox.getChildren().add(myTitleDisplay);
 		hbox.getChildren().add(mySpeedDisplay);
 		vbox.getChildren().add(hbox);
 	}
+	
 	
 	/**
 	 * Determines response to button press based on the button.
@@ -178,9 +214,11 @@ public class CSView {
 			break;
 		case "Load XML":
 			loadXMLPressed();
+			setupChart();
 			break;
 		case "Restart":
 			restartPressed();
+			setupChart();
 			break;
 		case "Save":
 			if(mySimulation.getRules() != null){
@@ -273,6 +311,49 @@ public class CSView {
 				myBoard[r][c].setFill(color);
 			}
 		}
+	}
+	
+	/**
+	 * Adds a linechart graph to the specified vbox
+	 * @param vbox
+	 */
+	private void buildChart(VBox vbox){
+		NumberAxis xAxis = new NumberAxis();
+	    NumberAxis yAxis = new NumberAxis();
+	    xAxis.setLabel("Time");
+	    yAxis.setLabel("Cells");
+	    //creating the chart
+	    lineChart = new LineChart<Number,Number>(xAxis,yAxis);
+	    lineChart.setCreateSymbols(false);
+	    lineChart.setLegendSide(Side.RIGHT);
+	    lineChart.setTitle("Current Cells");
+	    vbox.getChildren().add(lineChart);
+	}
+	
+	/**
+	 * Clears the old graph
+	 * adds series to graph based on current series
+	 */
+	private void setupChart(){
+		lineChart.getData().clear();
+	    seriesMap = new HashMap<String, XYChart.Series>();
+	    Map<String, Integer> statesCount = mySimulation.getRules().getMyStatesCount();
+	    //define series for each type of cell
+	    int time = 0;
+	    for(String key : statesCount.keySet()){
+	    	XYChart.Series series = new XYChart.Series();
+	 	    series.setName(key);
+	 	    seriesMap.put(key, series);
+	 	    lineChart.getData().add(series);
+	 	    series.getData().add(new XYChart.Data(time, statesCount.get(key)));
+	    }
+	}
+	
+	public void updateGraph(int time){
+		Map<String, Integer> statesCount = mySimulation.getRules().getMyStatesCount();		 
+		for(String key : statesCount.keySet()){
+	 	    seriesMap.get(key).getData().add(new XYChart.Data(time, statesCount.get(key)));
+	    }
 	}
 }
 

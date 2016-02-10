@@ -6,7 +6,6 @@
 package Controller;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
 import Model.Cell;
 import Model.Grid;
@@ -16,7 +15,6 @@ import XML.XMLGenerator;
 import XML.XMLParser;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.stage.FileChooser;
 
 /*
  * Todos:
@@ -82,6 +80,27 @@ public class Simulation {
 		loaded = true;
 	}
 	
+
+	/**
+	 * Saves a XML file 
+	 */
+	public void saveXML(){
+		running = false;
+		if (!loaded){
+			Alert myAlert = new Alert(AlertType.INFORMATION);
+			myAlert.setTitle("Saving Error");
+			myAlert.setHeaderText(null);
+			myAlert.setContentText("You must have a simulation loaded to save!");
+			myAlert.showAndWait();
+			return;
+		}
+		XMLGenerator myGenerator = new XMLGenerator();
+		String myRulesName = myRules.toString().replaceAll(" ", "");
+		File myFile = myView.promptForFileName();
+		if (myFile == null) return;
+		myGenerator.save(myRulesName, myGrid.getNumRows(), myGrid.getNumCols(), myGrid.getGrid(), myRules.getParameters(), myFile);
+	}
+	
 	/**
 	 * Applies rules to cells, updates their states, displays new states
 	 */
@@ -94,6 +113,7 @@ public class Simulation {
 			applyRulesToGrid();
 			updateEachState();
 			myView.displayGridToBoard();
+			myView.updateGraph(tick);
 		}
 		tick++;
 	}
@@ -115,6 +135,7 @@ public class Simulation {
 	 */
 	private void updateEachState(){
 		for(Cell c: myRules.getToBeUpdatedList()){
+			myRules.updateStateCount(c);
 			c.updateState();
 		}
 		myRules.clearToBeUpdatedList();
@@ -143,23 +164,6 @@ public class Simulation {
 	 */
 	public String getName(){
 		return myRules.toString();
-	}
-	
-	public void saveXML(){
-		running = false;
-		if (!loaded){
-			Alert myAlert = new Alert(AlertType.INFORMATION);
-			myAlert.setTitle("Saving Error");
-			myAlert.setHeaderText(null);
-			myAlert.setContentText("You must have a simulation loaded to save!");
-			myAlert.showAndWait();
-			return;
-		}
-		XMLGenerator myGenerator = new XMLGenerator();
-		String myRulesName = myRules.toString().replaceAll(" ", "");
-		File myFile = myView.promptForFileName();
-		if (myFile == null) return;
-		myGenerator.save(myRulesName, myGrid.getNumRows(), myGrid.getNumCols(), myGrid.getGrid(), myRules.getParameters(), myFile);
 	}
 	
 	/**
