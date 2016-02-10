@@ -1,6 +1,5 @@
 /**
  * @author Austin Wu
- * @author Blake Kaplan
  * This class takes care of overall logic and UI elements
  */
 
@@ -18,14 +17,12 @@ import XML.XMLParser;
 
 /*
  * Todos:
- * 1. Refactor into view class
+ * 1. Refactor into view class DONE
  * 2. Part 3 Visualization Stuff
  * 3. Different cell shapes
  * 4. Different grid edge types
  * 5. Simulation Styling
- * 6. Start resource file
- * 7. 
- * 
+ * 6. Start resource file DONE
  */
 
 /*
@@ -45,7 +42,6 @@ public class Simulation {
 	private File xmlFile;
 	private Grid myGrid;
 	private Rules myRules;
-	private String current; 
 	
 	private CSView myView;
 
@@ -74,12 +70,11 @@ public class Simulation {
 			xmlFile = file;
 		XMLParser parser = new XMLParser();
 		parser.parse(xmlFile);
-		myRules = parser.getRules(); 
 		String[][] inputgrid = parser.getGrid();
 		myGrid = new Grid(inputgrid[1].length, inputgrid[1].length, inputgrid);
+		myRules = parser.getRules(); 
 		myRules.initGrid(myGrid, inputgrid);
-		current = myRules.toString();
-		myView.setGridInfo(inputgrid.length, inputgrid[1].length, current);
+		myView.setGridInfo(inputgrid.length, inputgrid[1].length, myRules.toString());
 	}
 	
 	/**
@@ -139,16 +134,15 @@ public class Simulation {
 	}
 	
 	/**
-	 * @return returns the current speed
+	 * @return returns the current simulation
 	 */
-	public String getCurrent(){
-		return current;
+	public String getName(){
+		return myRules.toString();
 	}
 	
 	public void saveXML(){
 		XMLGenerator myGenerator = new XMLGenerator();
-		ArrayList<String> parameters = new ArrayList<String>();
-		String myRulesName = current.replaceAll(" ", "");
+		String myRulesName = myRules.toString().replaceAll(" ", "");
 		myGenerator.save(myRulesName, myGrid.getNumRows(), myGrid.getNumCols(), myGrid.getGrid(), myRules.getParameters());
 	}
 	

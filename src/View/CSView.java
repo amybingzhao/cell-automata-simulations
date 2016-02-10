@@ -105,8 +105,8 @@ public class CSView {
 	 * Attach buttons to the UI display.
 	 */
 	private void attachButtonsToVBox(VBox vbox){
-		String[] firstrow = {"Start", "Stop", "Step", "Load XML"};
-		String[] secondrow= {"Speed Up", "Slow Down", "Restart", "Save"};
+		String[] firstrow = myViewResources.getString("ButtonRowOne").split(",");
+		String[] secondrow= myViewResources.getString("ButtonRowTwo").split(",");
 		HBox hbox1 = new HBox(firstrow.length);
 		HBox hbox2 = new HBox(secondrow.length);
 		for(int i = 0; i < firstrow.length; i++){
@@ -156,14 +156,14 @@ public class CSView {
 	private void respondToButton(String button){
 		switch(button) {
 		case "Start":
-			if(mySimulation.getCurrent() != null)
+			if(mySimulation.getRules() != null)
 				mySimulation.setRunning(true);
 			break;
 		case "Stop":
 			mySimulation.setRunning(false);
 			break;
 		case "Step":
-			if(mySimulation.getCurrent() != null){
+			if(mySimulation.getRules() != null){
 				mySimulation.step(0.0, true);
 				displayGridToBoard();
 			}
@@ -182,7 +182,10 @@ public class CSView {
 		case "Restart":
 			restartPressed();
 		case "Save":
-			mySimulation.saveXML();
+			if(mySimulation.getRules() != null){
+				mySimulation.setRunning(false);
+				mySimulation.saveXML();
+			}
 			break;
 		}
 	}

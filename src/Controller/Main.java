@@ -34,7 +34,6 @@ public class Main extends Application {
         
         stage.setTitle(mySimulation.getTitle());
 
-//        Scene scene = mySimulation.init(BOARDSIZE, WIDTH, HEIGHT, stage);
         Scene scene = myView.getScene(stage);
         stage.setScene(scene);
         stage.show();
