@@ -36,7 +36,7 @@ public class CSView {
 	private int boardPixelSize;
 	private int cellPixelSize;
 		
-	public static final String DEFAULT_VIEW_RESOURCE = "View/DefaultView";
+	public static final String DEFAULT_VIEW_RESOURCE = "View/View";
 	private ResourceBundle myViewResources;
 	
 	private Simulation mySimulation;;
@@ -181,6 +181,7 @@ public class CSView {
 			break;
 		case "Restart":
 			restartPressed();
+			break;
 		case "Save":
 			if(mySimulation.getRules() != null){
 				mySimulation.setRunning(false);
@@ -203,6 +204,14 @@ public class CSView {
 			buildBoard();
 			displayGridToBoard();	
 		}
+	}
+	
+	public File promptForFileName(){
+		FileChooser myFileChooser = new FileChooser();
+		FileChooser.ExtensionFilter myFilter = new FileChooser.ExtensionFilter("XML Files (.xml)", "*.xml");
+		myFileChooser.getExtensionFilters().add(myFilter);
+		File fileName = myFileChooser.showSaveDialog(myStage);
+		return fileName;
 	}
 	
 	/**

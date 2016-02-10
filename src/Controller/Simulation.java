@@ -14,6 +14,9 @@ import Rules.Rules;
 import View.CSView;
 import XML.XMLGenerator;
 import XML.XMLParser;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.stage.FileChooser;
 
 /*
  * Todos:
@@ -37,6 +40,7 @@ public class Simulation {
 	private boolean running;
 	private int mySpeed;
 	private int tick;
+	private boolean loaded;
 	
 	//xml determined variables
 	private File xmlFile;
@@ -45,7 +49,7 @@ public class Simulation {
 	
 	private CSView myView;
 
-	public static final String DEFAULT_CONTROLLER_RESOURCE = "Controller/DefaultController";
+	public static final String DEFAULT_CONTROLLER_RESOURCE = "Controller/Controller";
 	private ResourceBundle myControllerResources;
 	
 	public Simulation(){
@@ -75,6 +79,7 @@ public class Simulation {
 		myRules = parser.getRules(); 
 		myRules.initGrid(myGrid, inputgrid);
 		myView.setGridInfo(inputgrid.length, inputgrid[1].length, myRules.toString());
+		loaded = true;
 	}
 	
 	/**
@@ -141,9 +146,20 @@ public class Simulation {
 	}
 	
 	public void saveXML(){
+		running = false;
+		if (!loaded){
+			Alert myAlert = new Alert(AlertType.INFORMATION);
+			myAlert.setTitle("Saving Error");
+			myAlert.setHeaderText(null);
+			myAlert.setContentText("You must have a simulation loaded to save!");
+			myAlert.showAndWait();
+			return;
+		}
 		XMLGenerator myGenerator = new XMLGenerator();
 		String myRulesName = myRules.toString().replaceAll(" ", "");
-		myGenerator.save(myRulesName, myGrid.getNumRows(), myGrid.getNumCols(), myGrid.getGrid(), myRules.getParameters());
+		File myFile = myView.promptForFileName();
+		if (myFile == null) return;
+		myGenerator.save(myRulesName, myGrid.getNumRows(), myGrid.getNumCols(), myGrid.getGrid(), myRules.getParameters(), myFile);
 	}
 	
 	/**
