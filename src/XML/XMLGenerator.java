@@ -8,7 +8,11 @@ package XML;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
+import java.util.ResourceBundle;
+import java.util.Scanner;
+
 import javax.xml.parsers.*;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
@@ -16,16 +20,19 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.*;
-
 import Model.Cell;
+import javafx.stage.FileChooser;
 
 public class XMLGenerator {
 
 	private DocumentBuilderFactory myFactory;
 	private DocumentBuilder myBuilder;
 	private Document myDocument;
+	private static final String RULES_PROPERTIES = "Rules/Rules";
+	private ResourceBundle myRulesResources;
 
 	public XMLGenerator() {
+		myRulesResources = ResourceBundle.getBundle(RULES_PROPERTIES);
 		try {
 			myFactory = DocumentBuilderFactory.newInstance();
 			myBuilder = myFactory.newDocumentBuilder();
@@ -35,13 +42,13 @@ public class XMLGenerator {
 			e.printStackTrace();
 		}
 	}
-	
-//	Element myRoot = myDocument.createElement("Simulation");
-//	myDocument.appendChild(myRoot);
-//	myRoot.appendChild(saveConfig);
-//	myRoot.appendChild(saveRules);
-//	myRoot.appendChild(saveCells);
-//	createFile();
+
+	// Element myRoot = myDocument.createElement("Simulation");
+	// myDocument.appendChild(myRoot);
+	// myRoot.appendChild(saveConfig);
+	// myRoot.appendChild(saveRules);
+	// myRoot.appendChild(saveCells);
+	// createFile();
 
 	/**
 	 * Generates an XML file containing a randomly determined starting state for
@@ -60,16 +67,16 @@ public class XMLGenerator {
 	 * @param numCells
 	 *            The number of cells to be randomly generated
 	 */
-	public void generateFile(int rows, int cols, String rules, List<String> parameters, List<String> states,
-			String fileName) {
+	public void generateFile(int rows, int cols, String rules, String fileName) {
+
 		try {
 			myDocument = myBuilder.newDocument();
 			Element myRoot = myDocument.createElement("Simulation");
 			myDocument.appendChild(myRoot);
 			myRoot.appendChild(getConfig(rows, cols));
-			myRoot.appendChild(getRules(rules, parameters));
-			myRoot.appendChild(createRandomCells(rows, cols, states));
-			createFile("data/" + fileName);
+			myRoot.appendChild(getRules(rules, promptForParameters(rules)));
+			myRoot.appendChild(createRandomCells(rows, cols, rules + "States"));
+			createFile(new File("data/" + fileName));
 		} catch (Exception e) {
 			System.out.println("OOPS");
 			e.printStackTrace();
@@ -153,19 +160,38 @@ public class XMLGenerator {
 	 *            An arraylist of potential cell states
 	 * @return An Element to be included in the XML file
 	 */
-	public Element createRandomCells(int rows, int cols, List<String> states) {
+	public Element createRandomCells(int rows, int cols, String rule) {
+		String statesString = myRulesResources.getString(rule);
+		String[] states = statesString.split(",");
 		Element myCells = myDocument.createElement("Cells");
 		Random myRandom = new Random();
 		for (int row = 0; row < rows; row++) {
 			for (int col = 0; col < cols; col++) {
-				Element myCell = makeCellEntry(row, col, states.get(myRandom.nextInt(states.size())));
+				Element myCell = makeCellEntry(row, col, states[(myRandom.nextInt(states.length))]);
 				myCells.appendChild(myCell);
 			}
 		}
 		return myCells;
 	}
 
-	public void save(String rulesType, int rows, int cols, Cell[][] gameGrid, ArrayList<String> params) {
+	/**
+	 * Saves the current simulation into an XML file that can be loaded later
+	 * 
+	 * @param rulesType
+	 *            The string representing which set of rules are being used
+	 * @param rows
+	 *            The number of rows in the grid
+	 * @param cols
+	 *            The number of columns in the grid
+	 * @param gameGrid
+	 *            The grid of Cell objects containing the current states of each
+	 *            cell
+	 * @param params
+	 *            An ArrayList of the current simulation parameters
+	 * @param myFile
+	 *            The file to be saved to
+	 */
+	public void save(String rulesType, int rows, int cols, Cell[][] gameGrid, ArrayList<String> params, File myFile) {
 		myDocument = myBuilder.newDocument();
 		Element saveConfig = getConfig(rows, cols);
 		Element saveRules = getRules(rulesType, params);
@@ -181,10 +207,17 @@ public class XMLGenerator {
 		myRoot.appendChild(saveConfig);
 		myRoot.appendChild(saveRules);
 		myRoot.appendChild(saveCells);
-		createFile("data/SavedGame.xml");
+		createFile(myFile);
 	}
 
-	public void createFile(String fileName) {
+	/**
+	 * Uses the data currently contained in the Document to create a new file as
+	 * desired
+	 * 
+	 * @param myFile
+	 *            The file to be written to
+	 */
+	public void createFile(File myFile) {
 		TransformerFactory myTransformerFactory = TransformerFactory.newInstance();
 		Transformer myTransformer;
 		try {
@@ -193,7 +226,7 @@ public class XMLGenerator {
 			myTransformer.setOutputProperty(OutputKeys.METHOD, "xml");
 			myTransformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
 			DOMSource mySource = new DOMSource(myDocument);
-			StreamResult myResult = new StreamResult(new File(fileName));
+			StreamResult myResult = new StreamResult(myFile);
 			myTransformer.transform(mySource, myResult);
 			System.out.println("DONE");
 		} catch (Exception e) {
@@ -202,6 +235,17 @@ public class XMLGenerator {
 		}
 	}
 
+	/**
+	 * Given data about a particular cell, creates an XML element for the cell
+	 * 
+	 * @param row
+	 *            The cell's row
+	 * @param col
+	 *            The cell's column
+	 * @param state
+	 *            The cell's state
+	 * @return The cell XML element
+	 */
 	Element makeCellEntry(int row, int col, String state) {
 		Element myCell = myDocument.createElement("Cell");
 		Element xElement = myDocument.createElement("X");
@@ -216,38 +260,31 @@ public class XMLGenerator {
 		return myCell;
 	}
 
+	/**
+	 * Asks the user to define the values of simulation parameters when building
+	 * an XML file
+	 * 
+	 * @param rule
+	 *            The set of rules to be applied to the XML file
+	 * @return An ArrayList containing the simulation parameters
+	 */
+	public ArrayList<String> promptForParameters(String rule) {
+		ArrayList<String> parameters = new ArrayList<String>();
+		String[] resourcesParams = myRulesResources.getString(rule + "Parameters").split(",");
+		Scanner myScanner = new Scanner(System.in);
+		for (String param : resourcesParams) {
+			System.out.println("Choose the value of " + param);
+			int value = myScanner.nextInt();
+			parameters.add(param + ":" + value);
+		}
+		myScanner.close();
+		return parameters;
+	}
+
 	public static void main(String[] args) {
 		XMLGenerator myGenerator = new XMLGenerator();
 		ArrayList<String> parameters = new ArrayList<String>();
-		ArrayList<String> states = new ArrayList<String>();
-
-		// Uncomment sections below according to desired simulation type
-
-		// GAME OF LIFE
-		states.add("ALIVE");
-		states.add("DEAD");
-
-		// FIRE
-		// states.add("EMPTY");
-		// states.add("TREE");
-		// states.add("BURNING");
-		// parameters.add("ProbCatch:10");
-
-		// Segregation
-		// states.add("RED");
-		// states.add("BLUE");
-		// states.add("EMPTY");
-		// parameters.add("Threshold:30");
-
-		// Predator Prey
-		// states.add("WATER");
-		// states.add("FISH");
-		// states.add("SHARK");
-		// parameters.add("InitialSharkEngery:15");
-		// parameters.add("SharkReproductionTime:10");
-		// parameters.add("FishReproductionTime:10");
-
-		myGenerator.generateFile(20, 20, "GameOfLife", parameters, states, "TEST.xml");
+		myGenerator.generateFile(20, 20, "Fire", "Fire5.xml");
 	}
 
 }

@@ -181,6 +181,7 @@ public class CSView {
 			break;
 		case "Restart":
 			restartPressed();
+			break;
 		case "Save":
 			mySimulation.saveXML();
 			break;
@@ -200,6 +201,14 @@ public class CSView {
 			buildBoard();
 			displayGridToBoard();	
 		}
+	}
+	
+	public File promptForFileName(){
+		FileChooser myFileChooser = new FileChooser();
+		FileChooser.ExtensionFilter myFilter = new FileChooser.ExtensionFilter("XML Files (.xml)", "*.xml");
+		myFileChooser.getExtensionFilters().add(myFilter);
+		File fileName = myFileChooser.showSaveDialog(myStage);
+		return fileName;
 	}
 	
 	/**
