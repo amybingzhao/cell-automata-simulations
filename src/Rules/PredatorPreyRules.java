@@ -41,11 +41,12 @@ public class PredatorPreyRules extends Rules {
 	 */
 	public void applyRulesToCell(PredatorPreyCell cell, Grid grid) {
 		String curState = cell.getCurState();
+		Cell[][] neighborhood = grid.getNeighborhood(cell.getCurRow(), cell.getCurCol(), NUM_NEIGHBORS);
 		
 		if (curState.equals(FISH)) {
-			handleFishCell(cell, grid);
+			handleFishCell(cell, neighborhood);
 		} else if (curState.equals(SHARK)) {
-			handleSharkCell(cell, grid);
+			handleSharkCell(cell, grid, neighborhood);
 		}
 
 		if (cell.getCurRow() == grid.getNumRows() - 1 && cell.getCurCol() == grid.getNumCols() - 1) {
@@ -75,9 +76,8 @@ public class PredatorPreyRules extends Rules {
 	 * @param cell: fish Cell of interest.
 	 * @param grid: Simulation grid.
 	 */
-	private void handleFishCell(PredatorPreyCell cell, Grid grid) {
+	private void handleFishCell(PredatorPreyCell cell, Cell[][] neighborhood) {
 		if (!fishHasAlreadyBeenEaten(cell)) {
-			Cell[][] neighborhood = grid.getNeighborhood(cell.getCurRow(), cell.getCurCol(), NUM_NEIGHBORS);
 			Cell nextLocation = cellToMoveTo(neighborhood, WATER);
 
 			if (nextLocation != null) {
@@ -95,9 +95,7 @@ public class PredatorPreyRules extends Rules {
 	 * @param cell: shark Cell of interest.
 	 * @param grid: Simulation grid.
 	 */
-	private void handleSharkCell(PredatorPreyCell cell, Grid grid) {
-		Cell[][] neighborhood = grid.getNeighborhood(cell.getCurRow(), cell.getCurCol(), NUM_NEIGHBORS);
-		
+	private void handleSharkCell(PredatorPreyCell cell, Grid grid, Cell[][] neighborhood) {		
 		PredatorPreyCell fishToEat = (PredatorPreyCell) cellToMoveTo(neighborhood, FISH);
 		if (fishToEat != null) {
 			eatFish(fishToEat, cell, grid);
