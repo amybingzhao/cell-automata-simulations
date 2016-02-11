@@ -9,9 +9,14 @@ public abstract class SugarScapeAgent {
 	private int myVision;
 	private int myRow;
 	private int myCol;	
+	private static final int INIT_SUGAR_MIN = 5;
 	
 	public SugarScapeAgent(int initSugar, int metabolism, int vision, int row, int col) {
-		mySugar = initSugar;
+		if (initSugar > INIT_SUGAR_MIN) {
+			mySugar = initSugar;
+		} else {
+			mySugar = INIT_SUGAR_MIN;
+		}
 		mySugarMetabolism = metabolism;
 		myVision = vision;
 		myRow = row;
@@ -22,10 +27,6 @@ public abstract class SugarScapeAgent {
 		List<SugarScapeCell> neighbors = getViableNeighbors(grid);
 		SugarScapeCell nextPatch = compareViableNeighbors(neighbors, grid);
 		return nextPatch;
-	}
-	
-	public void moveToPatch(SugarScapeCell nextCell) {
-		
 	}
 	
 	private List<SugarScapeCell> getViableNeighbors(Grid grid) {

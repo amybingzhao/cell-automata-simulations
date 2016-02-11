@@ -153,6 +153,15 @@ public abstract class Rules {
 	}
 	
 	/**
+	 * Generates a random integer between 0 and (max-1) for indexing into a list.
+	 * @param max: size of list you're indexing into.
+	 * @return an integer for the random index.
+	 */
+	protected int generateRandom(int max) {
+		return (int) Math.round(Math.random() * (max-1));
+	}
+	
+	/**
 	 * 
 	 * @param State for which the fill must be generated
 	 * @return returns the fill color to be generated

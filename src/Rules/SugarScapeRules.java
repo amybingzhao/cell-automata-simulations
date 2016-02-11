@@ -32,7 +32,7 @@ public abstract class SugarScapeRules extends Rules {
 	protected Cell createCell(String initialState, int row, int col) {
 		SugarScapeAgent agent = null;
 		if (initialState.equals("OCCUPIED")) {
-			agent = new StandardSugarScapeAgent(myAgentSugarLimit, myAgentMetabolismLimit, myAgentVisionLimit, row, col);
+			agent = new StandardSugarScapeAgent(generateRandom(myAgentSugarLimit), generateRandom(myAgentMetabolismLimit), generateRandom(myAgentVisionLimit), row, col);
 		}
 		return new SugarScapeCell(initialState, row, col, myMaxCellSugarCapacity, agent);
 	}
