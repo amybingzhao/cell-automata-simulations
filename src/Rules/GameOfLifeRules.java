@@ -7,6 +7,7 @@
 package Rules;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import Model.Cell;
 import Model.Grid;
@@ -17,8 +18,6 @@ public class GameOfLifeRules extends Rules {
 	private static final int NUM_NEIGHBORS = 8;
 	private static final String DEAD = "DEAD";
 	private static final String ALIVE = "ALIVE";
-	private static final Color DEADCOLOR = Color.RED;
-	private static final Color ALIVECOLOR = Color.GREEN;
 	private static final int MY_CELL_ROW = 1;
 	private static final int MY_CELL_COL = 1;
 	
@@ -84,20 +83,6 @@ public class GameOfLifeRules extends Rules {
 			addCellToBeUpdated(cell);
 		}
 	}
-	
-	/**
-	 * Returns the color corresponding to the state.
-	 */
-	public Color getFill(String state){
-		switch(state){
-		case DEAD:
-			return DEADCOLOR;
-		case ALIVE:
-			return ALIVECOLOR;
-		default:
-			return ERRORCOLOR;
-		}
-	}
 
 	/**
 	 * Creates a Standard Cell for this simulation.
@@ -116,4 +101,5 @@ public class GameOfLifeRules extends Rules {
 		ArrayList<String> parameters = new ArrayList<String>();
 		return parameters;
 	}
+	
 }

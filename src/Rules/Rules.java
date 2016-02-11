@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import Model.Cell;
 import Model.Grid;
@@ -16,9 +17,12 @@ import javafx.scene.paint.Color;
 
 public abstract class Rules {
 
-	protected static final Color ERRORCOLOR = Color.PINK;
 	private List<Cell> toBeUpdated = new ArrayList<Cell>();
-	private Map<String, Integer> myStatesCount = new HashMap<String, Integer>();
+	protected Map<String, Integer> myStatesCount;
+	protected Map<String, Color> myStatesColors;
+
+	public static final String DEFAULT_RULES_RESOURCE = "Rules/Rules";
+	private ResourceBundle myRulesResources;
 	
 	/**
 	 * Initialize the Grid with the Cells corresponding to this simulation.
@@ -32,6 +36,23 @@ public abstract class Rules {
 				grid.addCellToGrid(row, col, cell);
 				increaseStateCount(cell.getCurState());
 			}
+		}
+	}
+	
+	/**
+	 * Populates the state and colors information into two maps
+	 */
+	public void populateStatesInfo(){
+		myStatesCount = new HashMap<String, Integer>();
+		myStatesColors = new HashMap<String, Color>();
+		myRulesResources = ResourceBundle.getBundle(DEFAULT_RULES_RESOURCE);
+		String ruleName = toString().replace(" ", "");
+		String[] states = myRulesResources.getString(ruleName + "States").split(",");
+		String[] colors = myRulesResources.getString(ruleName + "Colors").split(",");
+		for(int i = 0; i < states.length; i++){
+			myStatesCount.put(states[i], 0);
+			Color color = Color.web(colors[i]);
+			myStatesColors.put(states[i], color);
 		}
 	}
 	
@@ -109,6 +130,14 @@ public abstract class Rules {
 	public Map<String, Integer> getMyStatesCount() {
 		return myStatesCount;
 	}
+
+	/**
+	 * Gets a map containing the color for each
+	 * @return map mapping state to color for that state.
+	 */
+	public Map<String, Color> getMyStatesColors() {
+		return myStatesColors;
+	}
 	
 	/**
 	 * Increases the count for the number of cells in a particular state by 1.
@@ -151,14 +180,6 @@ public abstract class Rules {
 		return (cell.getCurRow() == (grid.getNumRows() - 1)) && (cell.getCurCol() == (grid.getNumCols() - 1));
 	}
 	
-	/**
-	 * 
-	 * @param State for which the fill must be generated
-	 * @return returns the fill color to be generated
-	 * Currently it returns a Color, but in the future it 
-	 * could also be an image.
-	 */
-	public abstract Color getFill(String state);
 	
 	/**
 	 * Returns string name of the Simulation

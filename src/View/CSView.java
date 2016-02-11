@@ -44,7 +44,6 @@ public class CSView {
 	private LineChart<Number,Number> lineChart;
 	private Map<String, XYChart.Series> seriesMap;
 	
-	
 	//UI Metrics
 	private int myGridWidth;
 	private int myGridHeight;
@@ -374,8 +373,7 @@ public class CSView {
 		Grid grid = mySimulation.getGrid();
 		for(int r = 0; r < grid.getNumRows(); r++){
 			for(int c = 0; c < grid.getNumCols(); c++){
-				Color color = mySimulation.getRules().getFill(grid.getCell(r,c).getCurState());
-				myBoard[r][c].setFill(color);
+				myBoard[r][c].setFill(mySimulation.getRules().getMyStatesColors().get(grid.getCell(r,c).getCurState()));
 			}
 		}
 	}

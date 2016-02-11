@@ -96,6 +96,7 @@ public class Simulation {
 		String[][] inputgrid = parser.getGrid();
 		myGrid = new Grid(inputgrid[1].length, inputgrid[1].length, inputgrid);
 		myRules = parser.getRules(); 
+		myRules.populateStatesInfo();
 		myRules.initGrid(myGrid, inputgrid);
 		myView.setGridInfo(inputgrid.length, inputgrid[1].length, myRules.toString());
 		loaded = true;
