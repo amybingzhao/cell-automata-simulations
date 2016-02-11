@@ -22,8 +22,17 @@ import javafx.util.Duration;
 /*
  * Todos:
  * 1. Refactor into view class DONE
- * 2. Part 3 Visualization Stuff
- * 3. Different cell shapes
+ * 2. Part 3 Visualization Stuff DONE
+ * 3. Different grid shapes
+ * Fit biggest grid you can 
+ * greater than 50 x 50 -> scroll bars, WORKS FOR NON SQUARE GRIDS
+ * Factor out getFill() methods into UI stuff, shouldnt be in model, also impt to dynamically change colors
+ * kind of grid to use, both by shapes and by edges
+if scrolling is implemented, the size of each grid location (instead of it being calculated)
+whether or not grid locations should be outlined (i.e., to be able to "see" the grid or not)
+color of cell or patch states (at least support empty to represent a water world or space world, etc.)
+shape of cells or patches (i.e., circles, rectangles, or arbitrary images)
+neighbors to consider (i.e., cardinal directions, diagonal directions, or all directions) with appropriate error checking (e.g., hexagonal grids do not have cardinal directions)
  * 4. Different grid edge types
  * 5. Simulation Styling
  * 6. Start resource file DONE
@@ -134,9 +143,9 @@ public class Simulation {
 	}
 	
 	/**
-	 * Helper method that applies the specified rules to each method in the grid
+	 * Helper method that applies the specified rules to each cell in the grid
 	 */
-	private void applyRulesToGrid(){
+	public void applyRulesToGrid(){
 		for(int r = 0; r < myGrid.getNumRows(); r++){
 			for(int c = 0; c < myGrid.getNumCols(); c++){
 				myRules.applyRulesToCell(myGrid.getCell(r,c), myGrid);

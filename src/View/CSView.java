@@ -52,7 +52,9 @@ public class CSView {
 	private int boardWidthOffset;
 	private int boardPixelSize;
 	private int cellPixelSize;
+	private int borderPixelSize;
 	private int chartHeightOffset;
+	private int maxCellsDisplayed;
 	
 	//resources
 	public static final String DEFAULT_VIEW_RESOURCE = "View/View";
@@ -81,6 +83,8 @@ public class CSView {
 		boardWidthOffset = Integer.parseInt(myViewResources.getString("BoardWidthOffset"));
 		boardHeightOffset = Integer.parseInt(myViewResources.getString("BoardHeightOffset"));
 		chartHeightOffset = Integer.parseInt(myViewResources.getString("ChartHeightOffset"));
+		borderPixelSize = Integer.parseInt(myViewResources.getString("BorderPixelSize"));
+		maxCellsDisplayed = Integer.parseInt(myViewResources.getString("MaxCellsDisplayed"));
 	}
 	
 	public Scene getScene(Stage stage){
@@ -285,20 +289,30 @@ public class CSView {
 				if(myBoard[r][c].contains(x - boardWidthOffset, y - boardHeightOffset)){
 					mySimulation.setRunning(false);
 					String current = mySimulation.getGrid().getCell(r, c).getCurState();
-					List<String> choices = new ArrayList<String>();
-					choices.addAll(mySimulation.getRules().getMyStatesCount().keySet());
-					ChoiceDialog<String> dialog = new ChoiceDialog<>(current , choices);
-					dialog.setTitle("State Picker");
-					dialog.setHeaderText("Please pick a state to set cell: (" + r + "," + c + ") to");
-					dialog.setContentText("Choose a state:");
-					Optional<String> result = dialog.showAndWait();
-					if (result.isPresent()){
-					    mySimulation.getGrid().getCell(r, c).setCurState(result.get());
-					    mySimulation.getRules().applyRulesToCell(mySimulation.getGrid().getCell(r, c), mySimulation.getGrid());
-					}
+					createStatePicker(current, r, c);
 					updateUI();
 				}
 			}
+		}
+	}
+	
+	/**
+	 * Takes in a currents state string and the location of a grid 
+	 * and creates a dialog for the user to change the state
+	 * @param current String, current state of the cel 
+	 * @param r int, row
+	 * @param c int, col
+	 */
+	private void createStatePicker(String current, int r, int c){
+		List<String> choices = new ArrayList<String>();
+		choices.addAll(mySimulation.getRules().getMyStatesCount().keySet());
+		ChoiceDialog<String> dialog = new ChoiceDialog<>(current , choices);
+		dialog.setTitle("State Picker");
+		dialog.setHeaderText("Please pick a state to set cell: (" + r + "," + c + ") to");
+		dialog.setContentText("Choose a state:");
+		Optional<String> result = dialog.showAndWait();
+		if (result.isPresent()){
+		    mySimulation.getGrid().getCell(r, c).setCurState(result.get());
 		}
 	}
 	
@@ -312,8 +326,7 @@ public class CSView {
 	public void setGridInfo(int w, int h, String current){
 		myGridWidth = w;
 		myGridHeight = h;
-		int borderPixelSize = Integer.parseInt(myViewResources.getString("BorderPixelSize"));
-		cellPixelSize = (boardPixelSize / Math.max(myGridWidth, myGridHeight)) - 2 * borderPixelSize;
+		cellPixelSize = (boardPixelSize / Math.min(maxCellsDisplayed, Math.max(myGridWidth, myGridHeight))) - 2 * borderPixelSize;
 		myTitleDisplay.setText("Current Simulation: " + current);
 	}
 	
@@ -321,16 +334,21 @@ public class CSView {
 	 * builds board by adding rectangles, with the size and quantity based on xml input
 	 */
 	private void buildBoard(){
-		int borderPixelSize = Integer.parseInt(myViewResources.getString("BorderPixelSize"));
+		
+		int xOffset = Math.max(0, (boardPixelSize - mySimulation.getGrid().getNumCols() * (cellPixelSize + (2 * borderPixelSize))) / 2);
+		int yOffset = Math.max(0, (boardPixelSize - mySimulation.getGrid().getNumRows() * (cellPixelSize + (2 * borderPixelSize))) / 2);
+
 		myBoardGroup.getChildren().clear();
 		myBoard = new Rectangle[myGridWidth][myGridHeight];
 		Grid grid = mySimulation.getGrid();
 		for (int r = 0; r < grid.getNumRows(); r++) {
 			for (int c = 0; c < grid.getNumCols(); c++) {
 				Rectangle rect = new Rectangle();
-				//put black background and then make cells have an offset of a pixel on each side
-				rect.setY((r * (cellPixelSize + (2 * borderPixelSize))) + borderPixelSize);
-				rect.setX((c * (cellPixelSize + (2 * borderPixelSize))) + borderPixelSize);
+				//cells have an offset on each side if it fits in grid
+				//rects + borders have a size of (cellPixelSize + (2 * borderPixelSize))
+				//rects themselves sit one borderPixelSize below and right inside that^  
+				rect.setY((r * (cellPixelSize + (2 * borderPixelSize))) + borderPixelSize + yOffset);
+				rect.setX((c * (cellPixelSize + (2 * borderPixelSize))) + borderPixelSize + xOffset);
 				rect.setWidth(cellPixelSize);
 				rect.setHeight(cellPixelSize);
 				myBoard[r][c] = rect;

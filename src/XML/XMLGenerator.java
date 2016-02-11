@@ -284,7 +284,7 @@ public class XMLGenerator {
 	public static void main(String[] args) {
 		XMLGenerator myGenerator = new XMLGenerator();
 		ArrayList<String> parameters = new ArrayList<String>();
-		myGenerator.generateFile(20, 20, "Fire", "Fire5.xml");
+		myGenerator.generateFile(35, 35, "Fire", "ThirtyFive.xml");
 	}
 
 }
