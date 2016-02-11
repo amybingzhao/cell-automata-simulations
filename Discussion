@@ -1,0 +1,3 @@
+I chose to refactor the duplicated code in PredatorPreyRules because it was duplicate code contained within a single method, so it was easy to pass the required object in to both the functions called by the method as a parameter.
+
+Additionally, changing the methods whose signatures required ArrayLists to be returned allows for greater generality of the code.
