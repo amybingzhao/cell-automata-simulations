@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import Model.Cell;
 import Model.Grid;
+import Model.StandardSugarScapeAgent;
 import Model.SugarScapeAgent;
 import Model.SugarScapeCell;
 import javafx.scene.paint.Color;
@@ -14,16 +15,34 @@ public abstract class SugarScapeRules extends Rules {
 	private int mySugarGrowBackInterval;
 	private int mySugarGrowBackCountdown;
 	private int myMaxCellSugarCapacity;
+	private int myAgentSugarLimit;
+	private int myAgentVisionLimit;
+	private int myAgentMetabolismLimit;
 	
-	public SugarScapeRules(int sugarGrowBackRate, int sugarGrowBackInterval, int maxSugarCapacity) {
+	public SugarScapeRules(int sugarGrowBackRate, int sugarGrowBackInterval, int maxSugarCapacity, int sugarLimit, int visionLimit, int metabolismLimit) {
 		mySugarGrowBackRate = sugarGrowBackRate;
 		mySugarGrowBackInterval = sugarGrowBackInterval;
 		myMaxCellSugarCapacity = maxSugarCapacity;
+		myAgentSugarLimit = sugarLimit;
+		myAgentVisionLimit = visionLimit;
+		myAgentMetabolismLimit = metabolismLimit;
 	}
 	
 	@Override
 	protected Cell createCell(String initialState, int row, int col) {
-		return new SugarScapeCell(initialState, row, col, myMaxCellSugarCapacity);
+		SugarScapeAgent agent = null;
+		if (initialState.equals("OCCUPIED")) {
+			agent = new StandardSugarScapeAgent(myAgentSugarLimit, myAgentMetabolismLimit, myAgentVisionLimit, row, col);
+		}
+		return new SugarScapeCell(initialState, row, col, myMaxCellSugarCapacity, agent);
+	}
+	
+	public void setMySugarGrowBackInterval(int interval) {
+		mySugarGrowBackInterval = interval;
+	}
+	
+	public void setMyVisionLimit(int limit) {
+		myAgentVisionLimit = limit;
 	}
 	
 	@Override

@@ -7,11 +7,11 @@ public class SugarScapeCell extends Cell {
 	private int myRow;
 	private int myCol;
 	
-	public SugarScapeCell(String initialState, int row, int col, int maxSugar) {
+	public SugarScapeCell(String initialState, int row, int col, int maxSugar, SugarScapeAgent agent) {
 		super(initialState, row, col);
-		myAgent = null;
 		mySugar = maxSugar;
 		myMaxSugarCapacity = maxSugar;
+		myAgent = agent;
 	}
 	
 	public boolean hasAgent() {

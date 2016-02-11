@@ -8,9 +8,16 @@ public abstract class SugarScapeAgent {
 	private int mySugarMetabolism;
 	private int myVision;
 	private int myRow;
-	private int myCol;
-	private static final int NUM_DIRECTIONS = 4;
-		
+	private int myCol;	
+	
+	public SugarScapeAgent(int initSugar, int metabolism, int vision, int row, int col) {
+		mySugar = initSugar;
+		mySugarMetabolism = metabolism;
+		myVision = vision;
+		myRow = row;
+		myCol = col;
+	}
+	
 	public SugarScapeCell findNextPatch(Grid grid) {
 		List<SugarScapeCell> neighbors = getViableNeighbors(grid);
 		SugarScapeCell nextPatch = compareViableNeighbors(neighbors, grid);
