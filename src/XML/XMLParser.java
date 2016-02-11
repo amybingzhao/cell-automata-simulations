@@ -54,10 +54,9 @@ public class XMLParser {
 						extractCells(entryElement);
 						break;
 					case "Game":
-						extractGame(entryElement);
+						ArrayList<String> data = extract(entryElement);
+						initializeGame(data);
 						break;
-					default:
-						System.out.println("Not Configured");
 					}
 				}
 			}
@@ -67,33 +66,12 @@ public class XMLParser {
 	}
 
 	/**
-	 * Returns a string arraylist representation of the information provided in
-	 * a particular Java Element
-	 * 
-	 * @param data
-	 *            A Java Element containing the data to be extracted
-	 * @return A string arraylist containing the extracted data
-	 */
-	public ArrayList<String> extract(Element data) {
-		ArrayList<String> myConfig = new ArrayList<String>();
-		NodeList dataList = data.getChildNodes();
-		for (int i = 0; i < dataList.getLength(); i++) {
-			Node dataNode = dataList.item(i);
-			if (dataNode instanceof Element) {
-				Element dataElement = (Element) dataNode;
-				myConfig.add(dataElement.getNodeName() + ":" + dataElement.getTextContent());
-			}
-		}
-		return myConfig;
-	}
-
-	/**
 	 * Extract data related to the game details
 	 * 
 	 * @param data
 	 *            A Java element containing game data
 	 */
-	public void extractGame(Element data) {
+	public ArrayList<String> extract(Element data) {
 		ArrayList<String> myGame = new ArrayList<String>();
 		NodeList dataList = data.getChildNodes();
 		for (int i = 0; i < dataList.getLength(); i++) {
@@ -110,9 +88,8 @@ public class XMLParser {
 				}
 			}
 		}
-		initializeGame(myGame);
+		return myGame;
 	}
-
 	/**
 	 * Creates a Rules object specific to the game type with the proper
 	 * parameters
