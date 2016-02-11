@@ -9,6 +9,7 @@ package Rules;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 import Model.Cell;
@@ -156,8 +157,8 @@ public class SegregationRules extends Rules {
 	}
 
 	@Override
-	public ArrayList<String> getParameters() {
-		ArrayList<String> parameters = new ArrayList<String>();
+	public List<String> getParameters() {
+		List<String> parameters = new ArrayList<String>();
 		parameters.add("Threshold:" + myThreshold);
 		return parameters;
 	}

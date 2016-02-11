@@ -1,5 +1,8 @@
 package Rules;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import Model.Cell;
 import Model.Grid;
 import Model.ReproductionSugarScapeAgent;
@@ -52,4 +55,10 @@ public class SugarScapeReproductionPreset extends SugarScapeRules{
 		return generateRandom(max - min) + min;
 	}
 
+	@Override
+	public List<String> getParameters() {
+		// TODO Auto-generated method stub
+		List<String> parameters = new ArrayList<String>();
+		return parameters;
+	}
 }

@@ -1,6 +1,7 @@
 package Rules;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import Model.Cell;
 import Model.Grid;
@@ -86,11 +87,6 @@ public abstract class SugarScapeRules extends Rules {
 	@Override
 	public String toString() {
 		return "Sugarscape";
-	}
-	@Override
-	public ArrayList<String> getParameters() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 	
 	public abstract void applyExtraPresetRules(Cell cell, Grid grid);

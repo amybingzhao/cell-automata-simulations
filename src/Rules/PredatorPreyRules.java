@@ -303,8 +303,8 @@ public class PredatorPreyRules extends Rules {
 	}
 
 	@Override
-	public ArrayList<String> getParameters() {
-		ArrayList<String> parameters = new ArrayList<String>();
+	public List<String> getParameters() {
+		List<String> parameters = new ArrayList<String>();
 		parameters.add("InitialSharkEnergy:" + myInitialSharkEnergy);
 		parameters.add("SharkReproductionTime:" + mySharkReproductionTime);
 		parameters.add("FishReproductionTime:" + myFishReproductionTime);

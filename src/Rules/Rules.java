@@ -178,7 +178,7 @@ public abstract class Rules {
 	/**
 	 * Retrieves a list of all the rule parameters
 	 * @return
-	 * An ArrayList of Strings containing the game parameters
+	 * A List of Strings containing the game parameters
 	 */
-	public abstract ArrayList<String> getParameters();
+	public abstract List<String> getParameters();
 }

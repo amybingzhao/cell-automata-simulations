@@ -125,8 +125,8 @@ public class ForagingAntsRules extends Rules {
 	}
 
 	@Override
-	public ArrayList<String> getParameters() {
-		ArrayList<String> parameters = new ArrayList<String>();
+	public List<String> getParameters() {
+		List<String> parameters = new ArrayList<String>();
 		return parameters;
 	}
 
