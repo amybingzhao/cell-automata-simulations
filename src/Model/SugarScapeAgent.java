@@ -29,7 +29,15 @@ public abstract class SugarScapeAgent {
 		return nextPatch;
 	}
 	
-	private List<SugarScapeCell> getViableNeighbors(Grid grid) {
+	public int getRow() {
+		return myRow;
+	}
+	
+	public int getCol() {
+		return myCol;
+	}
+	
+	protected List<SugarScapeCell> getViableNeighbors(Grid grid) {
 		List<SugarScapeCell> neighbors = new ArrayList<SugarScapeCell>();
 		int row;
 		int col;
@@ -150,7 +158,15 @@ public abstract class SugarScapeAgent {
 		}
 	}
 	
+	public void setSugar(int amount) {
+		mySugar = amount;
+	}
+	
 	private void agentDies(SugarScapeCell nextPatch) {
 		nextPatch.removeAgent();
+	}
+	
+	public int getMySugarAmount() {
+		return mySugar;
 	}
 }

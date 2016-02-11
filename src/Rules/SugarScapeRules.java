@@ -22,27 +22,21 @@ public abstract class SugarScapeRules extends Rules {
 	public SugarScapeRules(int sugarGrowBackRate, int sugarGrowBackInterval, int maxSugarCapacity, int sugarLimit, int visionLimit, int metabolismLimit) {
 		mySugarGrowBackRate = sugarGrowBackRate;
 		mySugarGrowBackInterval = sugarGrowBackInterval;
-		myMaxCellSugarCapacity = maxSugarCapacity;
-		myAgentSugarLimit = sugarLimit;
-		myAgentVisionLimit = visionLimit;
-		myAgentMetabolismLimit = metabolismLimit;
+		setMyMaxCellSugarCapacity(maxSugarCapacity);
+		setMyAgentSugarLimit(sugarLimit);
+		setMyAgentVisionLimit(visionLimit);
+		setMyAgentMetabolismLimit(metabolismLimit);
 	}
 	
 	@Override
-	protected Cell createCell(String initialState, int row, int col) {
-		SugarScapeAgent agent = null;
-		if (initialState.equals("OCCUPIED")) {
-			agent = new StandardSugarScapeAgent(generateRandom(myAgentSugarLimit), generateRandom(myAgentMetabolismLimit), generateRandom(myAgentVisionLimit), row, col);
-		}
-		return new SugarScapeCell(initialState, row, col, myMaxCellSugarCapacity, agent);
-	}
+	protected abstract Cell createCell(String initialState, int row, int col);
 	
 	public void setMySugarGrowBackInterval(int interval) {
 		mySugarGrowBackInterval = interval;
 	}
 	
 	public void setMyVisionLimit(int limit) {
-		myAgentVisionLimit = limit;
+		setMyAgentVisionLimit(limit);
 	}
 	
 	@Override
@@ -99,7 +93,39 @@ public abstract class SugarScapeRules extends Rules {
 		return null;
 	}
 	
-	public abstract void applyExtraPresetRules();
+	public abstract void applyExtraPresetRules(Cell cell, Grid grid);
+
+	public int getMyAgentSugarLimit() {
+		return myAgentSugarLimit;
+	}
+
+	public void setMyAgentSugarLimit(int myAgentSugarLimit) {
+		this.myAgentSugarLimit = myAgentSugarLimit;
+	}
+
+	public int getMyMaxCellSugarCapacity() {
+		return myMaxCellSugarCapacity;
+	}
+
+	public void setMyMaxCellSugarCapacity(int myMaxCellSugarCapacity) {
+		this.myMaxCellSugarCapacity = myMaxCellSugarCapacity;
+	}
+
+	public int getMyAgentMetabolismLimit() {
+		return myAgentMetabolismLimit;
+	}
+
+	public void setMyAgentMetabolismLimit(int myAgentMetabolismLimit) {
+		this.myAgentMetabolismLimit = myAgentMetabolismLimit;
+	}
+
+	public int getMyAgentVisionLimit() {
+		return myAgentVisionLimit;
+	}
+
+	public void setMyAgentVisionLimit(int myAgentVisionLimit) {
+		this.myAgentVisionLimit = myAgentVisionLimit;
+	}
 	
 	
 }
