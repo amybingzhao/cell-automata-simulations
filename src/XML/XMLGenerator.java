@@ -7,11 +7,14 @@ package XML;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.Scanner;
+import java.util.Stack;
 
 import javax.xml.parsers.*;
 import javax.xml.transform.OutputKeys;
@@ -21,7 +24,6 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.*;
 import Model.Cell;
-import javafx.stage.FileChooser;
 
 public class XMLGenerator {
 
@@ -30,6 +32,9 @@ public class XMLGenerator {
 	private Document myDocument;
 	private static final String RULES_PROPERTIES = "Rules/Rules";
 	private ResourceBundle myRulesResources;
+	private Map<String, Double> stateWeights;
+	private boolean weighted;
+	private Stack<String> myStack;
 
 	public XMLGenerator() {
 		myRulesResources = ResourceBundle.getBundle(RULES_PROPERTIES);
@@ -43,12 +48,11 @@ public class XMLGenerator {
 		}
 	}
 
-	// Element myRoot = myDocument.createElement("Simulation");
-	// myDocument.appendChild(myRoot);
-	// myRoot.appendChild(saveConfig);
-	// myRoot.appendChild(saveRules);
-	// myRoot.appendChild(saveCells);
-	// createFile();
+	public XMLGenerator(HashMap<String, Double> myWeights) {
+		this();
+		stateWeights = myWeights;
+		weighted = true;
+	}
 
 	/**
 	 * Generates an XML file containing a randomly determined starting state for
@@ -75,7 +79,11 @@ public class XMLGenerator {
 			myDocument.appendChild(myRoot);
 			myRoot.appendChild(getConfig(rows, cols));
 			myRoot.appendChild(getRules(rules, promptForParameters(rules)));
-			myRoot.appendChild(createRandomCells(rows, cols, rules + "States"));
+			if (weighted) {
+				myRoot.appendChild(createWeightedRandomCells(rows, cols, rules + "States"));
+			} else {
+				myRoot.appendChild(createRandomCells(rows, cols, rules + "States"));
+			}
 			createFile(new File("data/" + fileName));
 		} catch (Exception e) {
 			System.out.println("OOPS");
@@ -171,6 +179,63 @@ public class XMLGenerator {
 				myCells.appendChild(myCell);
 			}
 		}
+		return myCells;
+	}
+
+	public void fillMap(String rule){
+		String statesString = myRulesResources.getString(rule);
+		String[] states = statesString.split(",");
+		double sum = 0;
+		ArrayList<String> statesNotIncluded = new ArrayList<String>();
+		for (String state : states){
+			if (stateWeights.containsKey(state)){
+				sum += (int) Math.round(stateWeights.get(state));
+			}
+			else{
+				statesNotIncluded.add(state);
+			}
+		}
+		for (String state : statesNotIncluded){
+			stateWeights.put(state, (100 - sum) / statesNotIncluded.size());
+		}
+	}
+	
+	public void fillStack(int rows, int columns){
+		myStack = new Stack<String>();
+		for (int row = 0; row < rows; row++){
+			for (int col = 0; col < columns; col++){
+				myStack.push(row +"," + col);
+			}
+		}
+		Collections.shuffle(myStack);
+	}
+	
+	public Element createWeightedRandomCells(int rows, int cols, String rule) {
+		fillMap(rule);
+		fillStack(rows, cols);
+		Element myCells = myDocument.createElement("Cells");
+		for (String state : stateWeights.keySet()){
+			int numCells = (int) Math.round(((stateWeights.get(state)/100) * (rows*cols)));
+			for (int i = 0; i < numCells && !myStack.isEmpty(); i++){
+				String[] coordinates = myStack.pop().split(",");
+				int row = Integer.parseInt(coordinates[0]);
+				int col = Integer.parseInt(coordinates[1]);
+				Element myCell = makeCellEntry(row, col, state);
+				myCells.appendChild(myCell);
+			}
+		}
+//		if (myStack.isEmpty()) return myCells;
+//		Random myRandom = new Random();
+//		String statesString = myRulesResources.getString(rule);
+//		String[] states = statesString.split(",");
+//		while(!myStack.isEmpty()){
+//			String[] coordinates = myStack.pop().split(",");
+//			int row = Integer.parseInt(coordinates[0]);
+//			int col = Integer.parseInt(coordinates[1]);
+//			Element myCell = makeCellEntry(row, col, states[myRandom.nextInt(states.length)]);
+//			myCells.appendChild(myCell);
+//		}
+//			
 		return myCells;
 	}
 
@@ -273,6 +338,7 @@ public class XMLGenerator {
 		String[] resourcesParams = myRulesResources.getString(rule + "Parameters").split(",");
 		Scanner myScanner = new Scanner(System.in);
 		for (String param : resourcesParams) {
+			if (param.equals("NONE")) break;
 			System.out.println("Choose the value of " + param);
 			int value = myScanner.nextInt();
 			parameters.add(param + ":" + value);
@@ -282,9 +348,11 @@ public class XMLGenerator {
 	}
 
 	public static void main(String[] args) {
-		XMLGenerator myGenerator = new XMLGenerator();
-		ArrayList<String> parameters = new ArrayList<String>();
-		myGenerator.generateFile(20, 20, "Fire", "Fire5.xml");
+		HashMap<String, Double> myMap = new HashMap<String, Double>();
+		myMap.put("ALIVE", 40.0);
+//		myMap.put("BURNING", .5);
+		XMLGenerator myGenerator = new XMLGenerator(myMap);
+		myGenerator.generateFile(80, 80, "GameOfLife", "GOL.xml");
 	}
 
 }
