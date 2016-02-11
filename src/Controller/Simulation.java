@@ -13,8 +13,11 @@ import Rules.Rules;
 import View.CSView;
 import XML.XMLGenerator;
 import XML.XMLParser;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.util.Duration;
 
 /*
  * Todos:
@@ -36,9 +39,10 @@ import javafx.scene.control.Alert.AlertType;
 
 public class Simulation {
 	private boolean running;
-	private int mySpeed;
-	private int tick;
 	private boolean loaded;
+	private int msDelay;
+	private int time;
+	private int mySpeed;
 	
 	//xml determined variables
 	private File xmlFile;
@@ -53,7 +57,15 @@ public class Simulation {
 	public Simulation(){
 		myControllerResources = ResourceBundle.getBundle(DEFAULT_CONTROLLER_RESOURCE);
 		mySpeed = Integer.parseInt(myControllerResources.getString("InitialSpeed"));
-		tick = 0;
+		msDelay = Integer.parseInt(myControllerResources.getString("MsDelay"));
+		time = 0;
+		
+		// sets the simulation's loop
+        KeyFrame frame = new KeyFrame(Duration.millis(msDelay), e -> step(false));
+        Timeline animation = new Timeline();
+        animation.setCycleCount(Timeline.INDEFINITE);
+        animation.getKeyFrames().add(frame);
+        animation.play();
 	}
 	
 	/**
@@ -103,19 +115,22 @@ public class Simulation {
 	
 	/**
 	 * Applies rules to cells, updates their states, displays new states
+	 * Fastest is every 100 ms, slowest is every 2 seconds. 
+	 * Changing the speed will not change the time on the graph- 
+	 * i.e. 2 seconds on graph will always be 2 seconds on graph,
+	 * However, changes in cell # will be spread of great delta time 
 	 */
-	public void step(double elapsedTime, boolean stepping) {
-		if(tick % (21 - mySpeed) != 0 && !stepping){
-			tick++;
-			return;
-		}
+	public void step(boolean stepping) {
 		if(running || stepping){
+			if(time % ((21 - mySpeed) * 100) != 0 && !stepping){
+				time += msDelay;
+				return;
+			}
+			time += msDelay;
 			applyRulesToGrid();
 			updateEachState();
-			myView.displayGridToBoard();
-			myView.updateGraph(tick);
+			myView.updateUI();
 		}
-		tick++;
 	}
 	
 	/**
@@ -203,6 +218,13 @@ public class Simulation {
 		myView = v;
 	}
 	
+	/**
+	 * 
+	 * @return returns the number of milliseconds since current execution start
+	 */
+	public int getTime(){
+		return time;
+	}
 	
 	
 	

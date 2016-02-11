@@ -1,9 +1,13 @@
 package View;
 
 import java.io.File;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import Controller.Simulation;
@@ -17,6 +21,8 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceDialog;
+import javafx.scene.control.ComboBox;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -83,6 +89,7 @@ public class CSView {
 		int width = Integer.parseInt(myViewResources.getString("WindowWidth"));
 		int height = Integer.parseInt(myViewResources.getString("WindowHeight"));
 		Scene myScene = new Scene(root, width, height, Color.WHITE);
+		myScene.setOnMouseClicked(e -> respondToMouse(e.getX(), e.getY()));
 		return myScene;
 	}
 	
@@ -199,10 +206,8 @@ public class CSView {
 			mySimulation.setRunning(false);
 			break;
 		case "Step":
-			if(mySimulation.getRules() != null){
-				mySimulation.step(0.0, true);
-				displayGridToBoard();
-			}
+			if(mySimulation.getRules() != null)
+				mySimulation.step(true);
 			break;
 		case "Speed Up":
 			if(mySimulation.getSpeed() < 20)
@@ -214,11 +219,11 @@ public class CSView {
 			break;
 		case "Load XML":
 			loadXMLPressed();
-			setupChart();
 			break;
 		case "Restart":
-			restartPressed();
-			setupChart();
+			if(mySimulation.getRules() != null){
+				restartPressed();
+			}
 			break;
 		case "Save":
 			if(mySimulation.getRules() != null){
@@ -240,10 +245,14 @@ public class CSView {
 		if(xmlFile != null){
 			mySimulation.loadXML(xmlFile);
 			buildBoard();
-			displayGridToBoard();	
+			setupChart();
 		}
 	}
 	
+	/**
+	 * Creates a file picker to get a file name
+	 * @return returns the file 
+	 */
 	public File promptForFileName(){
 		FileChooser myFileChooser = new FileChooser();
 		FileChooser.ExtensionFilter myFilter = new FileChooser.ExtensionFilter("XML Files (.xml)", "*.xml");
@@ -259,7 +268,37 @@ public class CSView {
 		if(mySimulation.getXML() != null){
 			mySimulation.loadXML(null);
 			buildBoard();
-			displayGridToBoard();	
+			setupChart();
+		}
+	}
+	
+	/**
+	 * Responds to mouse events at location x,y by allowing user to change states.
+	 * @param x x coord of mouse event
+	 * @param y y coord of mouse event
+	 */
+	private void respondToMouse(double x, double y){
+		if(mySimulation.getRules() == null)
+			return;
+		for(int r = 0; r < myBoard.length; r++){
+			for(int c = 0; c < myBoard[r].length; c++){
+				if(myBoard[r][c].contains(x - boardWidthOffset, y - boardHeightOffset)){
+					mySimulation.setRunning(false);
+					String current = mySimulation.getGrid().getCell(r, c).getCurState();
+					List<String> choices = new ArrayList<String>();
+					choices.addAll(mySimulation.getRules().getMyStatesCount().keySet());
+					ChoiceDialog<String> dialog = new ChoiceDialog<>(current , choices);
+					dialog.setTitle("State Picker");
+					dialog.setHeaderText("Please pick a state to set cell: (" + r + "," + c + ") to");
+					dialog.setContentText("Choose a state:");
+					Optional<String> result = dialog.showAndWait();
+					if (result.isPresent()){
+					    mySimulation.getGrid().getCell(r, c).setCurState(result.get());
+					    mySimulation.getRules().applyRulesToCell(mySimulation.getGrid().getCell(r, c), mySimulation.getGrid());
+					}
+					updateUI();
+				}
+			}
 		}
 	}
 	
@@ -298,12 +337,22 @@ public class CSView {
 				myBoardGroup.getChildren().add(rect);
 			}
 		}
+		displayGridToBoard();
 	}
+	
+	/**
+	 * Updates the board and the chart 
+	 */
+	public void updateUI(){
+		displayGridToBoard();
+		updateChart();
+	}
+	
 	
 	/**
 	 * Displays the grid to the board based on the state of each of its cells
 	 */
-	public void displayGridToBoard(){
+	private void displayGridToBoard(){
 		Grid grid = mySimulation.getGrid();
 		for(int r = 0; r < grid.getNumRows(); r++){
 			for(int c = 0; c < grid.getNumCols(); c++){
@@ -320,39 +369,41 @@ public class CSView {
 	private void buildChart(VBox vbox){
 		NumberAxis xAxis = new NumberAxis();
 	    NumberAxis yAxis = new NumberAxis();
-	    xAxis.setLabel("Time");
-	    yAxis.setLabel("Cells");
+	    xAxis.setLabel("Seconds");
 	    //creating the chart
 	    lineChart = new LineChart<Number,Number>(xAxis,yAxis);
 	    lineChart.setCreateSymbols(false);
 	    lineChart.setLegendSide(Side.RIGHT);
-	    lineChart.setTitle("Current Cells");
+	    lineChart.setTitle("Cells");
 	    vbox.getChildren().add(lineChart);
 	}
 	
 	/**
-	 * Clears the old graph
-	 * adds series to graph based on current series
+	 * Clears the old chart
+	 * adds series to chart based on current series
+	 * Loads initial data into chart
 	 */
 	private void setupChart(){
 		lineChart.getData().clear();
 	    seriesMap = new HashMap<String, XYChart.Series>();
 	    Map<String, Integer> statesCount = mySimulation.getRules().getMyStatesCount();
 	    //define series for each type of cell
-	    int time = 0;
 	    for(String key : statesCount.keySet()){
 	    	XYChart.Series series = new XYChart.Series();
 	 	    series.setName(key);
 	 	    seriesMap.put(key, series);
 	 	    lineChart.getData().add(series);
-	 	    series.getData().add(new XYChart.Data(time, statesCount.get(key)));
+	 	    series.getData().add(new XYChart.Data(0, statesCount.get(key)));
 	    }
 	}
 	
-	public void updateGraph(int time){
+	/**
+	 * updates the chart in time increments of 100 ms
+	 */
+	private void updateChart(){
 		Map<String, Integer> statesCount = mySimulation.getRules().getMyStatesCount();		 
 		for(String key : statesCount.keySet()){
-	 	    seriesMap.get(key).getData().add(new XYChart.Data(time, statesCount.get(key)));
+	 	    seriesMap.get(key).getData().add(new XYChart.Data(mySimulation.getTime()/100, statesCount.get(key)));
 	    }
 	}
 }
