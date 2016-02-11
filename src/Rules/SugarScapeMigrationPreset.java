@@ -1,5 +1,8 @@
 package Rules;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import Model.Cell;
 import Model.Grid;
 import Model.StandardSugarScapeAgent;
@@ -31,4 +34,10 @@ public class SugarScapeMigrationPreset extends SugarScapeRules {
 		// None.
 	}
 
+	@Override
+	public List<String> getParameters() {
+		// TODO Auto-generated method stub
+		List<String> parameters = new ArrayList<String>();
+		return parameters;
+	}
 }

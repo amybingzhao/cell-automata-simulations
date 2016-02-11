@@ -165,7 +165,7 @@ public class XMLGenerator {
 		return myCells;
 	}
 
-	public void save(String rulesType, int rows, int cols, Cell[][] gameGrid, ArrayList<String> params) {
+	public void save(String rulesType, int rows, int cols, Cell[][] gameGrid, List<String> params) {
 		myDocument = myBuilder.newDocument();
 		Element saveConfig = getConfig(rows, cols);
 		Element saveRules = getRules(rulesType, params);
