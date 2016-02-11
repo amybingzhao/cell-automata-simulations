@@ -84,7 +84,9 @@ public abstract class Rules {
 	 * @param cell: Cell to be updated.
 	 */
 	public void addCellToBeUpdated(Cell cell) {
-		toBeUpdated.add(cell);
+		if (!toBeUpdated.contains(cell)) {
+			toBeUpdated.add(cell);
+		}
 	}
 	
 	/**
@@ -144,7 +146,6 @@ public abstract class Rules {
 			decreaseStateCount(cell.getCurState());
 			increaseStateCount(cell.getNextState());
 		}
-		//addCellToBeUpdated(cell);
 	}
 	
 	protected boolean isLastCellInGrid(Cell cell, Grid grid) {

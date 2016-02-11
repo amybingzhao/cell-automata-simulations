@@ -7,8 +7,8 @@
 package Model;
 
 public class Grid {
-	private static int myRows;
-	private static int myCols;
+	private int myRows;
+	private int myCols;
 	private Cell[][] myGrid;
 	
 	/**
