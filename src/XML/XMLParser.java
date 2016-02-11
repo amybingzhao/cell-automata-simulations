@@ -16,6 +16,7 @@ import Rules.SegregationRules;
 import javax.xml.parsers.*;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class XMLParser {
 
@@ -45,7 +46,7 @@ public class XMLParser {
 					Element entryElement = (Element) entry;
 					switch (entryElement.getNodeName()) {
 					case "Config":
-						ArrayList<String> myConfig = extract(entryElement);
+						List<String> myConfig = extract(entryElement);
 						rows = Integer.parseInt(splitEntry(myConfig.get(0))[1]);
 						cols = Integer.parseInt(splitEntry(myConfig.get(1))[1]);
 						cellGrid = new String[rows][cols];
@@ -54,7 +55,7 @@ public class XMLParser {
 						extractCells(entryElement);
 						break;
 					case "Game":
-						ArrayList<String> data = extract(entryElement);
+						List<String> data = extract(entryElement);
 						initializeGame(data);
 						break;
 					}
@@ -71,7 +72,7 @@ public class XMLParser {
 	 * @param data
 	 *            A Java element containing game data
 	 */
-	public ArrayList<String> extract(Element data) {
+	public List<String> extract(Element data) {
 		ArrayList<String> myGame = new ArrayList<String>();
 		NodeList dataList = data.getChildNodes();
 		for (int i = 0; i < dataList.getLength(); i++) {
@@ -79,7 +80,7 @@ public class XMLParser {
 			if (dataNode instanceof Element) {
 				Element dataElement = (Element) dataNode;
 				if (dataElement.getNodeName() == "Parameters") {
-					ArrayList<String> extractedData = extract(dataElement);
+					List<String> extractedData = extract(dataElement);
 					for (String entry : extractedData) {
 						myGame.add(entry);
 					}
@@ -90,6 +91,7 @@ public class XMLParser {
 		}
 		return myGame;
 	}
+
 	/**
 	 * Creates a Rules object specific to the game type with the proper
 	 * parameters
@@ -97,7 +99,7 @@ public class XMLParser {
 	 * @param data
 	 *            A string arraylist containing the data to be interpreted
 	 */
-	public void initializeGame(ArrayList<String> data) {
+	public void initializeGame(List<String> data) {
 		String game = splitEntry(data.get(0))[1];
 		switch (game) {
 		case "Segregation":
@@ -136,7 +138,7 @@ public class XMLParser {
 			Node dataNode = dataList.item(i);
 			if (dataNode instanceof Element) {
 				Element dataElement = (Element) dataNode;
-				ArrayList<String> extractedData = extract(dataElement);
+				List<String> extractedData = extract(dataElement);
 				int x = Integer.parseInt(splitEntry(extractedData.get(0))[1]);
 				int y = Integer.parseInt(splitEntry(extractedData.get(1))[1]);
 				String state = splitEntry(extractedData.get(2))[1];

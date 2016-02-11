@@ -15,7 +15,6 @@ import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 import java.util.Stack;
-
 import javax.xml.parsers.*;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
@@ -267,7 +266,7 @@ public class XMLGenerator {
 	 * @param myFile
 	 *            The file to be saved to
 	 */
-	public void save(String rulesType, int sideLength, Cell[][] gameGrid, ArrayList<String> params, File myFile) {
+	public void save(String rulesType, int sideLength, Cell[][] gameGrid, List<String> params, File myFile) {
 		myDocument = myBuilder.newDocument();
 		Element saveConfig = getConfig(sideLength);
 		Element saveRules = getRules(rulesType, params);
@@ -343,7 +342,7 @@ public class XMLGenerator {
 	 *            The set of rules to be applied to the XML file
 	 * @return An ArrayList containing the simulation parameters
 	 */
-	public ArrayList<String> promptForParameters(String rule) {
+	public List<String> promptForParameters(String rule) {
 		ArrayList<String> parameters = new ArrayList<String>();
 		String[] resourcesParams = myRulesResources.getString(rule + "Parameters").split(",");
 		Scanner myScanner = new Scanner(System.in);
@@ -360,9 +359,9 @@ public class XMLGenerator {
 
 	public static void main(String[] args) {
 		HashMap<String, Double> myMap = new HashMap<String, Double>();
-		myMap.put("ALIVE", 40.0);
+		myMap.put("ALIVE", 10.0);
 		XMLGenerator myGenerator = new XMLGenerator(myMap);
-		myGenerator.generateFile(80, "GameOfLife", "GOL.xml");
+		myGenerator.generateFile(3, "GameOfLife", "GOL.xml");
 	}
 
 }
