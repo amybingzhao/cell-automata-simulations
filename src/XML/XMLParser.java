@@ -16,6 +16,7 @@ import Rules.SegregationRules;
 import javax.xml.parsers.*;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class XMLParser {
 
@@ -46,7 +47,7 @@ public class XMLParser {
 					Element entryElement = (Element) entry;
 					switch (entryElement.getNodeName()) {
 					case "Config":
-						ArrayList<String> myConfig = extract(entryElement);
+						List<String> myConfig = extract(entryElement);
 						rows = Integer.parseInt(splitEntry(myConfig.get(0))[1]);
 						cols = Integer.parseInt(splitEntry(myConfig.get(1))[1]);
 						gridType = splitEntry(myConfig.get(2))[1];
@@ -56,10 +57,9 @@ public class XMLParser {
 						extractCells(entryElement);
 						break;
 					case "Game":
-						extractGame(entryElement);
+						List<String> data = extract(entryElement);
+						initializeGame(data);
 						break;
-					default:
-						System.out.println("Not Configured");
 					}
 				}
 			}
@@ -69,33 +69,12 @@ public class XMLParser {
 	}
 
 	/**
-	 * Returns a string arraylist representation of the information provided in
-	 * a particular Java Element
-	 * 
-	 * @param data
-	 *            A Java Element containing the data to be extracted
-	 * @return A string arraylist containing the extracted data
-	 */
-	public ArrayList<String> extract(Element data) {
-		ArrayList<String> myConfig = new ArrayList<String>();
-		NodeList dataList = data.getChildNodes();
-		for (int i = 0; i < dataList.getLength(); i++) {
-			Node dataNode = dataList.item(i);
-			if (dataNode instanceof Element) {
-				Element dataElement = (Element) dataNode;
-				myConfig.add(dataElement.getNodeName() + ":" + dataElement.getTextContent());
-			}
-		}
-		return myConfig;
-	}
-
-	/**
 	 * Extract data related to the game details
 	 * 
 	 * @param data
 	 *            A Java element containing game data
 	 */
-	public void extractGame(Element data) {
+	public List<String> extract(Element data) {
 		ArrayList<String> myGame = new ArrayList<String>();
 		NodeList dataList = data.getChildNodes();
 		for (int i = 0; i < dataList.getLength(); i++) {
@@ -103,7 +82,7 @@ public class XMLParser {
 			if (dataNode instanceof Element) {
 				Element dataElement = (Element) dataNode;
 				if (dataElement.getNodeName() == "Parameters") {
-					ArrayList<String> extractedData = extract(dataElement);
+					List<String> extractedData = extract(dataElement);
 					for (String entry : extractedData) {
 						myGame.add(entry);
 					}
@@ -112,7 +91,7 @@ public class XMLParser {
 				}
 			}
 		}
-		initializeGame(myGame);
+		return myGame;
 	}
 
 	/**
@@ -122,7 +101,7 @@ public class XMLParser {
 	 * @param data
 	 *            A string arraylist containing the data to be interpreted
 	 */
-	public void initializeGame(ArrayList<String> data) {
+	public void initializeGame(List<String> data) {
 		String game = splitEntry(data.get(0))[1];
 		switch (game) {
 		case "Segregation":
@@ -161,7 +140,7 @@ public class XMLParser {
 			Node dataNode = dataList.item(i);
 			if (dataNode instanceof Element) {
 				Element dataElement = (Element) dataNode;
-				ArrayList<String> extractedData = extract(dataElement);
+				List<String> extractedData = extract(dataElement);
 				int x = Integer.parseInt(splitEntry(extractedData.get(0))[1]);
 				int y = Integer.parseInt(splitEntry(extractedData.get(1))[1]);
 				String state = splitEntry(extractedData.get(2))[1];

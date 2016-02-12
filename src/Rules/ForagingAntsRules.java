@@ -1,6 +1,7 @@
 package Rules;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import Model.Cell;
 import Model.ForagingAntsCell;
@@ -37,12 +38,6 @@ public class ForagingAntsRules extends Rules {
 	}
 
 	@Override
-	public Color getFill(String state) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public String toString() {
 		return "Foraging Ants";
 	}
@@ -52,5 +47,5 @@ public class ForagingAntsRules extends Rules {
 		ArrayList<String> parameters = new ArrayList<String>();
 		return parameters;
 	}
-
+	
 }

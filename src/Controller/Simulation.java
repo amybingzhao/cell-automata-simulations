@@ -23,12 +23,12 @@ import javafx.util.Duration;
 
 /*
  * Todos:
- * 1. Refactor into view class DONE
- * 2. Part 3 Visualization Stuff
- * 3. Different cell shapes
- * 4. Different grid edge types
- * 5. Simulation Styling
- * 6. Start resource file DONE
+ * XML Generator UI
+ * Allow users to interact with the simulation dynamically to change the values of its parameters 
+ * Different grid shapes
+ * shape of cells or patches (i.e., circles, rectangles, or arbitrary images)
+ * neighbors to consider (i.e., cardinal directions, diagonal directions, or all directions) with appropriate error checking (e.g., hexagonal grids do not have cardinal directions)
+ * 
  */
 
 /*
@@ -96,6 +96,7 @@ public class Simulation {
 		cols = rows;
 		getGridObject();
 		myRules = parser.getRules(); 
+		myRules.populateStatesInfo();
 		myRules.initGrid(myGrid, inputgrid);
 		myView.setGridInfo(inputgrid.length, inputgrid[1].length, myRules.toString());
 		loaded = true;
@@ -157,9 +158,9 @@ public class Simulation {
 	}
 	
 	/**
-	 * Helper method that applies the specified rules to each method in the grid
+	 * Helper method that applies the specified rules to each cell in the grid
 	 */
-	private void applyRulesToGrid(){
+	public void applyRulesToGrid(){
 		for(int r = 0; r < myGrid.getNumRows(); r++){
 			for(int c = 0; c < myGrid.getNumCols(); c++){
 				myRules.applyRulesToCell(myGrid.getCell(r,c), myGrid);

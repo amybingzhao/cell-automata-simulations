@@ -15,7 +15,6 @@ import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 import java.util.Stack;
-
 import javax.xml.parsers.*;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
@@ -346,7 +345,7 @@ public class XMLGenerator {
 	 *            The set of rules to be applied to the XML file
 	 * @return An ArrayList containing the simulation parameters
 	 */
-	public ArrayList<String> promptForParameters(String rule) {
+	public List<String> promptForParameters(String rule) {
 		ArrayList<String> parameters = new ArrayList<String>();
 		String[] resourcesParams = myRulesResources.getString(rule + "Parameters").split(",");
 		Scanner myScanner = new Scanner(System.in);
@@ -367,5 +366,4 @@ public class XMLGenerator {
 		XMLGenerator myGenerator = new XMLGenerator(myMap);
 		myGenerator.generateFile(40, "Segregation", "SegregationTor40.xml", "Toroidal");
 	}
-
 }
