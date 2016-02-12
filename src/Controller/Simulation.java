@@ -23,12 +23,7 @@ import javafx.util.Duration;
  * Todos:
  * 1. Refactor into view class DONE
  * 2. Part 3 Visualization Stuff DONE
- * 3. Different grid shapes
- * Fit biggest grid you can 
- * greater than 50 x 50 -> scroll bars, WORKS FOR NON SQUARE GRIDS
- * Factor out getFill() methods into UI stuff, shouldnt be in model, also impt to dynamically change colors
- * kind of grid to use, both by shapes and by edges
-if scrolling is implemented, the size of each grid location (instead of it being calculated)
+ * 3. Different grid shapes 
 whether or not grid locations should be outlined (i.e., to be able to "see" the grid or not)
 color of cell or patch states (at least support empty to represent a water world or space world, etc.)
 shape of cells or patches (i.e., circles, rectangles, or arbitrary images)

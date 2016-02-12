@@ -14,6 +14,8 @@ import Controller.Simulation;
 import Model.Grid;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
 import javafx.geometry.Side;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -23,6 +25,10 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ScrollBar;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -43,6 +49,8 @@ public class CSView {
 	private Text mySpeedDisplay;
 	private LineChart<Number,Number> lineChart;
 	private Map<String, XYChart.Series> seriesMap;
+	private ScrollBar scVert;
+	private ScrollBar scHorz;
 	
 	//UI Metrics
 	private int myGridWidth;
@@ -54,6 +62,7 @@ public class CSView {
 	private int borderPixelSize;
 	private int chartHeightOffset;
 	private int maxCellsDisplayed;
+	private int uiWidth;
 	
 	//resources
 	public static final String DEFAULT_VIEW_RESOURCE = "View/View";
@@ -84,47 +93,60 @@ public class CSView {
 		chartHeightOffset = Integer.parseInt(myViewResources.getString("ChartHeightOffset"));
 		borderPixelSize = Integer.parseInt(myViewResources.getString("BorderPixelSize"));
 		maxCellsDisplayed = Integer.parseInt(myViewResources.getString("MaxCellsDisplayed"));
+		uiWidth= Integer.parseInt(myViewResources.getString("UIWidth"));
 	}
 	
 	public Scene getScene(Stage stage){
 		myStage = stage;
-		Group root = buildUIRoot();
+		Group root = buildUI();
 		int width = Integer.parseInt(myViewResources.getString("WindowWidth"));
 		int height = Integer.parseInt(myViewResources.getString("WindowHeight"));
 		Scene myScene = new Scene(root, width, height, Color.WHITE);
-		myScene.setOnMouseClicked(e -> respondToMouse(e.getX(), e.getY()));
 		return myScene;
 	}
 	
 	/**
 	 * Sets up 
 	 * @return returns a new group that represents the root node for the entire UI, with buttons and board background attached
+	 * Keep convention of setting max height/widths on VBox/Hboxes and then adding to overall vbox
 	 */
-	private Group buildUIRoot(){
+	private Group buildUI(){
 		Group group = new Group();
-		group.getChildren().add(getBackground());
+		
+		VBox vbox = new VBox(4);
+		vbox.setPrefWidth(Integer.parseInt(myViewResources.getString("WindowWidth")));
+		vbox.setAlignment(Pos.CENTER);
 		
 		//add chart
-		VBox vbox1 = new VBox();
-		vbox1.setPrefWidth(boardPixelSize);
-		vbox1.setMaxHeight(100);
-		vbox1.setLayoutX(boardWidthOffset);
-		vbox1.setLayoutY(chartHeightOffset);
-		buildChart(vbox1);
+		VBox chartVBox = new VBox();
+		chartVBox.setMaxWidth(uiWidth);
+		chartVBox.setMaxHeight(100);
+		buildChart(chartVBox);
 		
-		//set boardGroup instance variable
+		//add board
+		HBox spHBox = new HBox();
 		myBoardGroup = new Group();
-		myBoardGroup.setLayoutX(boardWidthOffset);
-		myBoardGroup.setLayoutY(boardHeightOffset);
-		group.getChildren().add(myBoardGroup);
+		myBoardGroup.getChildren().add(getBackground());
 		
-		VBox vbox2 = new VBox(3);
-		attachButtonsToVBox(vbox2);
-		attachFieldsToVBox(vbox2);
-		vbox2.setPrefWidth(boardPixelSize);
-		vbox2.setLayoutX(boardWidthOffset);
-		vbox2.setLayoutY(boardPixelSize + boardHeightOffset + 20);
-		group.getChildren().addAll(vbox1, vbox2);
+		ScrollPane sp = new ScrollPane();
+		sp.setContent(myBoardGroup);
+		sp.setHbarPolicy(ScrollBarPolicy.ALWAYS);
+		sp.setVbarPolicy(ScrollBarPolicy.ALWAYS);
+		
+		spHBox.getChildren().add(sp);
+		spHBox.setAlignment(Pos.CENTER);
+		spHBox.setMaxSize(uiWidth, uiWidth);
+		
+		VBox buttonsVBox = new VBox(2);
+		buttonsVBox.setMaxWidth(uiWidth);
+		attachButtonsToVBox(buttonsVBox);
+		
+		VBox fieldsVBox = new VBox();
+		fieldsVBox.setMaxWidth(uiWidth);
+		attachFieldsToVBox(fieldsVBox);
+		
+		vbox.getChildren().addAll(chartVBox, spHBox, buttonsVBox, fieldsVBox);
+		group.getChildren().add(vbox);
 		return group;
 	}
 	
@@ -134,9 +156,7 @@ public class CSView {
 	 */
 	private Rectangle getBackground(){
 		Rectangle boardBackground = new Rectangle();
-		boardBackground.setFill(Color.BLACK);
-		boardBackground.setX(boardWidthOffset);
-		boardBackground.setY(boardHeightOffset);
+		boardBackground.setFill(Color.WHITE);
 		boardBackground.setWidth(boardPixelSize);
 		boardBackground.setHeight(boardPixelSize);
 		return boardBackground;
@@ -276,23 +296,13 @@ public class CSView {
 	}
 	
 	/**
-	 * Responds to mouse events at location x,y by allowing user to change states.
-	 * @param x x coord of mouse event
-	 * @param y y coord of mouse event
+	 * Responds to mouse events on a given cell
 	 */
-	private void respondToMouse(double x, double y){
-		if(mySimulation.getRules() == null)
-			return;
-		for(int r = 0; r < myBoard.length; r++){
-			for(int c = 0; c < myBoard[r].length; c++){
-				if(myBoard[r][c].contains(x - boardWidthOffset, y - boardHeightOffset)){
-					mySimulation.setRunning(false);
-					String current = mySimulation.getGrid().getCell(r, c).getCurState();
-					createStatePicker(current, r, c);
-					updateUI();
-				}
-			}
-		}
+	private void respondToMouse(int r, int c){
+		mySimulation.setRunning(false);
+		String current = mySimulation.getGrid().getCell(r, c).getCurState();
+		createStatePicker(current, r, c);
+		updateUI();
 	}
 	
 	/**
@@ -333,49 +343,30 @@ public class CSView {
 	 * builds board by adding rectangles, with the size and quantity based on xml input
 	 */
 	private void buildBoard(){
-		
-		int xOffset = Math.max(0, (boardPixelSize - mySimulation.getGrid().getNumCols() * (cellPixelSize + (2 * borderPixelSize))) / 2);
-		int yOffset = Math.max(0, (boardPixelSize - mySimulation.getGrid().getNumRows() * (cellPixelSize + (2 * borderPixelSize))) / 2);
-
 		myBoardGroup.getChildren().clear();
 		myBoard = new Rectangle[myGridWidth][myGridHeight];
 		Grid grid = mySimulation.getGrid();
 		for (int r = 0; r < grid.getNumRows(); r++) {
 			for (int c = 0; c < grid.getNumCols(); c++) {
+				Rectangle bg = new Rectangle();
+				bg.setLayoutY(r * (cellPixelSize + (2 * borderPixelSize)));
+				bg.setLayoutX(c * (cellPixelSize + (2 * borderPixelSize)));
+				bg.setWidth(cellPixelSize + (2 * borderPixelSize));
+				bg.setHeight(cellPixelSize + (2 * borderPixelSize));
+				
 				Rectangle rect = new Rectangle();
-				//cells have an offset on each side if it fits in grid
-				//rects + borders have a size of (cellPixelSize + (2 * borderPixelSize))
-				//rects themselves sit one borderPixelSize below and right inside that^  
-				rect.setY((r * (cellPixelSize + (2 * borderPixelSize))) + borderPixelSize + yOffset);
-				rect.setX((c * (cellPixelSize + (2 * borderPixelSize))) + borderPixelSize + xOffset);
+				rect.setLayoutY((r * (cellPixelSize + (2 * borderPixelSize))) + borderPixelSize);
+				rect.setLayoutX((c * (cellPixelSize + (2 * borderPixelSize))) + borderPixelSize);
 				rect.setWidth(cellPixelSize);
 				rect.setHeight(cellPixelSize);
+				int x = r;
+				int y = c;
+				rect.setOnMouseClicked(e -> respondToMouse(x, y));
 				myBoard[r][c] = rect;
-				myBoardGroup.getChildren().add(rect);
+				myBoardGroup.getChildren().addAll(bg,rect);
 			}
 		}
 		displayGridToBoard();
-	}
-	
-	/**
-	 * Updates the board and the chart 
-	 */
-	public void updateUI(){
-		displayGridToBoard();
-		updateChart();
-	}
-	
-	
-	/**
-	 * Displays the grid to the board based on the state of each of its cells
-	 */
-	private void displayGridToBoard(){
-		Grid grid = mySimulation.getGrid();
-		for(int r = 0; r < grid.getNumRows(); r++){
-			for(int c = 0; c < grid.getNumCols(); c++){
-				myBoard[r][c].setFill(mySimulation.getRules().getMyStatesColors().get(grid.getCell(r,c).getCurState()));
-			}
-		}
 	}
 	
 	/**
@@ -412,6 +403,28 @@ public class CSView {
 	 	    series.getData().add(new XYChart.Data(0, statesCount.get(key)));
 	    }
 	}
+	
+	/**
+	 * Updates the board and the chart 
+	 */
+	public void updateUI(){
+		displayGridToBoard();
+		updateChart();
+	}
+	
+	
+	/**
+	 * Displays the grid to the board based on the state of each of its cells
+	 */
+	private void displayGridToBoard(){
+		Grid grid = mySimulation.getGrid();
+		for(int r = 0; r < grid.getNumRows(); r++){
+			for(int c = 0; c < grid.getNumCols(); c++){
+				myBoard[r][c].setFill(mySimulation.getRules().getMyStatesColors().get(grid.getCell(r,c).getCurState()));
+			}
+		}
+	}
+	
 	
 	/**
 	 * updates the chart in time increments of 100 ms
