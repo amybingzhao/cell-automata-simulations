@@ -14,6 +14,7 @@ public class ForagingAntsRules extends Rules {
 	private static final String GROUND = "GROUND";
 	private static final String OBSTACLE = "OBSTACLE";
 	private static final String FOOD = "FOOD";
+	private static final String DEFAULT_STATE = GROUND;
 	private static final int NUM_NEIGHBORS = 8;
 	private static final Integer[] NORTH = new Integer[]{0, 1};
 	private static final Integer[] SOUTH = new Integer[]{2, 1};
@@ -135,5 +136,10 @@ public class ForagingAntsRules extends Rules {
 	public ArrayList<String> getParameters() {
 		ArrayList<String> parameters = new ArrayList<String>();
 		return parameters;
+	}
+	
+	@Override
+	protected String getDefault() {
+		return DEFAULT_STATE;
 	}
 }

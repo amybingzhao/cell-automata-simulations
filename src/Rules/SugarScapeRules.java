@@ -18,6 +18,7 @@ public abstract class SugarScapeRules extends Rules {
 	private int myAgentSugarLimit;
 	private int myAgentVisionLimit;
 	private int myAgentMetabolismLimit;
+	private static final String DEFAULT_STATE = "NONE";
 	
 	public SugarScapeRules(int sugarGrowBackRate, int sugarGrowBackInterval, int maxSugarCapacity, int sugarLimit, int visionLimit, int metabolismLimit) {
 		mySugarGrowBackRate = sugarGrowBackRate;
@@ -130,5 +131,10 @@ public abstract class SugarScapeRules extends Rules {
 
 	public void setMyAgentVisionLimit(int myAgentVisionLimit) {
 		this.myAgentVisionLimit = myAgentVisionLimit;
+	}
+	
+	@Override
+	protected String getDefault() {
+		return DEFAULT_STATE;
 	}
 }

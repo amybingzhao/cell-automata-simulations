@@ -18,6 +18,7 @@ public class FireRules extends Rules {
 	private static final String EMPTY = "EMPTY";
 	private static final String TREE = "TREE";
 	private static final String BURNING = "BURNING";
+	private static final String DEFAULT_STATE = TREE;
 	private double myProbCatch;
 
 	public FireRules(double probCatch) {
@@ -145,4 +146,10 @@ public class FireRules extends Rules {
 		parameters.add("ProbCatch:" + myProbCatch);
 		return parameters;
 	}
+
+	@Override
+	protected String getDefault() {
+		return DEFAULT_STATE;
+	}
+
 }

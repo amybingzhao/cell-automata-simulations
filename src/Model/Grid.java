@@ -7,9 +7,10 @@
 package Model;
 
 public abstract class Grid {
-	private static int myRows;
-	private static int myCols;
+	private int myRows;
+	private int myCols;
 	private Cell[][] myGrid;
+	private boolean resized;
 	
 	/**
 	 * Sets the rules, possible states, grid size, and initial states for the current simulation.
@@ -22,6 +23,15 @@ public abstract class Grid {
 		myRows = rows;
 		myCols = cols;
 		myGrid = new Cell[myRows][myCols];
+		resized = false;
+	}
+	
+	public void setResized(boolean bool) {
+		resized = bool;
+	}
+	
+	public boolean hasBeenResized() {
+		return resized;
 	}
 	
 	/**
@@ -78,7 +88,20 @@ public abstract class Grid {
 		}
 		return sb.toString();
 	}
+
+	protected void setGrid(Cell[][] newGrid) {
+		myGrid = newGrid;
+		myRows = newGrid.length;
+		myCols = newGrid[0].length;
+		setResized(true);
+	}
 	
+	public boolean inBounds(int row, int col) {
+		System.out.println("grid dimensions:");
+		System.out.println("\t(" + myRows + ", " + myCols + ")");
+		return (row >= 0 && row < myRows && col >= 0 && col < myCols);
+	}
+
 	public Cell[][] getGrid(){
 		return myGrid;
 	}

@@ -15,6 +15,7 @@ import Rules.Rules;
 import View.CSView;
 import XML.XMLGenerator;
 import XML.XMLParser;
+import cellsociety_team21.InfiniteGrid;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.control.Alert;
@@ -94,8 +95,8 @@ public class Simulation {
 		inputgrid = parser.getGrid();
 		rows = inputgrid[1].length;
 		cols = rows;
-		getGridObject();
 		myRules = parser.getRules(); 
+		getGridObject();
 		myRules.populateStatesInfo();
 		myRules.initGrid(myGrid, inputgrid);
 		myView.setGridInfo(inputgrid.length, inputgrid[1].length, myRules.toString());
@@ -110,6 +111,9 @@ public class Simulation {
 			break;
 		case "Toroidal":
 			myGrid = new ToroidalGrid(rows, cols, inputgrid);
+			break;
+		case "Infinite":
+			myGrid = new InfiniteGrid(rows, cols, inputgrid, myRules);
 			break;
 		default:
 			System.out.println("THAT IS NOT AN OPTION!");
@@ -161,16 +165,25 @@ public class Simulation {
 	 * Helper method that applies the specified rules to each cell in the grid
 	 */
 	public void applyRulesToGrid(){
-		for(int r = 0; r < myGrid.getNumRows(); r++){
-			for(int c = 0; c < myGrid.getNumCols(); c++){
+		int rows = myGrid.getNumRows();
+		int cols = myGrid.getNumCols();
+		for(int r = 0; r < rows; r++){
+			for(int c = 0; c < cols; c++){
 				myRules.applyRulesToCell(myGrid.getCell(r,c), myGrid);
+				if (myGrid.hasBeenResized()) {
+					r += 1;
+					c += 1;
+					rows += 1;
+					cols += 1;
+					myGrid.setResized(false);
+				}
 			}
 		}
 	}
 	
 	/**
 	 * Helper method that updates each state that needs to be updated
-	 * Then clears the 
+	 * Then clears the update list.
 	 */
 	private void updateEachState(){
 		for(Cell c: myRules.getToBeUpdatedList()){

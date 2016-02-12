@@ -25,6 +25,7 @@ public class SegregationRules extends Rules {
 	private static final String BLUE = "BLUE";
 	private static final int MY_CELL_ROW = 1;
 	private static final int MY_CELL_COL = 1;
+	private static final String DEFAULT_STATE = EMPTY;
 	private ArrayList<Cell> toBeMoved;
 	private Queue<Cell> emptyCellList;
 	private double myThreshold;
@@ -142,5 +143,10 @@ public class SegregationRules extends Rules {
 		ArrayList<String> parameters = new ArrayList<String>();
 		parameters.add("Threshold:" + myThreshold);
 		return parameters;
+	}
+	
+	@Override
+	protected String getDefault() {
+		return DEFAULT_STATE;
 	}
 }

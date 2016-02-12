@@ -25,6 +25,7 @@ public class PredatorPreyRules extends Rules {
 	private static final String SHARK = "SHARK";
 	private static final String WATER = "WATER";
 	private static final int NUM_NEIGHBORS = 4;
+	private static final String DEFAULT_STATE = WATER;
 	
 	public PredatorPreyRules(int initialSharkEnergy, int sharkReproductionTime, int fishReproductionTime) {
 		mySharkReproductionTime = sharkReproductionTime;
@@ -293,5 +294,10 @@ public class PredatorPreyRules extends Rules {
 		parameters.add("SharkReproductionTime:" + mySharkReproductionTime);
 		parameters.add("FishReproductionTime:" + myFishReproductionTime);
 		return parameters;
+	}
+	
+	@Override
+	protected String getDefault() {
+		return DEFAULT_STATE;
 	}
 }

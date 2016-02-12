@@ -18,6 +18,7 @@ public class GameOfLifeRules extends Rules {
 	private static final int NUM_NEIGHBORS = 8;
 	private static final String DEAD = "DEAD";
 	private static final String ALIVE = "ALIVE";
+	private static final String DEFAULT_STATE = DEAD;
 	private static final int MY_CELL_ROW = 1;
 	private static final int MY_CELL_COL = 1;
 	
@@ -100,6 +101,11 @@ public class GameOfLifeRules extends Rules {
 	public ArrayList<String> getParameters() {
 		ArrayList<String> parameters = new ArrayList<String>();
 		return parameters;
+	}
+	
+	@Override
+	protected String getDefault() {
+		return DEFAULT_STATE;
 	}
 	
 }

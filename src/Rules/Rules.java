@@ -76,6 +76,12 @@ public abstract class Rules {
 	 */
 	protected abstract Cell createCell(String initialState, int row, int col);
 	
+	public Cell createDefaultCell(int row, int col) {
+		return createCell(getDefault(), row, col);
+	}
+	
+	protected abstract String getDefault();
+	
 	/**
 	 * Rules for each simulation to be implemented by simulation-specific subclasses.
 	 * @param cell: Cell to apply rules to.
