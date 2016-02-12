@@ -531,6 +531,11 @@ public class CSView {
 	 	    seriesMap.get(key).getData().add(new XYChart.Data(mySimulation.getTime()/100, statesCount.get(key)));
 	    }
 	}
+	
+	
+	public void displayAlert(String message){
+		
+	}
 }
 
 
