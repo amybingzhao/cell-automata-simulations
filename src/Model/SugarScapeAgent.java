@@ -9,6 +9,7 @@ public abstract class SugarScapeAgent {
 	private int myVision;
 	private int myRow;
 	private int myCol;	
+	private boolean hasMoved;
 	private static final int INIT_SUGAR_MIN = 5;
 	
 	public SugarScapeAgent(int initSugar, int metabolism, int vision, int row, int col) {
@@ -21,12 +22,23 @@ public abstract class SugarScapeAgent {
 		myVision = vision;
 		myRow = row;
 		myCol = col;
+		hasMoved = false;
 	}
 	
 	public SugarScapeCell findNextPatch(Grid grid) {
 		List<SugarScapeCell> neighbors = getViableNeighbors(grid);
 		SugarScapeCell nextPatch = compareViableNeighbors(neighbors, grid);
+		System.out.println("my loc: (" + myRow + ", " + myCol + ")");
+		System.out.println("next: (" + nextPatch.getCurRow() + ", " + nextPatch.getCurCol() + ")");
 		return nextPatch;
+	}
+	
+	public int getVision() {
+		return myVision;
+	}
+	
+	public int getMetabolism() {
+		return mySugarMetabolism;
 	}
 	
 	public int getRow() {
@@ -77,12 +89,11 @@ public abstract class SugarScapeAgent {
 				neighbors.add((SugarScapeCell) grid.getCell(row, col));
 			}
 		}
-		
 		return neighbors;
 	}
 	
 	private boolean inBounds(int row, int col, Grid grid) {
-		return (row < grid.getNumRows() && row > 0 && col < grid.getNumCols() && col < 0);
+		return (row < grid.getNumRows() && row >= 0 && col < grid.getNumCols() && col >= 0);
 	}
 	
 	private boolean viableNeighbor(int row, int col, Grid grid) {
@@ -149,6 +160,7 @@ public abstract class SugarScapeAgent {
 	public void moveToPatch(SugarScapeCell curPatch, SugarScapeCell nextPatch) {
 		curPatch.removeAgent();
 		nextPatch.setAgent(this);
+		hasMoved = true;
 		int sugarToConsume = nextPatch.consumeSugar();
 		mySugar += sugarToConsume;
 		
@@ -168,5 +180,14 @@ public abstract class SugarScapeAgent {
 	
 	public int getMySugarAmount() {
 		return mySugar;
+	}
+	
+	public void setLocation(int row, int col) {
+		myRow = row;
+		myCol = col;
+	}
+	
+	public boolean hasNotMoved() {
+		return hasMoved == false;
 	}
 }

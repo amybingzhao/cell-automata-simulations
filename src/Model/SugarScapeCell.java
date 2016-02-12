@@ -24,6 +24,7 @@ public class SugarScapeCell extends Cell {
 	
 	public void setAgent(SugarScapeAgent agent) {
 		myAgent = agent;
+		agent.setLocation(myRow, myCol);
 	}
 	
 	public void removeAgent() {
@@ -46,5 +47,13 @@ public class SugarScapeCell extends Cell {
 	
 	public int getMySugarAmount() {
 		return mySugar;
+	}
+	
+	public String toString() {
+		if (hasAgent()) {
+			return "[my Agent: " + myAgent.toString() + ", my Sugar: " + mySugar + "]";
+		} else {
+			return String.valueOf(mySugar);
+		}
 	}
 }

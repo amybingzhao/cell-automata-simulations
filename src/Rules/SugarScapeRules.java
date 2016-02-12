@@ -22,6 +22,7 @@ public abstract class SugarScapeRules extends Rules {
 	public SugarScapeRules(int sugarGrowBackRate, int sugarGrowBackInterval, int maxSugarCapacity, int sugarLimit, int visionLimit, int metabolismLimit) {
 		mySugarGrowBackRate = sugarGrowBackRate;
 		mySugarGrowBackInterval = sugarGrowBackInterval;
+		mySugarGrowBackCountdown = sugarGrowBackInterval;
 		setMyMaxCellSugarCapacity(maxSugarCapacity);
 		setMyAgentSugarLimit(sugarLimit);
 		setMyAgentVisionLimit(visionLimit);
@@ -45,15 +46,20 @@ public abstract class SugarScapeRules extends Rules {
 		
 		if (sugarScapeCell.hasAgent()) {
 			SugarScapeAgent agent = sugarScapeCell.getAgent();
-			SugarScapeCell nextPatch = agent.findNextPatch(grid);
-			if (nextPatch != null) {
-			agent.moveToPatch(sugarScapeCell, nextPatch);
+			if (agent.hasNotMoved()) {
+				SugarScapeCell nextPatch = agent.findNextPatch(grid);
+				if (nextPatch != null) {
+					agent.moveToPatch(sugarScapeCell, nextPatch);
+				}
 			}
 		}
 		
 		if (isLastCellInGrid(cell, grid)) {
+			System.out.println("sugar growback coutndown: " + mySugarGrowBackCountdown);
 			if (canGrowSugarBack()) {
 				growBackSugarInCells(grid);
+			} else {
+				mySugarGrowBackCountdown--;
 			}
 		}
 	}
@@ -70,6 +76,7 @@ public abstract class SugarScapeRules extends Rules {
 	
 	private boolean canGrowSugarBack() {
 		if (mySugarGrowBackCountdown == 0) {
+			System.out.println("hello");
 			mySugarGrowBackCountdown = mySugarGrowBackInterval;
 			return true;
 		} else {
@@ -120,6 +127,4 @@ public abstract class SugarScapeRules extends Rules {
 	public void setMyAgentVisionLimit(int myAgentVisionLimit) {
 		this.myAgentVisionLimit = myAgentVisionLimit;
 	}
-	
-	
 }
