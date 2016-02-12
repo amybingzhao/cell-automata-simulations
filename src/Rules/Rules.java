@@ -25,6 +25,17 @@ public abstract class Rules {
 	private ResourceBundle myRulesResources;
 	
 	/**
+	 * Helper method that applies the specified rules to each method in the grid
+	 */
+	public void applyRulesToGrid(Grid grid){
+		for(int r = 0; r < grid.getNumRows(); r++){
+			for(int c = 0; c < grid.getNumCols(); c++){
+				applyRulesToCell(grid.getCell(r,c), grid);
+			}
+		}
+	}
+	
+	/**
 	 * Initialize the Grid with the Cells corresponding to this simulation.
 	 * @param grid: Simulation grid.
 	 * @param initialStates: String 2D array with the initial states of each cell.
@@ -34,7 +45,7 @@ public abstract class Rules {
 			for (int col = 0; col < grid.getNumCols(); col++) {
 				Cell cell = createCell(initialStates[row][col], row, col);
 				grid.addCellToGrid(row, col, cell);
-				increaseStateCount(cell.getCurState());
+				//increaseStateCount(cell.getCurState());
 			}
 		}
 	}
@@ -105,7 +116,9 @@ public abstract class Rules {
 	 * @param cell: Cell to be updated.
 	 */
 	public void addCellToBeUpdated(Cell cell) {
-		toBeUpdated.add(cell);
+		if (!toBeUpdated.contains(cell)) {
+			toBeUpdated.add(cell);
+		}
 	}
 	
 	/**
@@ -173,13 +186,20 @@ public abstract class Rules {
 			decreaseStateCount(cell.getCurState());
 			increaseStateCount(cell.getNextState());
 		}
-		//addCellToBeUpdated(cell);
 	}
 	
 	protected boolean isLastCellInGrid(Cell cell, Grid grid) {
 		return (cell.getCurRow() == (grid.getNumRows() - 1)) && (cell.getCurCol() == (grid.getNumCols() - 1));
 	}
-	
+
+	/**
+	 * Generates a random integer between 0 and (max-1) for indexing into a list.
+	 * @param max: size of list you're indexing into.
+	 * @return an integer for the random index.
+	 */
+	protected int generateRandom(int max) {
+		return (int) Math.round(Math.random() * (max-1));
+	}
 	
 	/**
 	 * Returns string name of the Simulation

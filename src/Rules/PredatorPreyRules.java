@@ -218,15 +218,6 @@ public class PredatorPreyRules extends Rules {
 	private boolean sharkCanReproduce() {
 		return (mySharkReproductionTime == 1);
 	}
-
-	/**
-	 * Generates a random integer between 0 and (max-1) for indexing into a list.
-	 * @param max: size of list you're indexing into.
-	 * @return an integer for the random index.
-	 */
-	private int generateRandom(int max) {
-		return (int) Math.round(Math.random() * (max-1));
-	}
 	
 	/**
 	 * Gets the Cell that the current Cell will move to.
