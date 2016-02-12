@@ -50,6 +50,10 @@ public abstract class SugarScapeRules extends Rules {
 				SugarScapeCell nextPatch = agent.findNextPatch(grid);
 				if (nextPatch != null) {
 					agent.moveToPatch(sugarScapeCell, nextPatch);
+					nextPatch.setNextState("OCCUPIED");
+					sugarScapeCell.setNextState("NONE");
+					addCellToBeUpdated(nextPatch);
+					addCellToBeUpdated(sugarScapeCell);
 				}
 			}
 		}

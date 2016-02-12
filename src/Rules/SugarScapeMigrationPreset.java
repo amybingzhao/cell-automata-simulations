@@ -21,7 +21,7 @@ public class SugarScapeMigrationPreset extends SugarScapeRules {
 	protected Cell createCell(String initialState, int row, int col) {
 		SugarScapeAgent agent = null;
 		if (initialState.equals("OCCUPIED")) {
-			agent = new StandardSugarScapeAgent(generateRandom(getMyAgentSugarLimit()), generateRandom(getMyAgentMetabolismLimit()), generateRandom(getMyAgentVisionLimit()), row, col);
+			agent = new StandardSugarScapeAgent(generateRandom(getMyAgentSugarLimit()) + 1, generateRandom(getMyAgentMetabolismLimit()) + 1, generateRandom(getMyAgentVisionLimit()) + 1, row, col);
 		}
 		return new SugarScapeCell(initialState, row, col, getMyMaxCellSugarCapacity(), agent);
 	}

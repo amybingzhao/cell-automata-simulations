@@ -27,6 +27,7 @@ public abstract class SugarScapeAgent {
 	
 	public SugarScapeCell findNextPatch(Grid grid) {
 		List<SugarScapeCell> neighbors = getViableNeighbors(grid);
+		System.out.println(neighbors);
 		SugarScapeCell nextPatch = compareViableNeighbors(neighbors, grid);
 		System.out.println("my loc: (" + myRow + ", " + myCol + ")");
 		System.out.println("next: (" + nextPatch.getCurRow() + ", " + nextPatch.getCurCol() + ")");
@@ -53,8 +54,7 @@ public abstract class SugarScapeAgent {
 		List<SugarScapeCell> neighbors = new ArrayList<SugarScapeCell>();
 		int row;
 		int col;
-		
-		// up
+		// left
 		for (int distance = 1; distance <= myVision; distance++) {
 			row = myRow;
 			col = myCol - distance;
@@ -63,7 +63,7 @@ public abstract class SugarScapeAgent {
 			}
 		}
 		
-		// down
+		// right
 		for (int distance = 1; distance <= myVision; distance++) {
 			row = myRow;
 			col = myCol + distance;
@@ -72,7 +72,7 @@ public abstract class SugarScapeAgent {
 			}
 		}
 		
-		// left
+		// up
 		for (int distance = 1; distance <= myVision; distance++) {
 			row = myRow - distance;
 			col = myCol;
@@ -81,10 +81,11 @@ public abstract class SugarScapeAgent {
 			}
 		}
 		
-		//right
+		//down
 		for (int distance = 1; distance <= myVision; distance++) {
 			row = myRow + distance;
 			col = myCol;
+			System.out.println("Hello");
 			if (viableNeighbor(row, col, grid)) {
 				neighbors.add((SugarScapeCell) grid.getCell(row, col));
 			}
@@ -98,6 +99,7 @@ public abstract class SugarScapeAgent {
 	
 	private boolean viableNeighbor(int row, int col, Grid grid) {
 		if (inBounds(row, col, grid)) {
+			System.out.println("(" + row + ", " + col + ")");
 			SugarScapeCell neighbor = (SugarScapeCell) grid.getCell(row, col);
 			if (!neighbor.hasAgent()) {
 				return true;
@@ -109,8 +111,9 @@ public abstract class SugarScapeAgent {
 	
 	private SugarScapeCell compareViableNeighbors(List<SugarScapeCell> neighbors, Grid grid) {
 		SugarScapeCell patchToMoveTo = null;
+		System.out.println(neighbors);
 		List<SugarScapeCell> highestSugarNeighbors = getHighestSugar(neighbors);
-		
+		System.out.println("size: " + highestSugarNeighbors.size());
 		if (highestSugarNeighbors.size() > 0) {
 			patchToMoveTo = getClosestNeighbor(highestSugarNeighbors, grid);
 		}

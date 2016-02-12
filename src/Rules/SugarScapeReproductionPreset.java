@@ -13,6 +13,7 @@ public class SugarScapeReproductionPreset extends SugarScapeRules{
 	private static final int FERTILITY_MIN = 18;
 	private static final int FERTILITY_MAX = 50;
 	private static final int NUM_GENDERS = 2;
+	
 	public SugarScapeReproductionPreset(int sugarGrowBackRate, int sugarGrowBackInterval, int maxSugarCapacity,
 			int sugarLimit, int visionLimit, int metabolismLimit) {
 		super(sugarGrowBackRate, sugarGrowBackInterval, maxSugarCapacity, sugarLimit, visionLimit, metabolismLimit);
@@ -34,7 +35,7 @@ public class SugarScapeReproductionPreset extends SugarScapeRules{
 	private void reproduce(ReproductionSugarScapeAgent curAgent, ReproductionSugarScapeAgent neighbor, Grid grid) {
 		int sugarForChild = curAgent.splitSugar(neighbor);
 		SugarScapeCell childCell = curAgent.getEmptyNeighbor(grid);
-		childCell.setAgent(new ReproductionSugarScapeAgent(generateRandom(getMyAgentSugarLimit()), generateRandom(getMyAgentMetabolismLimit()), generateRandom(getMyAgentVisionLimit()), childCell.getCurRow(), childCell.getCurCol(), generateRandom(NUM_GENDERS - 1),
+		childCell.setAgent(new ReproductionSugarScapeAgent(sugarForChild, generateRandom(getMyAgentMetabolismLimit()), generateRandom(getMyAgentVisionLimit()), childCell.getCurRow(), childCell.getCurCol(), generateRandom(NUM_GENDERS - 1),
 				generateLimitedRandom(MAX_AGE_MAX, MAX_AGE_MIN), FERTILITY_MIN, FERTILITY_MAX));
 	}
 	
@@ -42,7 +43,7 @@ public class SugarScapeReproductionPreset extends SugarScapeRules{
 	protected Cell createCell(String initialState, int row, int col) {
 		SugarScapeAgent agent = null;
 		if (initialState.equals("OCCUPIED")) {
-			agent = new ReproductionSugarScapeAgent(generateRandom(getMyAgentSugarLimit()), generateRandom(getMyAgentMetabolismLimit()), generateRandom(getMyAgentVisionLimit()), row, col, generateRandom(NUM_GENDERS - 1),
+			agent = new ReproductionSugarScapeAgent(generateRandom(getMyAgentSugarLimit()) + 1, generateRandom(getMyAgentMetabolismLimit()) + 1, generateRandom(getMyAgentVisionLimit()) + 1, row, col, generateRandom(NUM_GENDERS - 1),
 					generateLimitedRandom(MAX_AGE_MAX, MAX_AGE_MIN), FERTILITY_MIN, FERTILITY_MAX);
 		}
 		return new SugarScapeCell(initialState, row, col, getMyMaxCellSugarCapacity(), agent);

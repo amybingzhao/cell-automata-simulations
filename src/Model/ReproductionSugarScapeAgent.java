@@ -83,9 +83,8 @@ public class ReproductionSugarScapeAgent extends SugarScapeAgent {
 	private int getGender() {
 		return myGender;
 	}
-	//getNeighbors --> randomize
 	
-	// checkIfCanReproduce
-	
-	// reproduce
+	public String toString() {
+		return "my vision: " + getVision();
+	}
 }
