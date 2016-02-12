@@ -3,7 +3,7 @@
     <Config>
         <Rows>20</Rows>
         <Columns>20</Columns>
-    </Config>
+        <GridType>Toroidal</GridType></Config>
     <Game>
         <Name>GameOfLife</Name>
         <Parameters/>
@@ -17,87 +17,87 @@
         <Cell>
             <X>0</X>
             <Y>1</Y>
-            <State>DEAD</State>
-        </Cell>
-        <Cell>
-            <X>0</X>
-            <Y>2</Y>
             <State>ALIVE</State>
         </Cell>
         <Cell>
             <X>0</X>
+            <Y>2</Y>
+            <State>DEAD</State>
+        </Cell>
+        <Cell>
+            <X>0</X>
             <Y>3</Y>
             <State>DEAD</State>
         </Cell>
         <Cell>
             <X>0</X>
             <Y>4</Y>
-            <State>ALIVE</State>
-        </Cell>
-        <Cell>
-            <X>0</X>
-            <Y>5</Y>
             <State>DEAD</State>
         </Cell>
         <Cell>
             <X>0</X>
+            <Y>5</Y>
+            <State>DEAD</State>
+        </Cell>
+        <Cell>
+            <X>0</X>
             <Y>6</Y>
             <State>DEAD</State>
         </Cell>
         <Cell>
             <X>0</X>
             <Y>7</Y>
-            <State>ALIVE</State>
-        </Cell>
-        <Cell>
-            <X>0</X>
-            <Y>8</Y>
             <State>DEAD</State>
         </Cell>
         <Cell>
             <X>0</X>
+            <Y>8</Y>
+            <State>DEAD</State>
+        </Cell>
+        <Cell>
+            <X>0</X>
             <Y>9</Y>
             <State>DEAD</State>
         </Cell>
         <Cell>
             <X>0</X>
             <Y>10</Y>
-            <State>ALIVE</State>
-        </Cell>
-        <Cell>
-            <X>0</X>
-            <Y>11</Y>
             <State>DEAD</State>
         </Cell>
         <Cell>
             <X>0</X>
+            <Y>11</Y>
+            <State>DEAD</State>
+        </Cell>
+        <Cell>
+            <X>0</X>
             <Y>12</Y>
             <State>DEAD</State>
         </Cell>
         <Cell>
             <X>0</X>
             <Y>13</Y>
-            <State>ALIVE</State>
-        </Cell>
-        <Cell>
-            <X>0</X>
-            <Y>14</Y>
-            <State>ALIVE</State>
-        </Cell>
-        <Cell>
-            <X>0</X>
-            <Y>15</Y>
-            <State>ALIVE</State>
-        </Cell>
-        <Cell>
-            <X>0</X>
-            <Y>16</Y>
             <State>DEAD</State>
         </Cell>
         <Cell>
             <X>0</X>
+            <Y>14</Y>
+            <State>DEAD</State>
+        </Cell>
+        <Cell>
+            <X>0</X>
+            <Y>15</Y>
+            <State>DEAD</State>
+        </Cell>
+        <Cell>
+            <X>0</X>
+            <Y>16</Y>
+            <State>DEAD</State>
+        </Cell>
+        <Cell>
+            <X>0</X>
             <Y>17</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>0</X>
@@ -107,12 +107,12 @@
         <Cell>
             <X>0</X>
             <Y>19</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>1</X>
             <Y>0</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>1</X>
@@ -122,7 +122,7 @@
         <Cell>
             <X>1</X>
             <Y>2</Y>
-            <State>DEAD</State>
+            <State>ALIVE</State>
         </Cell>
         <Cell>
             <X>1</X>
@@ -157,12 +157,12 @@
         <Cell>
             <X>1</X>
             <Y>9</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>1</X>
             <Y>10</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>1</X>
@@ -172,7 +172,7 @@
         <Cell>
             <X>1</X>
             <Y>12</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>1</X>
@@ -187,17 +187,17 @@
         <Cell>
             <X>1</X>
             <Y>15</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>1</X>
             <Y>16</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>1</X>
             <Y>17</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>1</X>
@@ -212,7 +212,7 @@
         <Cell>
             <X>2</X>
             <Y>0</Y>
-            <State>DEAD</State>
+            <State>ALIVE</State>
         </Cell>
         <Cell>
             <X>2</X>
@@ -227,7 +227,7 @@
         <Cell>
             <X>2</X>
             <Y>3</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>2</X>
@@ -237,7 +237,7 @@
         <Cell>
             <X>2</X>
             <Y>5</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>2</X>
@@ -282,12 +282,12 @@
         <Cell>
             <X>2</X>
             <Y>14</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>2</X>
             <Y>15</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>2</X>
@@ -307,7 +307,7 @@
         <Cell>
             <X>2</X>
             <Y>19</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>3</X>
@@ -317,27 +317,27 @@
         <Cell>
             <X>3</X>
             <Y>1</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>3</X>
             <Y>2</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>3</X>
             <Y>3</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>3</X>
             <Y>4</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>3</X>
             <Y>5</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>3</X>
@@ -352,7 +352,7 @@
         <Cell>
             <X>3</X>
             <Y>8</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>3</X>
@@ -367,22 +367,22 @@
         <Cell>
             <X>3</X>
             <Y>11</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>3</X>
             <Y>12</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>3</X>
             <Y>13</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>3</X>
             <Y>14</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>3</X>
@@ -397,7 +397,7 @@
         <Cell>
             <X>3</X>
             <Y>17</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>3</X>
@@ -412,7 +412,7 @@
         <Cell>
             <X>4</X>
             <Y>0</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>4</X>
@@ -437,12 +437,12 @@
         <Cell>
             <X>4</X>
             <Y>5</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>4</X>
             <Y>6</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>4</X>
@@ -487,12 +487,12 @@
         <Cell>
             <X>4</X>
             <Y>15</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>4</X>
             <Y>16</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>4</X>
@@ -507,12 +507,12 @@
         <Cell>
             <X>4</X>
             <Y>19</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>5</X>
             <Y>0</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>5</X>
@@ -522,42 +522,42 @@
         <Cell>
             <X>5</X>
             <Y>2</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>5</X>
             <Y>3</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>5</X>
             <Y>4</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>5</X>
             <Y>5</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>5</X>
             <Y>6</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>5</X>
             <Y>7</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>5</X>
             <Y>8</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>5</X>
             <Y>9</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>5</X>
@@ -572,7 +572,7 @@
         <Cell>
             <X>5</X>
             <Y>12</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>5</X>
@@ -582,17 +582,17 @@
         <Cell>
             <X>5</X>
             <Y>14</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>5</X>
             <Y>15</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>5</X>
             <Y>16</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>5</X>
@@ -607,7 +607,7 @@
         <Cell>
             <X>5</X>
             <Y>19</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>6</X>
@@ -627,12 +627,12 @@
         <Cell>
             <X>6</X>
             <Y>3</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>6</X>
             <Y>4</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>6</X>
@@ -642,7 +642,7 @@
         <Cell>
             <X>6</X>
             <Y>6</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>6</X>
@@ -657,7 +657,7 @@
         <Cell>
             <X>6</X>
             <Y>9</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>6</X>
@@ -667,7 +667,7 @@
         <Cell>
             <X>6</X>
             <Y>11</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>6</X>
@@ -677,12 +677,12 @@
         <Cell>
             <X>6</X>
             <Y>13</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>6</X>
             <Y>14</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>6</X>
@@ -712,17 +712,17 @@
         <Cell>
             <X>7</X>
             <Y>0</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>7</X>
             <Y>1</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>7</X>
             <Y>2</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>7</X>
@@ -742,12 +742,12 @@
         <Cell>
             <X>7</X>
             <Y>6</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>7</X>
             <Y>7</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>7</X>
@@ -757,22 +757,22 @@
         <Cell>
             <X>7</X>
             <Y>9</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>7</X>
             <Y>10</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>7</X>
             <Y>11</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>7</X>
             <Y>12</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>7</X>
@@ -782,7 +782,7 @@
         <Cell>
             <X>7</X>
             <Y>14</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>7</X>
@@ -812,7 +812,7 @@
         <Cell>
             <X>8</X>
             <Y>0</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>8</X>
@@ -822,12 +822,12 @@
         <Cell>
             <X>8</X>
             <Y>2</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>8</X>
             <Y>3</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>8</X>
@@ -842,7 +842,7 @@
         <Cell>
             <X>8</X>
             <Y>6</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>8</X>
@@ -857,7 +857,7 @@
         <Cell>
             <X>8</X>
             <Y>9</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>8</X>
@@ -867,12 +867,12 @@
         <Cell>
             <X>8</X>
             <Y>11</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>8</X>
             <Y>12</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>8</X>
@@ -882,7 +882,7 @@
         <Cell>
             <X>8</X>
             <Y>14</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>8</X>
@@ -892,12 +892,12 @@
         <Cell>
             <X>8</X>
             <Y>16</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>8</X>
             <Y>17</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>8</X>
@@ -922,7 +922,7 @@
         <Cell>
             <X>9</X>
             <Y>2</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>9</X>
@@ -937,7 +937,7 @@
         <Cell>
             <X>9</X>
             <Y>5</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>9</X>
@@ -947,12 +947,12 @@
         <Cell>
             <X>9</X>
             <Y>7</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>9</X>
             <Y>8</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>9</X>
@@ -967,12 +967,12 @@
         <Cell>
             <X>9</X>
             <Y>11</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>9</X>
             <Y>12</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>9</X>
@@ -992,12 +992,12 @@
         <Cell>
             <X>9</X>
             <Y>16</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>9</X>
             <Y>17</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>9</X>
@@ -1007,7 +1007,7 @@
         <Cell>
             <X>9</X>
             <Y>19</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>10</X>
@@ -1017,7 +1017,7 @@
         <Cell>
             <X>10</X>
             <Y>1</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>10</X>
@@ -1032,42 +1032,42 @@
         <Cell>
             <X>10</X>
             <Y>4</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>10</X>
             <Y>5</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>10</X>
             <Y>6</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>10</X>
             <Y>7</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>10</X>
             <Y>8</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>10</X>
             <Y>9</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>10</X>
             <Y>10</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>10</X>
             <Y>11</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>10</X>
@@ -1077,7 +1077,7 @@
         <Cell>
             <X>10</X>
             <Y>13</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>10</X>
@@ -1087,22 +1087,22 @@
         <Cell>
             <X>10</X>
             <Y>15</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>10</X>
             <Y>16</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>10</X>
             <Y>17</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>10</X>
             <Y>18</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>10</X>
@@ -1112,7 +1112,7 @@
         <Cell>
             <X>11</X>
             <Y>0</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>11</X>
@@ -1127,12 +1127,12 @@
         <Cell>
             <X>11</X>
             <Y>3</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>11</X>
             <Y>4</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>11</X>
@@ -1142,7 +1142,7 @@
         <Cell>
             <X>11</X>
             <Y>6</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>11</X>
@@ -1167,7 +1167,7 @@
         <Cell>
             <X>11</X>
             <Y>11</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>11</X>
@@ -1177,22 +1177,22 @@
         <Cell>
             <X>11</X>
             <Y>13</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>11</X>
             <Y>14</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>11</X>
             <Y>15</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>11</X>
             <Y>16</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>11</X>
@@ -1202,7 +1202,7 @@
         <Cell>
             <X>11</X>
             <Y>18</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>11</X>
@@ -1212,12 +1212,12 @@
         <Cell>
             <X>12</X>
             <Y>0</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>12</X>
             <Y>1</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>12</X>
@@ -1252,17 +1252,17 @@
         <Cell>
             <X>12</X>
             <Y>8</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>12</X>
             <Y>9</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>12</X>
             <Y>10</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>12</X>
@@ -1277,7 +1277,7 @@
         <Cell>
             <X>12</X>
             <Y>13</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>12</X>
@@ -1297,7 +1297,7 @@
         <Cell>
             <X>12</X>
             <Y>17</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>12</X>
@@ -1307,12 +1307,12 @@
         <Cell>
             <X>12</X>
             <Y>19</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>13</X>
             <Y>0</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>13</X>
@@ -1327,7 +1327,7 @@
         <Cell>
             <X>13</X>
             <Y>3</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>13</X>
@@ -1337,12 +1337,12 @@
         <Cell>
             <X>13</X>
             <Y>5</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>13</X>
             <Y>6</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>13</X>
@@ -1352,7 +1352,7 @@
         <Cell>
             <X>13</X>
             <Y>8</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>13</X>
@@ -1367,12 +1367,12 @@
         <Cell>
             <X>13</X>
             <Y>11</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>13</X>
             <Y>12</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>13</X>
@@ -1387,7 +1387,7 @@
         <Cell>
             <X>13</X>
             <Y>15</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>13</X>
@@ -1397,7 +1397,7 @@
         <Cell>
             <X>13</X>
             <Y>17</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>13</X>
@@ -1417,7 +1417,7 @@
         <Cell>
             <X>14</X>
             <Y>1</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>14</X>
@@ -1427,12 +1427,12 @@
         <Cell>
             <X>14</X>
             <Y>3</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>14</X>
             <Y>4</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>14</X>
@@ -1442,12 +1442,12 @@
         <Cell>
             <X>14</X>
             <Y>6</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>14</X>
             <Y>7</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>14</X>
@@ -1462,17 +1462,17 @@
         <Cell>
             <X>14</X>
             <Y>10</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>14</X>
             <Y>11</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>14</X>
             <Y>12</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>14</X>
@@ -1482,17 +1482,17 @@
         <Cell>
             <X>14</X>
             <Y>14</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>14</X>
             <Y>15</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>14</X>
             <Y>16</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>14</X>
@@ -1502,17 +1502,17 @@
         <Cell>
             <X>14</X>
             <Y>18</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>14</X>
             <Y>19</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>15</X>
             <Y>0</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>15</X>
@@ -1542,7 +1542,7 @@
         <Cell>
             <X>15</X>
             <Y>6</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>15</X>
@@ -1552,22 +1552,22 @@
         <Cell>
             <X>15</X>
             <Y>8</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>15</X>
             <Y>9</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>15</X>
             <Y>10</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>15</X>
             <Y>11</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>15</X>
@@ -1577,7 +1577,7 @@
         <Cell>
             <X>15</X>
             <Y>13</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>15</X>
@@ -1592,7 +1592,7 @@
         <Cell>
             <X>15</X>
             <Y>16</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>15</X>
@@ -1602,7 +1602,7 @@
         <Cell>
             <X>15</X>
             <Y>18</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>15</X>
@@ -1612,12 +1612,12 @@
         <Cell>
             <X>16</X>
             <Y>0</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>16</X>
             <Y>1</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>16</X>
@@ -1632,37 +1632,37 @@
         <Cell>
             <X>16</X>
             <Y>4</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>16</X>
             <Y>5</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>16</X>
             <Y>6</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>16</X>
             <Y>7</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>16</X>
             <Y>8</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>16</X>
             <Y>9</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>16</X>
             <Y>10</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>16</X>
@@ -1672,7 +1672,7 @@
         <Cell>
             <X>16</X>
             <Y>12</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>16</X>
@@ -1687,7 +1687,7 @@
         <Cell>
             <X>16</X>
             <Y>15</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>16</X>
@@ -1702,17 +1702,17 @@
         <Cell>
             <X>16</X>
             <Y>18</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>16</X>
             <Y>19</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>17</X>
             <Y>0</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>17</X>
@@ -1722,22 +1722,22 @@
         <Cell>
             <X>17</X>
             <Y>2</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>17</X>
             <Y>3</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>17</X>
             <Y>4</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>17</X>
             <Y>5</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>17</X>
@@ -1752,7 +1752,7 @@
         <Cell>
             <X>17</X>
             <Y>8</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>17</X>
@@ -1772,12 +1772,12 @@
         <Cell>
             <X>17</X>
             <Y>12</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>17</X>
             <Y>13</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>17</X>
@@ -1797,32 +1797,32 @@
         <Cell>
             <X>17</X>
             <Y>17</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>17</X>
             <Y>18</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>17</X>
             <Y>19</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>18</X>
             <Y>0</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>18</X>
             <Y>1</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>18</X>
             <Y>2</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>18</X>
@@ -1832,7 +1832,7 @@
         <Cell>
             <X>18</X>
             <Y>4</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>18</X>
@@ -1842,12 +1842,12 @@
         <Cell>
             <X>18</X>
             <Y>6</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>18</X>
             <Y>7</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>18</X>
@@ -1857,12 +1857,12 @@
         <Cell>
             <X>18</X>
             <Y>9</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>18</X>
             <Y>10</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>18</X>
@@ -1872,7 +1872,7 @@
         <Cell>
             <X>18</X>
             <Y>12</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>18</X>
@@ -1882,12 +1882,12 @@
         <Cell>
             <X>18</X>
             <Y>14</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>18</X>
             <Y>15</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>18</X>
@@ -1897,17 +1897,17 @@
         <Cell>
             <X>18</X>
             <Y>17</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>18</X>
             <Y>18</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>18</X>
             <Y>19</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>19</X>
@@ -1937,7 +1937,7 @@
         <Cell>
             <X>19</X>
             <Y>5</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>19</X>
@@ -1947,7 +1947,7 @@
         <Cell>
             <X>19</X>
             <Y>7</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>19</X>
@@ -1957,17 +1957,17 @@
         <Cell>
             <X>19</X>
             <Y>9</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>19</X>
             <Y>10</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>19</X>
             <Y>11</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>19</X>
@@ -1982,7 +1982,7 @@
         <Cell>
             <X>19</X>
             <Y>14</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>19</X>
@@ -2002,7 +2002,7 @@
         <Cell>
             <X>19</X>
             <Y>18</Y>
-            <State>ALIVE</State>
+            <State>DEAD</State>
         </Cell>
         <Cell>
             <X>19</X>

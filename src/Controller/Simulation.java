@@ -9,6 +9,8 @@ import java.io.File;
 import java.util.ResourceBundle;
 import Model.Cell;
 import Model.Grid;
+import Model.StandardGrid;
+import Model.ToroidalGrid;
 import Rules.Rules;
 import View.CSView;
 import XML.XMLGenerator;
@@ -43,11 +45,16 @@ public class Simulation {
 	private int msDelay;
 	private int time;
 	private int mySpeed;
+	private XMLParser parser;
 	
 	//xml determined variables
 	private File xmlFile;
 	private Grid myGrid;
 	private Rules myRules;
+	private int rows;
+	private int cols;
+	private String[][] inputgrid;
+	private String gridType;
 	
 	private CSView myView;
 
@@ -82,15 +89,31 @@ public class Simulation {
 	public void loadXML(File file){
 		if(file != null)
 			xmlFile = file;
-		XMLParser parser = new XMLParser();
+		parser = new XMLParser();
 		parser.parse(xmlFile);
-		String[][] inputgrid = parser.getGrid();
-		myGrid = new Grid(inputgrid[1].length, inputgrid[1].length, inputgrid);
+		inputgrid = parser.getGrid();
+		rows = inputgrid[1].length;
+		cols = rows;
+		getGridObject();
 		myRules = parser.getRules(); 
 		myRules.populateStatesInfo();
 		myRules.initGrid(myGrid, inputgrid);
 		myView.setGridInfo(inputgrid.length, inputgrid[1].length, myRules.toString());
 		loaded = true;
+	}
+	
+	public void getGridObject(){
+		gridType = parser.getGridType();
+		switch(gridType){
+		case "Standard":
+			myGrid = new StandardGrid(rows, cols, inputgrid);
+			break;
+		case "Toroidal":
+			myGrid = new ToroidalGrid(rows, cols, inputgrid);
+			break;
+		default:
+			System.out.println("THAT IS NOT AN OPTION!");
+		}
 	}
 	
 
@@ -111,7 +134,7 @@ public class Simulation {
 		String myRulesName = myRules.toString().replaceAll(" ", "");
 		File myFile = myView.promptForFileName();
 		if (myFile == null) return;
-		myGenerator.save(myRulesName, myGrid.getNumRows(), myGrid.getGrid(), myRules.getParameters(), myFile);
+		myGenerator.save(myRulesName, myGrid.getNumRows(), myGrid.getGrid(), myRules.getParameters(), myFile, gridType);
 	}
 	
 	/**
