@@ -70,13 +70,13 @@ public class XMLGenerator {
 	 * @param numCells
 	 *            The number of cells to be randomly generated
 	 */
-	public void generateFile(int sideLength, String rules, String fileName) {
+	public void generateFile(int sideLength, String rules, String fileName, String gridType) {
 
 		try {
 			myDocument = myBuilder.newDocument();
 			Element myRoot = myDocument.createElement("Simulation");
 			myDocument.appendChild(myRoot);
-			myRoot.appendChild(getConfig(sideLength));
+			myRoot.appendChild(getConfig(sideLength, gridType));
 			myRoot.appendChild(getRules(rules, promptForParameters(rules)));
 			if (weighted) {
 				myRoot.appendChild(createWeightedRandomCells(sideLength, rules + "States"));
@@ -99,15 +99,18 @@ public class XMLGenerator {
 	 *            The number of columns in the grid
 	 * @return An element containing the data to be put in the file
 	 */
-	public Element getConfig(int sideLength) {
+	public Element getConfig(int sideLength, String gridType) {
 
 		Element configElement = myDocument.createElement("Config");
 		Element myRows = myDocument.createElement("Rows");
 		myRows.appendChild(myDocument.createTextNode("" + sideLength));
 		Element myCols = myDocument.createElement("Columns");
 		myCols.appendChild(myDocument.createTextNode("" + sideLength));
+		Element myGrid = myDocument.createElement("GridType");
+		myGrid.appendChild(myDocument.createTextNode("" + gridType));
 		configElement.appendChild(myRows);
 		configElement.appendChild(myCols);
+		configElement.appendChild(myGrid);
 
 		return configElement;
 	}
@@ -266,9 +269,10 @@ public class XMLGenerator {
 	 * @param myFile
 	 *            The file to be saved to
 	 */
-	public void save(String rulesType, int sideLength, Cell[][] gameGrid, List<String> params, File myFile) {
+
+	public void save(String rulesType, int sideLength, Cell[][] gameGrid, ArrayList<String> params, File myFile, String gridType) {
 		myDocument = myBuilder.newDocument();
-		Element saveConfig = getConfig(sideLength);
+		Element saveConfig = getConfig(sideLength, gridType);
 		Element saveRules = getRules(rulesType, params);
 		Element saveCells = myDocument.createElement("Cells");
 		for (int row = 0; row < gameGrid.length; row++) {
@@ -359,9 +363,8 @@ public class XMLGenerator {
 
 	public static void main(String[] args) {
 		HashMap<String, Double> myMap = new HashMap<String, Double>();
-		myMap.put("ALIVE", 10.0);
+		myMap.put("BLUE", 40.0);
 		XMLGenerator myGenerator = new XMLGenerator(myMap);
-		myGenerator.generateFile(3, "GameOfLife", "GOL.xml");
+		myGenerator.generateFile(40, "Segregation", "SegregationTor40.xml", "Toroidal");
 	}
-
 }
