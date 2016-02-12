@@ -110,7 +110,7 @@ public class Simulation {
 		String myRulesName = myRules.toString().replaceAll(" ", "");
 		File myFile = myView.promptForFileName();
 		if (myFile == null) return;
-		myGenerator.save(myRulesName, myGrid.getNumRows(), myGrid.getNumCols(), myGrid.getGrid(), myRules.getParameters(), myFile);
+		myGenerator.save(myRulesName, myGrid.getNumRows(), myGrid.getGrid(), myRules.getParameters(), myFile);
 	}
 	
 	/**
