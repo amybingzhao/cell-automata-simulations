@@ -20,51 +20,32 @@ public class ForagingAntsRules extends Rules {
 	private static final String OBSTACLE = "OBSTACLE";
 	private static final String FOOD = "FOOD";
 	private static final int NUM_NEIGHBORS = 8;
-	private Map<String, String[]> myForwardDirectionMap;
-	private Map<String, Integer[]> myDirectionToCoordMap;
-	private Map<Integer[], String> myCoordToDirectionMap;
+	private static final Integer[] NORTH = new Integer[]{0, 1};
+	private static final Integer[] SOUTH = new Integer[]{2, 1};
+	private static final Integer[] WEST = new Integer[]{1, 0};
+	private static final Integer[] EAST = new Integer[]{1, 2};
+	private static final Integer[] NW = new Integer[]{0, 0};
+	private static final Integer[] NE = new Integer[]{0, 2};
+	private static final Integer[] SW = new Integer[]{2, 0};
+	private static final Integer[] SE = new Integer[]{2, 2};
+	private List<Integer[]> myDirections;
+	
 	
 	public ForagingAntsRules(int numAnts) {
 		numTotalAnts = numAnts;
-		initForwardDirectionMap();
-		initDirectionToCoordMap();	
-		initCoordToDirectionMap();
+		initDirections();
 	}
 	
-	private void initDirectionToCoordMap() {
-		myDirectionToCoordMap = new HashMap<String, Integer[]>();
-		myDirectionToCoordMap.put("N", new Integer[]{0, 1});
-		myDirectionToCoordMap.put("S", new Integer[]{2, 1});
-		myDirectionToCoordMap.put("E", new Integer[]{1, 2});
-		myDirectionToCoordMap.put("W", new Integer[]{1, 0});
-		myDirectionToCoordMap.put("NW", new Integer[]{0, 0});
-		myDirectionToCoordMap.put("NE", new Integer[]{0, 2});
-		myDirectionToCoordMap.put("SW", new Integer[]{2, 0});
-		myDirectionToCoordMap.put("SE", new Integer[]{2, 2});
-	}
-	
-	private void initCoordToDirectionMap() {
-		myCoordToDirectionMap = new HashMap<Integer[], String>();
-		myCoordToDirectionMap.put(new Integer[]{0, 1}, "N");
-		myCoordToDirectionMap.put(new Integer[]{2, 1}, "S");
-		myCoordToDirectionMap.put(new Integer[]{1, 2}, "E");
-		myCoordToDirectionMap.put(new Integer[]{1, 0}, "W");
-		myCoordToDirectionMap.put(new Integer[]{0, 0}, "NW");
-		myCoordToDirectionMap.put(new Integer[]{0, 2}, "NE");
-		myCoordToDirectionMap.put(new Integer[]{2, 0}, "SW");
-		myCoordToDirectionMap.put(new Integer[]{2, 2}, "SE");
-	}
-
-	private void initForwardDirectionMap() {
-		myForwardDirectionMap = new HashMap<String, String[]>();
-		myForwardDirectionMap.put("N", new String[]{"N", "NW", "NE"});
-		myForwardDirectionMap.put("W", new String[]{"W", "NW", "SW"});
-		myForwardDirectionMap.put("E", new String[]{"E", "NE", "SE"});
-		myForwardDirectionMap.put("S", new String[]{"S", "SW", "SE"});
-		myForwardDirectionMap.put("NW", new String[]{"NW", "N", "W"});
-		myForwardDirectionMap.put("SW", new String[]{"SW", "S", "W"});
-		myForwardDirectionMap.put("NE", new String[]{"NE", "N", "E"});
-		myForwardDirectionMap.put("SE", new String[]{"SE", "S", "E"});
+	private void initDirections() {
+		myDirections = new ArrayList<Integer[]>();
+		myDirections.add(NORTH);
+		myDirections.add(SOUTH);
+		myDirections.add(WEST);
+		myDirections.add(EAST);
+		myDirections.add(NE);
+		myDirections.add(NW);
+		myDirections.add(SE);
+		myDirections.add(SW);
 	}
 
 	@Override
@@ -74,7 +55,7 @@ public class ForagingAntsRules extends Rules {
 
 	public void applyRulesToCell(ForagingAntsCell cell, Grid grid) {
 		List<Ant> ants = cell.getAnts();
-		
+
 		for (int i = 0; i < ants.size(); i++) {
 			handleAnt(ants.get(i), cell, grid);
 		}
@@ -92,20 +73,57 @@ public class ForagingAntsRules extends Rules {
 
 	private List<Integer[]> getDirectionsToCheck(Ant ant) {
 		List<Integer[]> directions = new ArrayList<Integer[]>();
-		String[] forwardDirections = myForwardDirectionMap.get(ant.getDirection());
-		
-		for (int i = 0; i < forwardDirections.length; i++) {
-			directions.add(myDirectionToCoordMap.get(forwardDirections[i]));
-		}
-		
-		for (String key : myDirectionToCoordMap.keySet()) {
-			Integer[] dir = myDirectionToCoordMap.get(key);
-			if (!directions.contains(dir)) {
-				directions.add(dir);
+		directions.addAll(getForwardDirections(ant.getDirection()));
+
+		for (int i = 0; i < myDirections.size(); i++) {
+			if (!directions.contains(myDirections.get(i))) {
+				directions.add(myDirections.get(i));
 			}
 		}
 		
 		return directions;
+	}
+	
+	private List<Integer[]> getForwardDirections(Integer[] curDirection) {
+		int curRow = curDirection[0];
+		int curCol = curDirection[1];
+
+		List<Integer[]> forwardDirections = new ArrayList<Integer[]>();
+		forwardDirections.add(curDirection);
+		
+		if (curRow == 0) {
+			if (curCol == 0) {
+				forwardDirections.add(NORTH);
+				forwardDirections.add(WEST);
+			} else if (curCol == 1) {
+				forwardDirections.add(NW);
+				forwardDirections.add(NE);
+			} else if (curCol == 2) {
+				forwardDirections.add(NORTH);
+				forwardDirections.add(EAST);
+			}
+		} else if (curRow == 1) {
+			if (curCol == 0) {
+				forwardDirections.add(NW);
+				forwardDirections.add(SW);
+			} else if (curCol == 2) {
+				forwardDirections.add(NE);
+				forwardDirections.add(SE);
+			}
+		} else if (curRow == 2) {
+			if (curCol == 0) {
+				forwardDirections.add(WEST);
+				forwardDirections.add(SOUTH);
+			} else if (curCol == 1) {
+				forwardDirections.add(SW);
+				forwardDirections.add(SE);
+			} else if (curCol == 2) {
+				forwardDirections.add(EAST);
+				forwardDirections.add(SOUTH);
+			}
+		}
+		
+		return forwardDirections;
 	}
 	
 	@Override
@@ -129,5 +147,4 @@ public class ForagingAntsRules extends Rules {
 		ArrayList<String> parameters = new ArrayList<String>();
 		return parameters;
 	}
-
 }

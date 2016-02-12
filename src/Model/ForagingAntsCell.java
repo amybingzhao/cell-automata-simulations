@@ -16,16 +16,18 @@ public class ForagingAntsCell extends Cell {
 	
 	public ForagingAntsCell(String initialState, int row, int col, int numTotalAnts) {
 		super(initialState, row, col);
+		myAnts = new ArrayList<Ant>();
 		if (getCurState().equals(HOME)) {
 			myNumAnts = numTotalAnts;
-			myMaxNumAnts = numTotalAnts;
+			for (int i = 0; i < numTotalAnts; i++) {
+				myAnts.add(new Ant());
+			}
 		} else {
 			myNumAnts = 0;
-			myMaxNumAnts = MAX_ANT_PER_CELL;
 		}
+		myMaxNumAnts = MAX_ANT_PER_CELL;
 		myFoodPheromones = 0;
 		myHomePheromones = 0;
-		myAnts = new ArrayList<Ant>();
 	}
 
 	public int getNumAnts() {
@@ -83,5 +85,11 @@ public class ForagingAntsCell extends Cell {
 	
 	public boolean isHome() {
 		return getCurState().equals(HOME);
+	}
+	
+	public String toString() {
+		return ("Cell row: " + this.getCurRow() + ", col: " + this.getCurCol() + "\n" + 
+				"\t num Ants: " + myNumAnts + "\n\tnum food pheromones: " + myFoodPheromones
+				+ ", num home pheromones: " + myHomePheromones + "\n");
 	}
 }
