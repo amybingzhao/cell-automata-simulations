@@ -78,12 +78,6 @@ public abstract class SugarScapeRules extends Rules {
 	}
 	
 	@Override
-	public Color getFill(String state) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	@Override
 	public String toString() {
 		return "Sugarscape";
 	}

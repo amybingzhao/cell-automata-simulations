@@ -8,6 +8,7 @@ package Rules;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -22,9 +23,6 @@ public class SegregationRules extends Rules {
 	private static final String EMPTY = "EMPTY";
 	private static final String RED = "RED";
 	private static final String BLUE = "BLUE";
-	private static final Color REDCOLOR = Color.RED;
-	private static final Color BLUECOLOR = Color.BLUE;
-	private static final Color EMPTYCOLOR = Color.WHITE;
 	private static final int MY_CELL_ROW = 1;
 	private static final int MY_CELL_COL = 1;
 	private ArrayList<Cell> toBeMoved;
@@ -124,22 +122,6 @@ public class SegregationRules extends Rules {
 		}
 		
 		return ((((double) numSameNeighbors)/((double) numNeighbors) >= myThreshold) || numNeighbors == 0);
-	}
-	
-	/**
-	 * Returns the color corresponding to the state.
-	 */
-	public Color getFill(String state){
-		switch(state){
-		case BLUE:
-			return BLUECOLOR;
-		case RED:
-			return REDCOLOR;
-		case EMPTY:
-			return EMPTYCOLOR;
-		default:
-			return ERRORCOLOR;
-		}
 	}
 
 	/**

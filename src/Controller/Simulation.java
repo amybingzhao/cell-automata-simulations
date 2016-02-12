@@ -1,13 +1,11 @@
 /**
  * @author Austin Wu
- * @author Blake Kaplan
  * This class takes care of overall logic and UI elements
  */
 
 package Controller;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
 import Model.Cell;
 import Model.Grid;
@@ -15,16 +13,19 @@ import Rules.Rules;
 import View.CSView;
 import XML.XMLGenerator;
 import XML.XMLParser;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.util.Duration;
 
 /*
  * Todos:
- * 1. Refactor into view class
- * 2. Part 3 Visualization Stuff
- * 3. Different cell shapes
- * 4. Different grid edge types
- * 5. Simulation Styling
- * 6. Start resource file
- * 7. 
+ * XML Generator UI
+ * Allow users to interact with the simulation dynamically to change the values of its parameters 
+ * Different grid shapes
+ * shape of cells or patches (i.e., circles, rectangles, or arbitrary images)
+ * neighbors to consider (i.e., cardinal directions, diagonal directions, or all directions) with appropriate error checking (e.g., hexagonal grids do not have cardinal directions)
  * 
  */
 
@@ -38,24 +39,33 @@ import XML.XMLParser;
 
 public class Simulation {
 	private boolean running;
+	private boolean loaded;
+	private int msDelay;
+	private int time;
 	private int mySpeed;
-	private int tick;
 	
 	//xml determined variables
 	private File xmlFile;
 	private Grid myGrid;
 	private Rules myRules;
-	private String current; 
 	
 	private CSView myView;
 
-	public static final String DEFAULT_CONTROLLER_RESOURCE = "Controller/DefaultController";
+	public static final String DEFAULT_CONTROLLER_RESOURCE = "Controller/Controller";
 	private ResourceBundle myControllerResources;
 	
 	public Simulation(){
 		myControllerResources = ResourceBundle.getBundle(DEFAULT_CONTROLLER_RESOURCE);
 		mySpeed = Integer.parseInt(myControllerResources.getString("InitialSpeed"));
-		tick = 0;
+		msDelay = Integer.parseInt(myControllerResources.getString("MsDelay"));
+		time = 0;
+		
+		// sets the simulation's loop
+        KeyFrame frame = new KeyFrame(Duration.millis(msDelay), e -> step(false));
+        Timeline animation = new Timeline();
+        animation.setCycleCount(Timeline.INDEFINITE);
+        animation.getKeyFrames().add(frame);
+        animation.play();
 	}
 	
 	/**
@@ -74,34 +84,60 @@ public class Simulation {
 			xmlFile = file;
 		XMLParser parser = new XMLParser();
 		parser.parse(xmlFile);
-		myRules = parser.getRules(); 
 		String[][] inputgrid = parser.getGrid();
 		myGrid = new Grid(inputgrid[1].length, inputgrid[1].length, inputgrid);
+		myRules = parser.getRules(); 
+		myRules.populateStatesInfo();
 		myRules.initGrid(myGrid, inputgrid);
-		current = myRules.toString();
-		myView.setGridInfo(inputgrid.length, inputgrid[1].length, current);
+		myView.setGridInfo(inputgrid.length, inputgrid[1].length, myRules.toString());
+		loaded = true;
+	}
+	
+
+	/**
+	 * Saves a XML file 
+	 */
+	public void saveXML(){
+		running = false;
+		if (!loaded){
+			Alert myAlert = new Alert(AlertType.INFORMATION);
+			myAlert.setTitle("Saving Error");
+			myAlert.setHeaderText(null);
+			myAlert.setContentText("You must have a simulation loaded to save!");
+			myAlert.showAndWait();
+			return;
+		}
+		XMLGenerator myGenerator = new XMLGenerator();
+		String myRulesName = myRules.toString().replaceAll(" ", "");
+		File myFile = myView.promptForFileName();
+		if (myFile == null) return;
+		myGenerator.save(myRulesName, myGrid.getNumRows(), myGrid.getGrid(), myRules.getParameters(), myFile);
 	}
 	
 	/**
 	 * Applies rules to cells, updates their states, displays new states
+	 * Fastest is every 100 ms, slowest is every 2 seconds. 
+	 * Changing the speed will not change the time on the graph- 
+	 * i.e. 2 seconds on graph will always be 2 seconds on graph,
+	 * However, changes in cell # will be spread of great delta time 
 	 */
-	public void step(double elapsedTime, boolean stepping) {
-		if(tick % (21 - mySpeed) != 0 && !stepping){
-			tick++;
-			return;
-		}
+	public void step(boolean stepping) {
 		if(running || stepping){
+			if(time % ((21 - mySpeed) * 100) != 0 && !stepping){
+				time += msDelay;
+				return;
+			}
+			time += msDelay;
 			applyRulesToGrid();
 			updateEachState();
-			myView.displayGridToBoard();
+			myView.updateUI();
 		}
-		tick++;
 	}
 	
 	/**
-	 * Helper method that applies the specified rules to each method in the grid
+	 * Helper method that applies the specified rules to each cell in the grid
 	 */
-	private void applyRulesToGrid(){
+	public void applyRulesToGrid(){
 		for(int r = 0; r < myGrid.getNumRows(); r++){
 			for(int c = 0; c < myGrid.getNumCols(); c++){
 				myRules.applyRulesToCell(myGrid.getCell(r,c), myGrid);
@@ -115,6 +151,7 @@ public class Simulation {
 	 */
 	private void updateEachState(){
 		for(Cell c: myRules.getToBeUpdatedList()){
+			myRules.updateStateCount(c);
 			c.updateState();
 		}
 		myRules.clearToBeUpdatedList();
@@ -139,17 +176,10 @@ public class Simulation {
 	}
 	
 	/**
-	 * @return returns the current speed
+	 * @return returns the current simulation
 	 */
-	public String getCurrent(){
-		return current;
-	}
-	
-	public void saveXML(){
-		XMLGenerator myGenerator = new XMLGenerator();
-		ArrayList<String> parameters = new ArrayList<String>();
-		String myRulesName = current.replaceAll(" ", "");
-		myGenerator.save(myRulesName, myGrid.getNumRows(), myGrid.getNumCols(), myGrid.getGrid(), myRules.getParameters());
+	public String getName(){
+		return myRules.toString();
 	}
 	
 	/**
@@ -189,6 +219,13 @@ public class Simulation {
 		myView = v;
 	}
 	
+	/**
+	 * 
+	 * @return returns the number of milliseconds since current execution start
+	 */
+	public int getTime(){
+		return time;
+	}
 	
 	
 	

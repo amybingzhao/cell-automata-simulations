@@ -7,6 +7,7 @@
 package Rules;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import Model.Cell;
@@ -23,9 +24,6 @@ public class PredatorPreyRules extends Rules {
 	private static final String FISH = "FISH";
 	private static final String SHARK = "SHARK";
 	private static final String WATER = "WATER";
-	private static final Color FISHCOLOR = Color.TEAL;
-	private static final Color SHARKCOLOR = Color.GRAY;
-	private static final Color WATERCOLOR = Color.BLUE;
 	private static final int NUM_NEIGHBORS = 4;
 	
 	public PredatorPreyRules(int initialSharkEnergy, int sharkReproductionTime, int fishReproductionTime) {
@@ -240,23 +238,7 @@ public class PredatorPreyRules extends Rules {
 		} else {
 			return null;
 		}
-	}
-	
-	/**
-	 * Returns the color corresponding to the state.
-	 */
-	public Color getFill(String state){
-		switch(state){
-		case FISH:
-			return FISHCOLOR;
-		case SHARK:
-			return SHARKCOLOR;
-		case WATER:
-			return WATERCOLOR;
-		default:
-			return ERRORCOLOR;
-		}
-	}
+	}	
 
 	/**
 	 * Adds a Cell to a list of options for the current Cell to move to if it is in fact a candidate for its next location.

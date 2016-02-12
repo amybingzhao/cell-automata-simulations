@@ -1,12 +1,7 @@
 package Rules;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import Model.Cell;
 import Model.ForagingAntsCell;
 import Model.Grid;
@@ -129,12 +124,6 @@ public class ForagingAntsRules extends Rules {
 	@Override
 	public void applyRulesToCell(Cell cell, Grid grid) {
 		applyRulesToCell((ForagingAntsCell) cell, grid);
-	}
-
-	@Override
-	public Color getFill(String state) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
