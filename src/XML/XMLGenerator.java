@@ -269,6 +269,7 @@ public class XMLGenerator {
 	 * @param myFile
 	 *            The file to be saved to
 	 */
+
 	public void save(String rulesType, int sideLength, Cell[][] gameGrid, ArrayList<String> params, File myFile, String gridType) {
 		myDocument = myBuilder.newDocument();
 		Element saveConfig = getConfig(sideLength, gridType);
