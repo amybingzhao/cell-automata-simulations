@@ -86,9 +86,25 @@ public class Simulation {
 	}
 
 	/**
-	 * Method that loads XML with the parser and then sets instance variables
+	 * 
+	 * @param myFile
+	 * @return returns whether or not xml file is properly formatted
 	 */
-	public void loadXML(File file) {
+	public boolean useParser(File file) {
+		parser = new XMLParser(this);
+		if (!parser.parse(file))
+			return false;
+		loadFromXML(file);
+		return true;
+	}
+
+	/**
+	 * Method that loads XML with the parser and then sets instance variables If
+	 * passed null, that means restart
+	 */
+	public void loadFromXML(File file) {
+		if (file != null)
+			xmlFile = file;
 		inputgrid = parser.getGrid();
 		rows = inputgrid[1].length;
 		cols = rows;
@@ -99,22 +115,11 @@ public class Simulation {
 		myView.setGridInfo(inputgrid.length, inputgrid[1].length, myRules.toString());
 		loaded = true;
 	}
-	
-	/**
-	 * 
-	 * @param myFile
-	 * @return returns whether or not xml file is properly formatted
-	 */
-	public boolean parse(File myFile){
-		if (myFile != null)
-			xmlFile = myFile;
-		parser = new XMLParser(this);
-		parser.parse(xmlFile);
-		if (inputgrid == null) return false;
-		loadXML(myFile);
-		return true;
-	}
 
+	/**
+	 * Sets the grid instance variable to be the correct instance of the Grid
+	 * abstract class
+	 */
 	public void getGridObject() {
 		gridType = parser.getGridType();
 		switch (gridType) {
@@ -196,7 +201,6 @@ public class Simulation {
 	/**
 	 * returns the current speed
 	 */
-
 	public int getSpeed() {
 		return mySpeed;
 	}

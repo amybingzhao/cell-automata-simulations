@@ -350,10 +350,9 @@ public class CSView {
 		fileChooser.setTitle("Load XML File");
 		File file = fileChooser.showOpenDialog(myStage);
 		if(file != null){
-			if(mySimulation.parse(file)){
-				stateColorMap = new HashMap<String, Color>(mySimulation.getRules().getMyStatesColors());
-				setupUI();
-			}
+			if(!mySimulation.useParser(file)) return;
+			stateColorMap = new HashMap<String, Color>(mySimulation.getRules().getMyStatesColors());
+			setupUI();
 		}
 	}
 	
@@ -374,7 +373,7 @@ public class CSView {
 	 */
 	private void restartPressed(){
 		if(mySimulation.getXML() != null){
-			mySimulation.loadXML(null);
+			mySimulation.loadFromXML(null);
 			setupUI();
 		}
 	}
@@ -521,7 +520,7 @@ public class CSView {
 	 * updates the chart in time increments of 100 ms
 	 */
 	private void updateChart(){
-		Map<String, Integer> statesCount = mySimulation.getRules().getMyStatesCount();		 
+		Map<String, Integer> statesCount = mySimulation.getRules().getMyStatesCount();
 		for(String key : statesCount.keySet()){
 	 	    seriesMap.get(key).getData().add(new XYChart.Data(mySimulation.getTime()/100, statesCount.get(key)));
 	    }

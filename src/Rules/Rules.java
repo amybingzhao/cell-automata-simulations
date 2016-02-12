@@ -45,7 +45,7 @@ public abstract class Rules {
 			for (int col = 0; col < grid.getNumCols(); col++) {
 				Cell cell = createCell(initialStates[row][col], row, col);
 				grid.addCellToGrid(row, col, cell);
-				//increaseStateCount(cell.getCurState());
+				increaseStateCount(cell.getCurState());
 			}
 		}
 	}

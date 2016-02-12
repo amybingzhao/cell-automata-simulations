@@ -368,8 +368,9 @@ public class XMLGenerator {
 
 	public static void main(String[] args) {
 		HashMap<String, Double> myMap = new HashMap<String, Double>();
-		myMap.put("TREE", 80.0);
+		myMap.put("TREE", 90.0);
+		myMap.put("BURNING", .25);
 		XMLGenerator myGenerator = new XMLGenerator(myMap);
-		myGenerator.generateFile(3, "Fire", "FireTest.xml", "Toroidal");
+		myGenerator.generateFile(80, "Fire", "FireSt80.xml", "Standard");
 	}
 }
