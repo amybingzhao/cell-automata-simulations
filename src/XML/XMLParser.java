@@ -24,6 +24,7 @@ public class XMLParser {
 	private String[][] cellGrid;
 	private int rows;
 	private int cols;
+	private String gridType;
 	private Rules myRule;
 
 	/**
@@ -48,6 +49,7 @@ public class XMLParser {
 						ArrayList<String> myConfig = extract(entryElement);
 						rows = Integer.parseInt(splitEntry(myConfig.get(0))[1]);
 						cols = Integer.parseInt(splitEntry(myConfig.get(1))[1]);
+						gridType = splitEntry(myConfig.get(2))[1];
 						cellGrid = new String[rows][cols];
 						break;
 					case "Cells":
@@ -215,5 +217,9 @@ public class XMLParser {
 	 */
 	public Rules getRules() {
 		return myRule;
+	}
+	
+	public String getGridType(){
+		return gridType;
 	}
 }
