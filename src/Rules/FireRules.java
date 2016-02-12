@@ -19,11 +19,11 @@ public class FireRules extends Rules {
 	private static final String TREE = "TREE";
 	private static final String BURNING = "BURNING";
 	private double myProbCatch;
-	
+
 	public FireRules(double probCatch) {
 		myProbCatch = probCatch;
 	}
-	
+
 	/**
 	 * Apply the rules of the Fire simulation to a Cell based on its state.
 	 */
@@ -39,12 +39,27 @@ public class FireRules extends Rules {
 	}
 
 	/**
-	 * Determine whether or not a tree Cell catches fire based on neighbors and its probability of catching fire.
-	 * @param cell: tree Cell of interest.
-	 * @param grid: Simulation grid.
+	 * Determine whether or not a tree Cell catches fire based on neighbors and
+	 * its probability of catching fire.
+	 * 
+	 * @param cell:
+	 *            tree Cell of interest.
+	 * @param grid:
+	 *            Simulation grid.
 	 */
 	private void handleTreeCell(Cell cell, Grid grid) {
 		Cell[][] neighborhood = grid.getNeighborhood(cell.getCurRow(), cell.getCurCol(), NUM_NEIGHBORS);
+		System.out.println("check for burning cell for cell at: (" + cell.getCurRow() + ", " + cell.getCurCol() + ")");
+		System.out.println(neighborIsBurning(cell, neighborhood, grid));
+
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 3; j++) {
+				System.out.print(neighborhood[i][j]);
+			}
+			System.out.println();
+		}
+		System.out.println();
+
 		if (neighborIsBurning(cell, neighborhood, grid)) {
 			double x = Math.random();
 			if (x < myProbCatch) {
@@ -53,10 +68,12 @@ public class FireRules extends Rules {
 			}
 		}
 	}
-	
+
 	/**
 	 * Burning Cell should become empty next round.
-	 * @param cell: burning Cell of interest.
+	 * 
+	 * @param cell:
+	 *            burning Cell of interest.
 	 */
 	private void handleBurningCell(Cell cell) {
 		cell.setNextState(EMPTY);
@@ -65,47 +82,51 @@ public class FireRules extends Rules {
 
 	/**
 	 * Checks if an adjacent neighbor Cell is burning.
-	 * @param cell: Cell of interest.
-	 * @param neighborhood: 3x3 array of Cells with the Cell of interest in the center and its neighbors surrounding it.
-	 * @param grid: Simulation grid.
-	 * @return true if an adjacent neighbor is burning; false if none are burning.
+	 * 
+	 * @param cell:
+	 *            Cell of interest.
+	 * @param neighborhood:
+	 *            3x3 array of Cells with the Cell of interest in the center and
+	 *            its neighbors surrounding it.
+	 * @param grid:
+	 *            Simulation grid.
+	 * @return true if an adjacent neighbor is burning; false if none are
+	 *         burning.
 	 */
 	private boolean neighborIsBurning(Cell cell, Cell[][] neighborhood, Grid grid) {
-		int cellRow = cell.getCurRow();
-		int cellCol = cell.getCurCol();
-		
-		if (cellCol > 0) {
-			if (cellIsBurning(neighborhood[1][0])) {
-				return true;
-			}
+
+		if (cellIsBurning(neighborhood[1][0])) {
+			return true;
 		}
-		if (cellRow > 0) {
-			if (cellIsBurning(neighborhood[0][1])) {
-				return true;
-			}
+		if (cellIsBurning(neighborhood[0][1])) {
+			return true;
 		}
-		if (cellCol < (grid.getNumCols() - 1)) {
-			if (cellIsBurning(neighborhood[1][2])) {
-				return true;
-			}
+		if (cellIsBurning(neighborhood[1][2])) {
+			return true;
 		}
-		if (cellRow < (grid.getNumRows() - 1)) {
-			if (cellIsBurning(neighborhood[2][1])) {
-				return true;
-			}
+		if (cellIsBurning(neighborhood[2][1])) {
+			return true;
 		}
-		
+
 		return false;
 	}
-	
+
 	/**
 	 * Check if a Cell is burning.
-	 * @param cell: Cell to check.
+	 * 
+	 * @param cell:
+	 *            Cell to check.
 	 * @return true if Cell is burning; false otherwise.
 	 */
 	private boolean cellIsBurning(Cell cell) {
-		return cell.getCurState().equals(BURNING);
+		if (cell != null) {
+			System.out.println(cell.getCurState());
+			return cell.getCurState().equals(BURNING);
+		} else {
+			return false;
+		}
 	}
+
 	/**
 	 * Creates a Standard Cell for this simulation.
 	 */
@@ -113,8 +134,8 @@ public class FireRules extends Rules {
 	protected Cell createCell(String initialState, int row, int col) {
 		return new StandardCell(initialState, row, col);
 	}
-	
-	public String toString(){
+
+	public String toString() {
 		return "Fire";
 	}
 
