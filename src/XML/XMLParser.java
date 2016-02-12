@@ -7,19 +7,24 @@ package XML;
 
 import org.w3c.dom.*;
 
+import Controller.Simulation;
 import Rules.FireRules;
 import Rules.GameOfLifeRules;
 import Rules.PredatorPreyRules;
 import Rules.Rules;
 import Rules.SegregationRules;
+import View.CSView;
 
 import javax.xml.parsers.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 public class XMLParser {
 
+	private static final String FILE_TYPE = "FileType";
+	private static final String OUT_OF_BOUNDS = "OutOfBounds";
 	private DocumentBuilderFactory myFactory;
 	private DocumentBuilder myBuilder;
 	private String[][] cellGrid;
@@ -27,6 +32,12 @@ public class XMLParser {
 	private int cols;
 	private String gridType;
 	private Rules myRule;
+	private ResourceBundle myStates;
+	private Simulation mySimulation;
+	
+	public XMLParser(Simulation sim){
+		mySimulation = sim;
+	}
 
 	/**
 	 * Parses a provided XML file to extract the simulation data
@@ -63,8 +74,9 @@ public class XMLParser {
 					}
 				}
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (Exception IOException) {
+			mySimulation.displayAlert(FILE_TYPE);
+			return;
 		}
 	}
 
@@ -136,16 +148,22 @@ public class XMLParser {
 	 */
 	public void extractCells(Element data) {
 		NodeList dataList = data.getChildNodes();
-		for (int i = 0; i < dataList.getLength(); i++) {
-			Node dataNode = dataList.item(i);
-			if (dataNode instanceof Element) {
-				Element dataElement = (Element) dataNode;
-				List<String> extractedData = extract(dataElement);
-				int x = Integer.parseInt(splitEntry(extractedData.get(0))[1]);
-				int y = Integer.parseInt(splitEntry(extractedData.get(1))[1]);
-				String state = splitEntry(extractedData.get(2))[1];
-				cellGrid[x][y] = state;
+		try {
+			for (int i = 0; i < dataList.getLength(); i++) {
+				Node dataNode = dataList.item(i);
+				if (dataNode instanceof Element) {
+					Element dataElement = (Element) dataNode;
+					List<String> extractedData = extract(dataElement);
+					int x = Integer.parseInt(splitEntry(extractedData.get(0))[1]);
+					int y = Integer.parseInt(splitEntry(extractedData.get(1))[1]);
+					String state = splitEntry(extractedData.get(2))[1];
+					cellGrid[x][y] = state;
+				}
 			}
+		}
+		
+		catch (Exception OutOfBoundsException){
+			mySimulation.displayAlert(OUT_OF_BOUNDS);
 		}
 	}
 
@@ -197,8 +215,8 @@ public class XMLParser {
 	public Rules getRules() {
 		return myRule;
 	}
-	
-	public String getGridType(){
+
+	public String getGridType() {
 		return gridType;
 	}
 }

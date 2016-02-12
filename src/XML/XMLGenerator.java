@@ -22,6 +22,8 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.*;
+
+import Controller.Simulation;
 import Model.Cell;
 
 public class XMLGenerator {
@@ -34,6 +36,7 @@ public class XMLGenerator {
 	private Map<String, Double> stateWeights;
 	private boolean weighted;
 	private Stack<String> myStack;
+	private Simulation mySimulation;
 
 	public XMLGenerator() {
 		myRulesResources = ResourceBundle.getBundle(RULES_PROPERTIES);
@@ -43,14 +46,19 @@ public class XMLGenerator {
 			myDocument = myBuilder.newDocument();
 
 		} catch (ParserConfigurationException e) {
-			e.printStackTrace();
+			System.out.println("Document Builder Error");
 		}
 	}
 
-	public XMLGenerator(HashMap<String, Double> myWeights) {
+	public XMLGenerator(Map<String, Double> myWeights) {
 		this();
 		stateWeights = myWeights;
 		weighted = true;
+	}
+
+	public XMLGenerator(Map<String, Double> myWeights, Simulation simulation) {
+		this(myWeights);
+		mySimulation = simulation;
 	}
 
 	/**
@@ -72,22 +80,18 @@ public class XMLGenerator {
 	 */
 	public void generateFile(int sideLength, String rules, String fileName, String gridType) {
 
-		try {
-			myDocument = myBuilder.newDocument();
-			Element myRoot = myDocument.createElement("Simulation");
-			myDocument.appendChild(myRoot);
-			myRoot.appendChild(getConfig(sideLength, gridType));
-			myRoot.appendChild(getRules(rules, promptForParameters(rules)));
-			if (weighted) {
-				myRoot.appendChild(createWeightedRandomCells(sideLength, rules + "States"));
-			} else {
-				myRoot.appendChild(createRandomCells(sideLength, rules + "States"));
-			}
-			createFile(new File("data/" + fileName));
-		} catch (Exception e) {
-			System.out.println("OOPS");
-			e.printStackTrace();
+		myDocument = myBuilder.newDocument();
+		Element myRoot = myDocument.createElement("Simulation");
+		myDocument.appendChild(myRoot);
+		myRoot.appendChild(getConfig(sideLength, gridType));
+		myRoot.appendChild(getRules(rules, promptForParameters(rules)));
+		if (weighted) {
+			myRoot.appendChild(createWeightedRandomCells(sideLength, rules + "States"));
+		} else {
+			myRoot.appendChild(createRandomCells(sideLength, rules + "States"));
 		}
+		createFile(new File("data/" + fileName));
+
 	}
 
 	/**
@@ -270,7 +274,8 @@ public class XMLGenerator {
 	 *            The file to be saved to
 	 */
 
-	public void save(String rulesType, int sideLength, Cell[][] gameGrid, ArrayList<String> params, File myFile, String gridType) {
+	public void save(String rulesType, int sideLength, Cell[][] gameGrid, ArrayList<String> params, File myFile,
+			String gridType) {
 		myDocument = myBuilder.newDocument();
 		Element saveConfig = getConfig(sideLength, gridType);
 		Element saveRules = getRules(rulesType, params);
@@ -363,8 +368,8 @@ public class XMLGenerator {
 
 	public static void main(String[] args) {
 		HashMap<String, Double> myMap = new HashMap<String, Double>();
-		myMap.put("BLUE", 40.0);
+		myMap.put("TREE", 80.0);
 		XMLGenerator myGenerator = new XMLGenerator(myMap);
-		myGenerator.generateFile(40, "Segregation", "SegregationTor40.xml", "Toroidal");
+		myGenerator.generateFile(3, "Fire", "FireTest.xml", "Toroidal");
 	}
 }
