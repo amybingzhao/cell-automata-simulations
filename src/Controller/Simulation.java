@@ -98,7 +98,6 @@ public class Simulation {
 		myRules = parser.getRules(); 
 		myRules.populateStatesInfo();
 		myRules.initGrid(myGrid, inputgrid);
-		myView.setGridInfo(inputgrid.length, inputgrid[1].length, myRules.toString());
 		loaded = true;
 	}
 	
