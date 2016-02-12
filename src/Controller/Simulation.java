@@ -99,7 +99,6 @@ public class Simulation {
 		getGridObject();
 		myRules.populateStatesInfo();
 		myRules.initGrid(myGrid, inputgrid);
-		myView.setGridInfo(inputgrid.length, inputgrid[1].length, myRules.toString());
 		loaded = true;
 	}
 	
