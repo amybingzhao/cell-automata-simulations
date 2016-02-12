@@ -143,7 +143,7 @@ public abstract class Rules {
 	 * Increases the count for the number of cells in a particular state by 1.
 	 * @param state: state whose count to increase.
 	 */
-	protected void increaseStateCount(String state) {
+	public void increaseStateCount(String state) {
 		if (!myStatesCount.containsKey(state)) {
 			myStatesCount.put(state, 1);
 		} else {
@@ -155,7 +155,7 @@ public abstract class Rules {
 	 * Decreases the count for the number of cells in a particular state by 1.
 	 * @param state: state whose count to decrease.
 	 */
-	protected void decreaseStateCount(String state) {
+	public void decreaseStateCount(String state) {
 		if (myStatesCount.containsKey(state)) {
 			int num = myStatesCount.get(state);
 			if (num > 0) {
