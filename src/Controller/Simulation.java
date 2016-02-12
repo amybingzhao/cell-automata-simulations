@@ -169,15 +169,16 @@ public class Simulation {
 		for(int r = 0; r < rows; r++){
 			for(int c = 0; c < cols; c++){
 				myRules.applyRulesToCell(myGrid.getCell(r,c), myGrid);
-				if (myGrid.hasBeenResized()) {
+				if (myGrid.hasBeenResizedImmediatelyBefore()) {
 					r += 1;
 					c += 1;
 					rows += 1;
 					cols += 1;
-					myGrid.setResized(false);
+					myGrid.setResizedImmediatelyBefore(false);
 				}
 			}
 		}
+		myGrid.setResizedThisStep(false);
 	}
 	
 	/**

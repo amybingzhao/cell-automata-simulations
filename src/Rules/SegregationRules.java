@@ -50,6 +50,10 @@ public class SegregationRules extends Rules {
 		} else {
 			handleAgentCell(cell, grid);
 		}
+		
+		if (cell.getCurRow() == 3 && cell.getCurCol() == 3) {
+			System.out.println();
+		}
 		if (isLastCellInGrid(cell, grid)) {
 			handleUnmovedCells();
 		}
@@ -121,8 +125,7 @@ public class SegregationRules extends Rules {
 				}
 			}
 		}
-		
-		return ((((double) numSameNeighbors)/((double) numNeighbors) >= myThreshold) || numNeighbors == 0);
+		return ((((double) numSameNeighbors)/((double) numNeighbors)*100 >= myThreshold) || numNeighbors == 0);
 	}
 
 	/**

@@ -10,7 +10,8 @@ public abstract class Grid {
 	private int myRows;
 	private int myCols;
 	private Cell[][] myGrid;
-	private boolean resized;
+	private boolean resizedImmediatelyBefore;
+	private boolean resizedThisStep;
 	
 	/**
 	 * Sets the rules, possible states, grid size, and initial states for the current simulation.
@@ -23,15 +24,24 @@ public abstract class Grid {
 		myRows = rows;
 		myCols = cols;
 		myGrid = new Cell[myRows][myCols];
-		resized = false;
+		resizedImmediatelyBefore = false;
+		resizedThisStep = false;
 	}
 	
-	public void setResized(boolean bool) {
-		resized = bool;
+	public void setResizedImmediatelyBefore(boolean bool) {
+		resizedImmediatelyBefore = bool;
 	}
 	
-	public boolean hasBeenResized() {
-		return resized;
+	public boolean hasBeenResizedImmediatelyBefore() {
+		return resizedImmediatelyBefore;
+	}
+	
+	public void setResizedThisStep(boolean bool) {
+		resizedThisStep = bool;
+	}
+	
+	public boolean hasBeenResizedThisStep() {
+		return resizedThisStep;
 	}
 	
 	/**
@@ -93,12 +103,11 @@ public abstract class Grid {
 		myGrid = newGrid;
 		myRows = newGrid.length;
 		myCols = newGrid[0].length;
-		setResized(true);
+		setResizedImmediatelyBefore(true);
+		setResizedThisStep(true);
 	}
 	
 	public boolean inBounds(int row, int col) {
-		System.out.println("grid dimensions:");
-		System.out.println("\t(" + myRows + ", " + myCols + ")");
 		return (row >= 0 && row < myRows && col >= 0 && col < myCols);
 	}
 
