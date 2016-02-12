@@ -18,13 +18,20 @@ import View.CSView;
 import javax.xml.parsers.*;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 
 public class XMLParser {
 
+	private static final String RULE_TYPES = "RuleTypes";
+	private static final String STATE_TYPE = "StateType";
+	private static final String STATES = "States";
+	private static final String GRID_TYPES = "GridTypes";
+	private static final String INVALID_GRID_TYPE = "InvalidGridType";
 	private static final String FILE_TYPE = "FileType";
 	private static final String OUT_OF_BOUNDS = "OutOfBounds";
+	private static final String RULES_PROPERTIES = "Rules/Rules";
 	private DocumentBuilderFactory myFactory;
 	private DocumentBuilder myBuilder;
 	private String[][] cellGrid;
@@ -32,11 +39,12 @@ public class XMLParser {
 	private int cols;
 	private String gridType;
 	private Rules myRule;
-	private ResourceBundle myStates;
+	private ResourceBundle myRules;
 	private Simulation mySimulation;
 	
 	public XMLParser(Simulation sim){
 		mySimulation = sim;
+		myRules = ResourceBundle.getBundle(RULES_PROPERTIES);
 	}
 
 	/**
@@ -58,11 +66,7 @@ public class XMLParser {
 					Element entryElement = (Element) entry;
 					switch (entryElement.getNodeName()) {
 					case "Config":
-						List<String> myConfig = extract(entryElement);
-						rows = Integer.parseInt(splitEntry(myConfig.get(0))[1]);
-						cols = Integer.parseInt(splitEntry(myConfig.get(1))[1]);
-						gridType = splitEntry(myConfig.get(2))[1];
-						cellGrid = new String[rows][cols];
+						if (!parseConfig(entryElement)) return;
 						break;
 					case "Cells":
 						extractCells(entryElement);
@@ -78,6 +82,29 @@ public class XMLParser {
 			mySimulation.displayAlert(FILE_TYPE);
 			return;
 		}
+	}
+	
+	public boolean parseConfig(Element entryElement){
+		List<String> myConfig = extract(entryElement);
+		rows = Integer.parseInt(splitEntry(myConfig.get(0))[1]);
+		cols = Integer.parseInt(splitEntry(myConfig.get(1))[1]);
+		gridType = splitEntry(myConfig.get(2))[1];
+		if (!exists(gridType, GRID_TYPES)){
+			mySimulation.displayAlert(INVALID_GRID_TYPE);
+			return false;
+		}
+		cellGrid = new String[rows][cols];
+		return true;
+	}
+
+	private boolean exists(String item, String category){
+		ArrayList<String> types = new ArrayList<String>();
+		String[] items = myRules.getString(category).split(",");
+		for (String myItem : items){
+			types.add(myItem);
+		}
+		if (types.contains(item)) return true;
+		return false;
 	}
 
 	/**
@@ -115,6 +142,10 @@ public class XMLParser {
 	 */
 	public void initializeGame(List<String> data) {
 		String game = splitEntry(data.get(0))[1];
+		if (!exists(game, RULE_TYPES)){
+			mySimulation.displayAlert("RuleType");
+			return;
+		}
 		switch (game) {
 		case "Segregation":
 			double threshold = Double.parseDouble(splitEntry(data.get(1))[1]);
@@ -132,8 +163,6 @@ public class XMLParser {
 		case "Fire":
 			double probCatch = Double.parseDouble(splitEntry(data.get(1))[1]);
 			myRule = new FireRules(probCatch);
-			break;
-		default:
 			break;
 		}
 	}
@@ -157,6 +186,10 @@ public class XMLParser {
 					int x = Integer.parseInt(splitEntry(extractedData.get(0))[1]);
 					int y = Integer.parseInt(splitEntry(extractedData.get(1))[1]);
 					String state = splitEntry(extractedData.get(2))[1];
+					if (!exists(state, myRule.toString()+STATES)){
+						mySimulation.displayAlert(STATE_TYPE);
+						return;
+					}
 					cellGrid[x][y] = state;
 				}
 			}
