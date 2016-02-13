@@ -136,11 +136,16 @@ public class SegregationRules extends Rules {
 		return new StandardCell(initialState, row, col);
 	}
 	
-	
+	/**
+	 * Description of the simulation.
+	 */
 	public String toString(){
 		return "Segregation";
 	}
 
+	/**
+	 * Gets the parameters for the Segregation simulation.
+	 */
 	@Override
 	public ArrayList<String> getParameters() {
 		ArrayList<String> parameters = new ArrayList<String>();
@@ -148,6 +153,9 @@ public class SegregationRules extends Rules {
 		return parameters;
 	}
 	
+	/**
+	 * Returns the default state for the Segregation simulation.
+	 */
 	@Override
 	protected String getDefault() {
 		return DEFAULT_STATE;

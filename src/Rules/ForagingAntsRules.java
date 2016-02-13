@@ -199,6 +199,7 @@ public class ForagingAntsRules extends Rules {
 	@Override
 	public ArrayList<String> getParameters() {
 		ArrayList<String> parameters = new ArrayList<String>();
+		parameters.add("TotalNumAnts:" + numTotalAnts);
 		return parameters;
 	}
 	

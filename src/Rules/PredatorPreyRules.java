@@ -281,10 +281,16 @@ public class PredatorPreyRules extends Rules {
 		applyRulesToCell((PredatorPreyCell) cell, grid);
 	}
 	
+	/**
+	 * Description of the simulation.
+	 */
 	public String toString(){
 		return "Predator Prey";
 	}
 
+	/**
+	 * Returns the parameters for the Predator Prey simulation.
+	 */
 	@Override
 	public ArrayList<String> getParameters() {
 		ArrayList<String> parameters = new ArrayList<String>();
@@ -294,6 +300,9 @@ public class PredatorPreyRules extends Rules {
 		return parameters;
 	}
 	
+	/**
+	 * Gets the default state for the Predator Prey simulation.
+	 */
 	@Override
 	protected String getDefault() {
 		return DEFAULT_STATE;

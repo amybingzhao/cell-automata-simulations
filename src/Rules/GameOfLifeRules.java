@@ -93,16 +93,25 @@ public class GameOfLifeRules extends Rules {
 		return new StandardCell(initialState, row, col);
 	}
 	
+	/**
+	 * Description of Game of Life simulation.
+	 */
 	public String toString(){
 		return "Game Of Life";
 	}
 
+	/**
+	 * Parameters for Game of Life simulation.
+	 */
 	@Override
 	public ArrayList<String> getParameters() {
 		ArrayList<String> parameters = new ArrayList<String>();
 		return parameters;
 	}
 	
+	/**
+	 * Gets the default state for the Game of Life simulation.
+	 */
 	@Override
 	protected String getDefault() {
 		return DEFAULT_STATE;

@@ -125,10 +125,16 @@ public class FireRules extends Rules {
 		return new StandardCell(initialState, row, col);
 	}
 
+	/**
+	 * Description of the simulation.
+	 */
 	public String toString() {
 		return "Fire";
 	}
 
+	/**
+	 * Gets the parameters for the Fire simulation.
+	 */
 	@Override
 	public ArrayList<String> getParameters() {
 		ArrayList<String> parameters = new ArrayList<String>();
@@ -136,6 +142,9 @@ public class FireRules extends Rules {
 		return parameters;
 	}
 
+	/**
+	 * Returns default state for the Fire simulation.
+	 */
 	@Override
 	protected String getDefault() {
 		return DEFAULT_STATE;
