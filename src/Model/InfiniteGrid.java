@@ -5,11 +5,25 @@ import Rules.Rules;
 public class InfiniteGrid extends Grid {
 	Rules myRules;
 	
+	/**
+	 * Constructs an infinite grid specific to a given simulation's rules.
+	 * @param rows: number of rows.
+	 * @param cols: number of columns.
+	 * @param initialStates: initial states of each cell.
+	 * @param rules: rules specific to a given simulation.
+	 */
 	public InfiniteGrid(int rows, int cols, String[][] initialStates, Rules rules) {
 		super(rows, cols, initialStates);
 		myRules = rules;
 	}
 	
+	/**
+	 * Get the surrounding neighborhood; resize if getting a neighbor requires going out of bounds by adding an outer
+	 * layer of cells to each side.
+	 * @param row: row of current cell.
+	 * @param col: column of current cell.
+	 * @param numNeighbors: 4 or 8 depending on simulation.
+	 */
 	public Cell[][] getNeighborhood(int row, int col, int numNeighbors) {
 		Cell[][] neighborhood = new Cell[3][3];
 		int[] rowDirections = new int[]{-1, 0, 1};
@@ -33,6 +47,9 @@ public class InfiniteGrid extends Grid {
 		return neighborhood;
 	}
 	
+	/**
+	 * Resizes the grid by adding cells to the top, bottom, left, and right, and sets the resized grid to the current grid.
+	 */
 	private void resizeGrid() {
 		int curRows = getNumRows();
 		int curCols = getNumCols();
@@ -45,6 +62,12 @@ public class InfiniteGrid extends Grid {
 		setGrid(newGrid);
 	}
 	
+	/**
+	 * Populates a new grid with the existing cells from the current grid.
+	 * @param newGrid: resized grid.
+	 * @param curRows: number of rows in the current grid.
+	 * @param curCols: number of columns in the current grid.
+	 */
 	private void populateGridWithExistingCells(Cell[][] newGrid, int curRows, int curCols) {
 		for (int row = 0; row < curRows; row ++) {
 			for (int col = 0; col < curCols; col++) {
@@ -56,6 +79,10 @@ public class InfiniteGrid extends Grid {
 		}
 	}
 
+	/**
+	 * Adds a layer of DEFAULT cells to the top of the grid.
+	 * @param grid: grid to add to.
+	 */
 	private void addTopLayer(Cell[][] grid) {
 		int row = 0;
 		for (int col = 0; col < grid[0].length; col++) {
@@ -63,6 +90,10 @@ public class InfiniteGrid extends Grid {
 		}
 	}
 
+	/**
+	 * Adds a layer of DEFAULT cells to the bottom of the grid.
+	 * @param grid: grid to add to.
+	 */
 	private void addBotLayer(Cell[][] grid) {
 		int row = grid.length - 1;
 		for (int col = 0; col < grid[0].length; col++) {
@@ -70,6 +101,10 @@ public class InfiniteGrid extends Grid {
 		}
 	}
 
+	/**
+	 * Adds a layer of DEFAULT cells to the left of the grid.
+	 * @param grid: grid to add to.
+	 */
 	private void addLeftLayer(Cell[][] grid) {
 		int col = 0;
 		for (int row = 0; row < grid.length; row++) {
@@ -77,6 +112,10 @@ public class InfiniteGrid extends Grid {
 		}
 	}
 
+	/**
+	 * Adds a layer of DEFAULT cells to the right of the grid.
+	 * @param grid: grid to add to.
+	 */
 	private void addRightLayer(Cell[][] grid) {
 		int col = grid[0].length - 1;
 		for (int row = 0; row < grid.length; row++) {
