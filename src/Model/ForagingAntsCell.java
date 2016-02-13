@@ -61,6 +61,7 @@ public class ForagingAntsCell extends Cell {
 	
 	public void addAnt(Ant ant) {
 		myAnts.add(ant);
+		myNumAnts++;
 	}
 	
 	public List<Ant> getAnts() {
@@ -69,6 +70,7 @@ public class ForagingAntsCell extends Cell {
 	
 	public void removeAnt(Ant ant) {
 		myAnts.remove(ant);
+		myNumAnts--;
 	}
 	
 	public boolean isFull() {

@@ -50,10 +50,34 @@ public class ForagingAntsRules extends Rules {
 	}
 
 	public void applyRulesToCell(ForagingAntsCell cell, Grid grid) {
-		List<Ant> ants = cell.getAnts();
+		if (cell.getNumAnts() > 0) {
+			List<Ant> ants = cell.getAnts();
 
-		for (int i = 0; i < ants.size(); i++) {
-			handleAnt(ants.get(i), cell, grid);
+			while(ants.size() > 0) {
+				if (!ants.get(0).hasMovedThisTurn()) {
+					handleAnt(ants.get(0), cell, grid);
+				} else {
+					break;
+				}
+			}
+		}
+		
+		if (isLastCellInGrid(cell, grid)) {
+			resetAllAntHasMovedFlags(grid);
+		}
+	}
+	
+	private void resetAllAntHasMovedFlags(Grid grid) {
+		for (int row = 0; row < grid.getNumRows(); row++) {
+			for (int col = 0; col < grid.getNumCols(); col++) {
+				ForagingAntsCell cell = (ForagingAntsCell) grid.getCell(row, col);
+				if (cell.getNumAnts() > 0) {
+					List<Ant> ants = cell.getAnts();
+					for (int i = 0; i < ants.size(); i++) {
+						ants.get(i).setHasMovedThisTurn(false);
+					}
+				}
+			}
 		}
 	}
 	

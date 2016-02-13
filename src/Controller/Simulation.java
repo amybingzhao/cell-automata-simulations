@@ -169,6 +169,8 @@ public class Simulation {
 		int r0 = 0;
 		int c0 = 0;
 		
+		System.out.println(myGrid);
+		
 		for(int r = 0; r < rows; r++){
 			if (r == 0) {
 				r = r0;
@@ -191,7 +193,7 @@ public class Simulation {
 		}
 		myGrid.setResizedThisStep(false);
 	}
-	
+
 	/**
 	 * Helper method that updates each state that needs to be updated
 	 * Then clears the update list.

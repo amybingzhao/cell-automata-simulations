@@ -12,13 +12,20 @@ public class Ant {
 	private static final String FOOD = "FOOD";
 	private static final String HOME = "HOME";
 	private static final int NUM_NEIGHBORS_PER_SIDE = 3;
+	private boolean hasMovedThisTurn;
 	
 	public Ant() {
 		hasFood = false;
+		hasMovedThisTurn = false;
 		setRandomDirection();
-		while (myDirectionRow == 1 && myDirectionCol == 1) {
-			setRandomDirection();
-		}
+	}
+	
+	public void setHasMovedThisTurn(boolean bool) {
+		hasMovedThisTurn = bool;
+	}
+	
+	public boolean hasMovedThisTurn() {
+		return hasMovedThisTurn;
 	}
 	
 	public boolean hasFood() {
@@ -39,29 +46,40 @@ public class Ant {
 	}
 
 	public void followFoodPheromones(Cell[][] neighborhood, List<Integer[]> directions) {
-		followPheromones(FOOD, neighborhood, directions);
+		ForagingAntsCell nextLocation = followPheromones(FOOD, neighborhood, directions);
+		if (nextLocation.isFood()) {
+				System.out.println("found da food stuffsz");
+				hasFood = true;
+		}
 	}
 	
-	private void followPheromones(String type, Cell[][] neighborhood, List<Integer[]> directions) {
+	private ForagingAntsCell followPheromones(String type, Cell[][] neighborhood, List<Integer[]> directions) {
 		List<Integer[]> forwardDirections = directions.subList(0, NUM_FORWARD_NEIGHBORS - 1);
 		List<Integer[]> otherDirections = directions.subList(NUM_FORWARD_NEIGHBORS, directions.size() - 1); 
 		
 		ForagingAntsCell curLocation = (ForagingAntsCell) neighborhood[1][1];
 		ForagingAntsCell nextLocation = selectLocation(type, neighborhood, forwardDirections, otherDirections);
 		
+		dropPheromones(type, curLocation);
+
+		System.out.println("Next: " + nextLocation);
 		if (nextLocation != null) {
-			dropPheromones(type, curLocation);
 			int[] relativeNextLocation = new int[]{nextLocation.getCurRow() - curLocation.getCurRow() + 1, nextLocation.getCurCol() - curLocation.getCurCol() + 1};
 			setDirection(relativeNextLocation); 
 			moveToNextLocation(curLocation, nextLocation);
 		}
 		
-		System.out.println("Next: " + nextLocation);
+		return nextLocation;
 	}
 	
 	private void moveToNextLocation(ForagingAntsCell curLocation, ForagingAntsCell nextLocation) {
+		//System.out.println("tryna move");
 		curLocation.removeAnt(this);
+		//System.out.println(curLocation);
 		nextLocation.addAnt(this);
+		setHasMovedThisTurn(true);
+		//System.out.println(nextLocation);
+		//System.out.println("end");
 	}
 	
 	private ForagingAntsCell selectLocation(String type, Cell[][] neighborhood, List<Integer[]> forwardDirections, List<Integer[]> otherDirections) {
@@ -74,8 +92,9 @@ public class Ant {
 			nextLocation = pickWeightedRandomCell(otherWeights);
 		}
 		
-		if (nextLocation == null) {
+		while (nextLocation == null || nextLocation.isObstacle()) {
 			nextLocation = (ForagingAntsCell) neighborhood[myDirectionRow][myDirectionCol];
+			setRandomDirection();
 		}
 		
 		return nextLocation;
@@ -153,22 +172,24 @@ public class Ant {
 	}
 
 	public void followHomePheromones(Cell[][] neighborhood, List<Integer[]> directions) {
-		followPheromones(HOME, neighborhood, directions);
+		ForagingAntsCell nextLocation = followPheromones(HOME, neighborhood, directions);
+		if (nextLocation.isHome()) {
+			hasFood = false;
+		}
 	}
 
 	public void returnToNest(ForagingAntsCell cell, Cell[][] neighborhood, List<Integer[]> directions) {
 		if (cell.isFood()) {
+			System.out.println("ant found food");
 			Map<ForagingAntsCell, Integer> weights = assignWeights(HOME, neighborhood, directions);
 			ForagingAntsCell nextLocation = pickWeightedRandomCell(weights);
-			int[] relativeNextLocation = new int[]{cell.getCurRow() - nextLocation.getCurRow(), cell.getCurCol() - nextLocation.getCurCol()};
-			setDirection(relativeNextLocation); 
+			if (nextLocation != null) {
+				int[] relativeNextLocation = new int[]{cell.getCurRow() - nextLocation.getCurRow(), cell.getCurCol() - nextLocation.getCurCol()};
+				setDirection(relativeNextLocation);
+			}
 		}
 		
 		followHomePheromones(neighborhood, directions);
-		
-		if (cell.isHome()) {
-			hasFood = false;
-		}
 	}
 
 	public void findFoodSource(ForagingAntsCell cell, Cell[][] neighborhood, List<Integer[]> directions) {
@@ -176,21 +197,19 @@ public class Ant {
 			Map<ForagingAntsCell, Integer> weights = assignWeights(FOOD, neighborhood, directions);
 			ForagingAntsCell nextLocation = pickWeightedRandomCell(weights);
 			if (nextLocation != null) {
-				// IS THIS RIGHT?
 				int[] relativeNextLocation = new int[]{nextLocation.getCurRow() - cell.getCurRow() + 1, nextLocation.getCurCol() - cell.getCurCol() + 1};
 				setDirection(relativeNextLocation);
 			}
 		}
 		
 		followFoodPheromones(neighborhood, directions);
-		
-		if (cell.isFood()) {
-			hasFood = true;
-		}
 	}
 	
 	public void setRandomDirection() {
 		myDirectionRow = (int) Math.round(Math.random() * (NUM_NEIGHBORS_PER_SIDE - 1));
 		myDirectionCol = (int) Math.round(Math.random() * (NUM_NEIGHBORS_PER_SIDE - 1));
+		if ((myDirectionRow == 1 && myDirectionCol == 1)) {
+			setRandomDirection();
+		}
 	}
 }
