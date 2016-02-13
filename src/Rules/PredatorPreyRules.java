@@ -96,7 +96,6 @@ public class PredatorPreyRules extends Rules {
 				predatorPreyNeighborhood[row][col] = (PredatorPreyCell) neighborhood[row][col];
 			}
 		}
-		
 		return predatorPreyNeighborhood;
 	}
 

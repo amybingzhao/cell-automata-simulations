@@ -21,17 +21,6 @@ public class SugarScapeMigrationPreset extends SugarScapeRules {
 		setMySugarGrowBackInterval(PRESET_2_GROW_BACK_INTERVAL);
 	}
 
-	/**
-	 * Creates a standard sugar scape cell and initializes an agent if it is occupied.
-	 */
-	@Override
-	protected Cell createCell(String initialState, int row, int col) {
-		SugarScapeAgent agent = null;
-		if (initialState.equals("OCCUPIED")) {
-			agent = new StandardSugarScapeAgent(generateRandom(getMyAgentSugarLimit()) + 1, generateRandom(getMyAgentMetabolismLimit()) + 1, generateRandom(getMyAgentVisionLimit()) + 1, row, col);
-		}
-		return new SugarScapeCell(initialState, row, col, getMyMaxCellSugarCapacity(), agent);
-	}
 	
 	/**
 	 * No extra rules for this preset.
@@ -39,6 +28,11 @@ public class SugarScapeMigrationPreset extends SugarScapeRules {
 	@Override
 	public void applyExtraPresetRules(Cell cell, Grid grid) {
 		// None.
+	}
+
+	@Override
+	protected SugarScapeAgent createPresetAgent(int row, int col) {
+		return new StandardSugarScapeAgent(generateRandom(getMyAgentSugarLimit()) + 1, generateRandom(getMyAgentMetabolismLimit()) + 1, generateRandom(getMyAgentVisionLimit()) + 1, row, col);
 	}
 
 }

@@ -119,7 +119,6 @@ public class ForagingAntsRules extends Rules {
 				foragingAntsNeighborhood[row][col] = (ForagingAntsCell) neighborhood[row][col];
 			}
 		}
-		
 		return foragingAntsNeighborhood;
 	}
 	/**

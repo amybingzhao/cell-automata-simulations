@@ -11,6 +11,8 @@ public abstract class SugarScapeAgent {
 	private int myCol;	
 	private boolean hasMoved;
 	private static final int INIT_SUGAR_MIN = 5;
+	private static final String ROW = "ROW";
+	private static final String COL = "COL";
 	
 	/**
 	 * Constructs a sugar scape agent with an initial amount of sugar, a random metabolism within the limit of the simulation,
@@ -86,27 +88,25 @@ public abstract class SugarScapeAgent {
 	 */
 	protected List<SugarScapeCell> getViableNeighbors(Grid grid) {
 		List<SugarScapeCell> neighbors = new ArrayList<SugarScapeCell>();
-		checkLeftOrRightNeighbors(neighbors, 1, grid);
-		checkLeftOrRightNeighbors(neighbors, -1, grid);
-		checkTopOrBotNeighbors(neighbors, 1, grid);
-		checkTopOrBotNeighbors(neighbors, -1, grid);
+		checkNeighborsInOneDirection(neighbors, 1, ROW, grid);
+		checkNeighborsInOneDirection(neighbors, -1, ROW, grid);
+		checkNeighborsInOneDirection(neighbors, 1, COL, grid);
+		checkNeighborsInOneDirection(neighbors, -1, COL, grid);
 		return neighbors;
 	}
 	
-	protected void checkTopOrBotNeighbors(List<SugarScapeCell> neighbors, int offset, Grid grid) {
+
+	protected void checkNeighborsInOneDirection(List<SugarScapeCell> neighbors, int offset, String rowOrCol, Grid grid) {
 		for (int distance = 1; distance <= myVision; distance++) {
-			int row = myRow + offset * distance;
+			int row = myRow;
+			int col = myCol;
+			if (rowOrCol.equals(ROW)) {
+				row = myRow + offset * distance;
+			} else {
+				col = myCol + offset * distance;
+			}
 			if (viableNeighbor(row, myCol, grid)) {
 				neighbors.add((SugarScapeCell) grid.getCell(row, myCol));
-			}
-		}
-	}
-	
-	protected void checkLeftOrRightNeighbors(List<SugarScapeCell> neighbors, int offset, Grid grid) {
-		for (int distance = 1; distance <= myVision; distance++) {
-			int col = myCol + offset * distance;
-			if (viableNeighbor(myRow, col, grid)) {
-				neighbors.add((SugarScapeCell) grid.getCell(myRow, col));
 			}
 		}
 	}

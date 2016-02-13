@@ -6,6 +6,7 @@ import java.util.ResourceBundle;
 
 import Model.Cell;
 import Model.Grid;
+import Model.ReproductionSugarScapeAgent;
 import Model.SugarScapeAgent;
 import Model.SugarScapeCell;
 
@@ -32,10 +33,18 @@ public abstract class SugarScapeRules extends Rules {
 	}
 	
 	/**
-	 * Creates an instance of the cell required for the particular simulation.
+	 * Creates a cell for the reproduction simulation and initializes an agent if the cell is occupied.
 	 */
 	@Override
-	protected abstract Cell createCell(String initialState, int row, int col);
+	protected Cell createCell(String initialState, int row, int col) {
+		SugarScapeAgent agent = null;
+		if (initialState.equals("OCCUPIED")) {
+			agent = createPresetAgent(row, col);
+		}
+		return new SugarScapeCell(initialState, row, col, getMyMaxCellSugarCapacity(), agent);
+	}
+	
+	protected abstract SugarScapeAgent createPresetAgent(int row, int col);
 	
 	/**
 	 * Sets the interval for sugar to grow back for this simulation.

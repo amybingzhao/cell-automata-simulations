@@ -56,19 +56,6 @@ public class SugarScapeReproductionPreset extends SugarScapeRules{
 	}
 	
 	/**
-	 * Creates a cell for the reproduction simulation and initializes an agent if the cell is occupied.
-	 */
-	@Override
-	protected Cell createCell(String initialState, int row, int col) {
-		SugarScapeAgent agent = null;
-		if (initialState.equals("OCCUPIED")) {
-			agent = new ReproductionSugarScapeAgent(generateRandom(getMyAgentSugarLimit()) + 1, generateRandom(getMyAgentMetabolismLimit()) + 1, generateRandom(getMyAgentVisionLimit()) + 1, row, col, generateRandom(NUM_GENDERS - 1),
-					generateLimitedRandom(MAX_AGE_MAX, MAX_AGE_MIN), FERTILITY_MIN, FERTILITY_MAX);
-		}
-		return new SugarScapeCell(initialState, row, col, getMyMaxCellSugarCapacity(), agent);
-	}
-	
-	/**
 	 * Generates a random number between (min, max).
 	 * @param max: maximum number.
 	 * @param min: minimum number.
@@ -76,6 +63,13 @@ public class SugarScapeReproductionPreset extends SugarScapeRules{
 	 */
 	private int generateLimitedRandom(int max, int min) {
 		return generateRandom(max - min) + min;
+	}
+
+	@Override
+	protected SugarScapeAgent createPresetAgent(int row, int col) {
+		return new ReproductionSugarScapeAgent(generateRandom(getMyAgentSugarLimit()) + 1, generateRandom(getMyAgentMetabolismLimit()) + 1, generateRandom(getMyAgentVisionLimit()) + 1, row, col, generateRandom(NUM_GENDERS - 1),
+				generateLimitedRandom(MAX_AGE_MAX, MAX_AGE_MIN), FERTILITY_MIN, FERTILITY_MAX);
+	
 	}
 
 }
