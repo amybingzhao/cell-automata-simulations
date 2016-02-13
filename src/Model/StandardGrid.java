@@ -14,6 +14,7 @@ public class StandardGrid extends Grid{
 	 */
 	public Cell[][] getNeighborhood(int row, int col, int numNeighbors) {
 		Cell[][] neighborhood = new Cell[getNeighborGridSideLength()][getNeighborGridSideLength()];
+		
 		if (numNeighbors == 4) {
 			int[] rowDirections = new int[]{-1, 0, 1, 0};
 			int[] colDirections = new int[]{0, 1, 0, -1};

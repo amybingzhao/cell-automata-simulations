@@ -8,10 +8,8 @@ package Rules;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-
 import Model.Cell;
 import Model.Grid;
-import Model.StandardCell;
 
 public class FireRules extends Rules {
 	public static final String DEFAULT_RESOURCE = "Rules/FireRules";
@@ -117,14 +115,6 @@ public class FireRules extends Rules {
 		} else {
 			return false;
 		}
-	}
-
-	/**
-	 * Creates a Standard Cell for this simulation.
-	 */
-	@Override
-	protected Cell createCell(String initialState, int row, int col) {
-		return new StandardCell(initialState, row, col);
 	}
 
 	/**

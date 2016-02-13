@@ -13,6 +13,7 @@ import java.util.ResourceBundle;
 
 import Model.Cell;
 import Model.Grid;
+import Model.StandardCell;
 import javafx.scene.paint.Color;
 
 public abstract class Rules {
@@ -23,6 +24,8 @@ public abstract class Rules {
 
 	public static final String DEFAULT_RULES_RESOURCE = "Rules/Rules";
 	private ResourceBundle myRulesResources;
+	private int MY_CELL_ROW;
+	private int MY_CELL_COL;
 	
 	/**
 	 * Helper method that applies the specified rules to each method in the grid
@@ -65,6 +68,8 @@ public abstract class Rules {
 			Color color = Color.web(colors[i]);
 			myStatesColors.put(states[i], color);
 		}
+		MY_CELL_ROW = Integer.parseInt(myRulesResources.getString("MyCellRow"));
+		MY_CELL_COL = Integer.parseInt(myRulesResources.getString("MyCellCol"));
 	}
 	
 	/**
@@ -74,7 +79,25 @@ public abstract class Rules {
 	 * @param col: column of the initial location of the Cell.
 	 * @return
 	 */
-	protected abstract Cell createCell(String initialState, int row, int col);
+	protected Cell createCell(String initialState, int row, int col) {
+		return new StandardCell(initialState, row, col);
+	}
+	
+	protected int countSurroundingNeighborsOfType(Cell[][] neighborhood, String state) {
+		int ret = 0;
+		for (int row = 0; row < neighborhood.length; row++) {
+			for (int col = 0; col < neighborhood[row].length; col++) {
+				if (neighborhood[row][col] != null) {
+					if (row != MY_CELL_ROW || col != MY_CELL_COL) {
+						if (neighborhood[row][col].getCurState().equals(state)) {
+							ret++;
+						}
+					}
+				}
+			}
+		}
+		return ret;
+	}
 	
 	public Cell createDefaultCell(int row, int col) {
 		return createCell(getDefault(), row, col);
@@ -195,11 +218,11 @@ public abstract class Rules {
 	}
 	
 	protected boolean isLastCellInGrid(Cell cell, Grid grid) {
+		int offset = 1;
 		if (grid.hasBeenResizedThisStep()) {
-			return (cell.getCurRow() == (grid.getNumRows() - 2)) && (cell.getCurCol() == (grid.getNumCols() - 2));
-		} else {
-			return (cell.getCurRow() == (grid.getNumRows() - 1)) && (cell.getCurCol() == (grid.getNumCols() - 1));
+			offset = 2;
 		}
+		return (cell.getCurRow() == (grid.getNumRows() - offset)) && (cell.getCurCol() == (grid.getNumCols() - offset));
 	}
 
 	/**

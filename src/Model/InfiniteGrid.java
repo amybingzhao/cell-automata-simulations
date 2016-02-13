@@ -59,7 +59,7 @@ public class InfiniteGrid extends Grid {
 		addTopOrBotLayer(newGrid, newGrid.length - 1);
 		addLeftOrRightLayer(newGrid, 0);
 		addLeftOrRightLayer(newGrid, newGrid[0].length - 1);
-
+		setGrid(newGrid);
 	}
 	
 	/**

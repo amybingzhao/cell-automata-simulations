@@ -56,21 +56,7 @@ public class GameOfLifeRules extends Rules {
 	 * @return number of live neighbors.
 	 */
 	private int countNumLiveNeighbors(Cell[][] neighborhood) {
-		int numNeighbors = 0;
-		
-		for (int row = 0; row < neighborhood.length; row++) {
-			for (int col = 0; col < neighborhood[row].length; col++) {
-				if (neighborhood[row][col] != null) {
-					if (row != MY_CELL_ROW || col != MY_CELL_COL) {
-						if (neighborhood[row][col].getCurState().equals(ALIVE)) {
-							numNeighbors++;
-						}
-					}
-				}
-			}
-		}
-		
-		return numNeighbors;
+		return countSurroundingNeighborsOfType(neighborhood, ALIVE);
 	}
 
 	/**
@@ -97,14 +83,6 @@ public class GameOfLifeRules extends Rules {
 		}
 	}
 
-	/**
-	 * Creates a Standard Cell for this simulation.
-	 */
-	@Override
-	protected Cell createCell(String initialState, int row, int col) {
-		return new StandardCell(initialState, row, col);
-	}
-	
 	/**
 	 * Description of Game of Life simulation.
 	 */
