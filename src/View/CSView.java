@@ -43,20 +43,15 @@ public class CSView {
 	//UI Objects
 	private Stage myStage;
 	private Group myBoardGroup;
-	private Rectangle[][] myBoard;
 	private Text myTitleDisplay;
 	private Text mySpeedDisplay;
 	private LineChart<Number,Number> lineChart;
 	private Map<String, XYChart.Series<Number, Number>> seriesMap;
-	private Map<String, Color> stateColorMap;
 	private Map<String, Button> buttonMap;
+	private Map<String, Color> stateColorMap;
 	private Color borderColor;
 	
 	//UI Metrics
-	private int boardPixelSize;
-	private int cellPixelSize;
-	private int borderPixelSize;
-	private int maxCellsDisplayed;
 	private int uiWidth;
 	
 	//resources
@@ -64,18 +59,19 @@ public class CSView {
 	private ResourceBundle myViewResources;
 
 	private Simulation mySimulation;
-	
+	private BoardBuilder myBB;
 	/**
 	 * Constructor, creates a new CSView object
 	 * Binds simulation to view object 
 	 */
 	public CSView(Simulation s) {
 		mySimulation = s;
-		s.setView(this);
+		mySimulation.setView(this);
 		myViewResources = ResourceBundle.getBundle(DEFAULT_VIEW_RESOURCE);
 		loadResources(myViewResources);
 		borderColor = Color.BLACK;
 		buttonMap = new HashMap<String, Button>();
+		myBB = new BoardBuilder(this, mySimulation);
 	}
 	
 	/**
@@ -83,9 +79,6 @@ public class CSView {
 	 * @param r
 	 */
 	private void loadResources(ResourceBundle r){
-		boardPixelSize = Integer.parseInt(myViewResources.getString("BoardPixelSize"));
-		borderPixelSize = Integer.parseInt(myViewResources.getString("DefaultBorderPixelSize"));
-		maxCellsDisplayed = Integer.parseInt(myViewResources.getString("MaxCellsDisplayed"));
 		uiWidth= Integer.parseInt(myViewResources.getString("UIWidth"));
 	}
 	
@@ -119,7 +112,7 @@ public class CSView {
 		//add board
 		HBox spHBox = new HBox(5);
 		myBoardGroup = new Group();
-		myBoardGroup.getChildren().add(getBackground());
+		myBoardGroup.getChildren().add(myBB.getBackground());
 		
 		ScrollPane sp = new ScrollPane();
 		sp.setContent(myBoardGroup);
@@ -160,17 +153,6 @@ public class CSView {
 	    vbox.getChildren().add(lineChart);
 	}
 	
-	/**
-	 * Generates the background rectangle for the board
-	 * @return a Rectangle object
-	 */
-	private Rectangle getBackground(){
-		Rectangle boardBackground = new Rectangle();
-		boardBackground.setFill(Color.WHITE);
-		boardBackground.setWidth(boardPixelSize);
-		boardBackground.setHeight(boardPixelSize);
-		return boardBackground;
-	}
 	
 	/**
 	 * Attach buttons to the UI display.
@@ -196,7 +178,7 @@ public class CSView {
 	 * @param name name of button
 	 * @param hbox hbox to be added to
 	 */
-	private void addButtonToHbox(String name, HBox hbox){
+	protected void addButtonToHbox(String name, HBox hbox){
 		Button button = new Button(name);
 		buttonMap.put(name, button);
 		button.setOnAction(new EventHandler<ActionEvent>() {
@@ -230,44 +212,10 @@ public class CSView {
 	 * Sets up the board and the chart
 	 */
 	private void setupUI(){
-		displayBoard();
+		myBB.displayBoard(myBoardGroup);
 		setupChart();
 	}
 	
-	/**
-	 * builds board by adding rectangles, with the size and quantity based on xml input
-	 */
-	private void displayBoard(){
-		int myGridWidth = mySimulation.getGrid().getNumCols();
-		int myGridHeight = mySimulation.getGrid().getNumRows();
-		cellPixelSize = (boardPixelSize / Math.min(maxCellsDisplayed, Math.max(myGridWidth, myGridHeight))) - 2 * borderPixelSize;
-		
-		myBoardGroup.getChildren().clear();
-		myBoard = new Rectangle[myGridWidth][myGridHeight];
-		Grid grid = mySimulation.getGrid();
-		for (int r = 0; r < grid.getNumRows(); r++) {
-			for (int c = 0; c < grid.getNumCols(); c++) {
-				Rectangle bg = new Rectangle();
-				bg.setLayoutY(r * (cellPixelSize + (2 * borderPixelSize)));
-				bg.setLayoutX(c * (cellPixelSize + (2 * borderPixelSize)));
-				bg.setWidth(cellPixelSize + (2 * borderPixelSize));
-				bg.setHeight(cellPixelSize + (2 * borderPixelSize));
-				bg.setFill(borderColor);
-				
-				Rectangle rect = new Rectangle();
-				rect.setLayoutY((r * (cellPixelSize + (2 * borderPixelSize))) + borderPixelSize);
-				rect.setLayoutX((c * (cellPixelSize + (2 * borderPixelSize))) + borderPixelSize);
-				rect.setWidth(cellPixelSize);
-				rect.setHeight(cellPixelSize);
-				int x = r; //java 8 MADE me do it Professor!
-				int y = c; //"effectively final" and whatnot.
-				rect.setOnMouseClicked(e -> respondToMouse(x, y)); 
-				myBoard[r][c] = rect;
-				myBoardGroup.getChildren().addAll(bg,rect);
-			}
-		}
-		displayGridToBoard();
-	}
 	
 	/**
 	 * Clears the old chart
@@ -302,7 +250,7 @@ public class CSView {
 			mySpeedDisplay.setText("Current Speed: " + mySimulation.changeSpeed(-1)); break;
 		case "Generate XML": generateXML(); break;
 		case "Load XML": loadXMLPressed(); break;
-		case "Restart": restartPressed(); break;
+		case "Reset": resetPressed(); break;
 		case "Save": mySimulation.saveXML(); break;
 		case "Config": createConfigPanel();break;
 		}
@@ -316,8 +264,8 @@ public class CSView {
 		for(String k: buttonMap.keySet()){
 			buttonMap.get(k).setDisable(mySimulation.getRules() == null);
 		}
-		buttonMap.get("Speed Up").setDisable(mySimulation.getRules() == null && mySimulation.getSpeed() >= 20);
-		buttonMap.get("Slow Down").setDisable(mySimulation.getRules() == null && mySimulation.getSpeed() <= 1);
+		buttonMap.get("Speed Up").setDisable(mySimulation.getRules() == null || mySimulation.getSpeed() >= 20);
+		buttonMap.get("Slow Down").setDisable(mySimulation.getRules() == null || mySimulation.getSpeed() <= 1);
 		buttonMap.get("Generate XML").setDisable(false);
 		buttonMap.get("Load XML").setDisable(false);
 		
@@ -359,9 +307,9 @@ public class CSView {
 	}
 	
 	/**
-	 * Handles restart Button press
+	 * Handles reset Button press
 	 */
-	private void restartPressed(){
+	private void resetPressed(){
 		if(mySimulation.getXML() != null){
 			mySimulation.setRunning(false);
 			mySimulation.loadXML(null);
@@ -372,7 +320,7 @@ public class CSView {
 	/**
 	 * Responds to mouse events on a given cell
 	 */
-	private void respondToMouse(int r, int c){
+	protected void respondToMouse(int r, int c){
 		mySimulation.setRunning(false);
 		String current = mySimulation.getGrid().getCell(r, c).getCurState();
 		createStateChanger(current, r, c);
@@ -454,6 +402,13 @@ public class CSView {
 	}
 	
 	/**
+	 * @return returns a map with the current color of each state
+	 */
+	protected Map<String, Color> getStateColorMap(){
+		return stateColorMap;
+	}
+	
+	/**
 	 * Opens border thickness config dialog 
 	 */
 	private void openBorderThicknessConfig(){
@@ -466,12 +421,12 @@ public class CSView {
 		dialog.setHeaderText("Border Thickness Picker");
 		dialog.setContentText("Border thickness (pixels):");
 		Optional<Integer> result = dialog.showAndWait();
-		result.ifPresent(name -> borderPixelSize = result.get());
-		displayBoard();
+		result.ifPresent(name -> myBB.setBorderPixelSize(result.get()));
+		myBB.displayBoard(myBoardGroup);
 	}
 	
 	/**
-	 * Opens a dialog to change border color
+	 * Opens a dialog to change border color, redisplay board
 	 */
 	private void openBorderColorConfig(){
 		final ColorPicker colorPicker = new ColorPicker(borderColor);
@@ -480,30 +435,24 @@ public class CSView {
             public void handle(ActionEvent t) { 
                 borderColor = colorPicker.getValue();
                 myBoardGroup.getChildren().remove(colorPicker);
-        		displayBoard();
+        		myBB.displayBoard(myBoardGroup);
             }
         });
+	}
+	
+	/**
+	 * @return returns the current color of the border
+	 */
+	protected Color getBorderColor(){
+		return borderColor;
 	}
 	
 	/**
 	 * Updates the board and the chart 
 	 */
 	public void updateUI(){
-		displayBoard();
+		myBB.displayBoard(myBoardGroup);
 		updateChart();
-	}
-	
-	
-	/**
-	 * Displays the grid to the board based on the state of each of its cells
-	 */
-	private void displayGridToBoard(){
-		Grid grid = mySimulation.getGrid();
-		for(int r = 0; r < grid.getNumRows(); r++){
-			for(int c = 0; c < grid.getNumCols(); c++){
-				myBoard[r][c].setFill(stateColorMap.get(grid.getCell(r,c).getCurState()));
-			}
-		}
 	}
 	
 	

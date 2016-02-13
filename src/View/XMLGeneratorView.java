@@ -62,7 +62,7 @@ public class XMLGeneratorView {
 	    
 	    Group root = new Group();
 	    rootvbox = new VBox(10);
-		rootvbox.setPadding(new Insets(0, inset, 0, inset));
+		rootvbox.setPadding(new Insets(inset, inset, inset, inset));
 		rootvbox.setAlignment(Pos.CENTER);
 		root.getChildren().add(rootvbox);
 	    stage.setScene(new Scene(root, pixelWidth, pixelHeight));
@@ -81,22 +81,24 @@ public class XMLGeneratorView {
 	}
 	
     private void fillVBox(VBox vbox){
+    	Text simulationprompt= new Text("Select Simulation:");
     	final ComboBox<String> simulationComboBox = new ComboBox<String>();
     	configmap.put("Simulation", simulationComboBox);
     	simulationComboBox.setPrefWidth(pixelWidth - 2 * inset);
         simulationComboBox.getItems().addAll(myRulesResources.getString("RuleTypes").split(","));
-        simulationComboBox.setPromptText("Simulation");
+        simulationComboBox.setValue(simulationComboBox.getItems().get(0));
         simulationComboBox.valueProperty().addListener(new ChangeListener<String>() {
             @Override public void changed(ObservableValue ov, String oldsim, String newsim) {
             	updateStateOptions(newsim);
             }    
         });
         
+        Text gridtypeprompt= new Text("Select Grid Type:");
         final ComboBox<String> gridtypeComboBox = new ComboBox<String>();
         configmap.put("GridType", gridtypeComboBox);
         gridtypeComboBox.setPrefWidth(pixelWidth - 2 * inset);
         gridtypeComboBox.getItems().addAll(myRulesResources.getString("GridTypes").split(","));
-        gridtypeComboBox.setPromptText("Grid Type");
+        gridtypeComboBox.setValue(gridtypeComboBox.getItems().get(0));
       
         Text gridsizeprompt = new Text("Select Grid Size:");
         gridsizeslider = new Slider();
@@ -123,7 +125,7 @@ public class XMLGeneratorView {
         button.setPrefWidth(pixelWidth - 2*inset);
         
         
-        vbox.getChildren().addAll(simulationComboBox, gridtypeComboBox, 
+        vbox.getChildren().addAll(simulationprompt, simulationComboBox, gridtypeprompt, gridtypeComboBox, 
         		gridsizeprompt, gridsizeslider, stateoptionprompt, stateoptionsvbox, filenameprompt, filename, button);
     }
     
@@ -204,6 +206,12 @@ public class XMLGeneratorView {
     	int sideLength = (int) gridsizeslider.getValue();
     	String rules = (String) configmap.get("Simulation").getValue();
     	String gridType = (String) configmap.get("GridType").getValue();
+    	/*
+    	 * Todos:
+    	 * Value checking for above params
+    	 * Display and ask for additional sim specific param
+    	 * Factor out dialogs/config code
+    	 */
     	generator.generateFile(sideLength, rules, filename.getText() + ".xml", gridType);
     	
     }

@@ -365,6 +365,6 @@ public class XMLGenerator {
 		HashMap<String, Double> myMap = new HashMap<String, Double>();
 		myMap.put("BLUE", 40.0);
 		XMLGenerator myGenerator = new XMLGenerator(myMap);
-		myGenerator.generateFile(40, "Segregation", "SegregationTor40.xml", "Toroidal");
+		myGenerator.generateFile(40, "PredatorPrey", "SegregationTor40.xml", "Toroidal");
 	}
 }
