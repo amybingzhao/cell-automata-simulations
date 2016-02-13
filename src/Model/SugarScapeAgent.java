@@ -86,44 +86,29 @@ public abstract class SugarScapeAgent {
 	 */
 	protected List<SugarScapeCell> getViableNeighbors(Grid grid) {
 		List<SugarScapeCell> neighbors = new ArrayList<SugarScapeCell>();
-		int row;
-		int col;
-		// left
-		for (int distance = 1; distance <= myVision; distance++) {
-			row = myRow;
-			col = myCol - distance;
-			if (viableNeighbor(row, col, grid)) {
-				neighbors.add((SugarScapeCell) grid.getCell(row, col));
-			}
-		}
-		
-		// right
-		for (int distance = 1; distance <= myVision; distance++) {
-			row = myRow;
-			col = myCol + distance;
-			if (viableNeighbor(row, col, grid)) {
-				neighbors.add((SugarScapeCell) grid.getCell(row, col));
-			}
-		}
-		
-		// up
-		for (int distance = 1; distance <= myVision; distance++) {
-			row = myRow - distance;
-			col = myCol;
-			if (viableNeighbor(row, col, grid)) {
-				neighbors.add((SugarScapeCell) grid.getCell(row, col));
-			}
-		}
-		
-		//down
-		for (int distance = 1; distance <= myVision; distance++) {
-			row = myRow + distance;
-			col = myCol;
-			if (viableNeighbor(row, col, grid)) {
-				neighbors.add((SugarScapeCell) grid.getCell(row, col));
-			}
-		}
+		checkLeftOrRightNeighbors(neighbors, 1, grid);
+		checkLeftOrRightNeighbors(neighbors, -1, grid);
+		checkTopOrBotNeighbors(neighbors, 1, grid);
+		checkTopOrBotNeighbors(neighbors, -1, grid);
 		return neighbors;
+	}
+	
+	protected void checkTopOrBotNeighbors(List<SugarScapeCell> neighbors, int offset, Grid grid) {
+		for (int distance = 1; distance <= myVision; distance++) {
+			int row = myRow + offset * distance;
+			if (viableNeighbor(row, myCol, grid)) {
+				neighbors.add((SugarScapeCell) grid.getCell(row, myCol));
+			}
+		}
+	}
+	
+	protected void checkLeftOrRightNeighbors(List<SugarScapeCell> neighbors, int offset, Grid grid) {
+		for (int distance = 1; distance <= myVision; distance++) {
+			int col = myCol + offset * distance;
+			if (viableNeighbor(myRow, col, grid)) {
+				neighbors.add((SugarScapeCell) grid.getCell(myRow, col));
+			}
+		}
 	}
 	
 	/**
