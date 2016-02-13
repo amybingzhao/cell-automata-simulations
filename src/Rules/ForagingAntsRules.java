@@ -104,14 +104,25 @@ public class ForagingAntsRules extends Rules {
 	 */
 	private void handleAnt(Ant ant, ForagingAntsCell cell, Grid grid) {
 		Cell[][] neighborhood = grid.getNeighborhood(cell.getCurRow(), cell.getCurCol(), NUM_NEIGHBORS);
+		ForagingAntsCell[][] foragingAntsNeighborhood = convertToForagingAntsCellNeighborhood(neighborhood);
 		List<Integer[]> directions = getDirectionsToCheck(ant);
 		if (ant.hasFood()) {
-			ant.returnToNest(cell, neighborhood, directions);
+			ant.returnToNest(cell, foragingAntsNeighborhood, directions);
 		} else {
-			ant.findFoodSource(cell, neighborhood, directions);
+			ant.findFoodSource(cell, foragingAntsNeighborhood, directions);
 		}
 	}
 
+	private ForagingAntsCell[][] convertToForagingAntsCellNeighborhood(Cell[][] neighborhood) {
+		ForagingAntsCell[][] foragingAntsNeighborhood = new ForagingAntsCell[neighborhood.length][neighborhood[0].length];
+		for (int row = 0; row < neighborhood.length; row++) {
+			for (int col = 0; col < neighborhood[0].length; col++) {
+				foragingAntsNeighborhood[row][col] = (ForagingAntsCell) neighborhood[row][col];
+			}
+		}
+		
+		return foragingAntsNeighborhood;
+	}
 	/**
 	 * Gets the directions that the ant should check with the forward directions at the front end of the list.
 	 * @param ant: ant being handled currently.

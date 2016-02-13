@@ -78,7 +78,7 @@ public class Ant {
 	 * @param neighborhood: cell of interest and its surrounding 8 neighbors.
 	 * @param directions: directions to check for food pheromones in the order that they should be checked.
 	 */
-	public void followFoodPheromones(Cell[][] neighborhood, List<Integer[]> directions) {
+	public void followFoodPheromones(ForagingAntsCell[][] neighborhood, List<Integer[]> directions) {
 		ForagingAntsCell nextLocation = followPheromones(FOOD, neighborhood, directions);
 		if (nextLocation.isFood()) {
 			System.out.println("found da food stuffsz");
@@ -92,11 +92,11 @@ public class Ant {
 	 * @param neighborhood: cell of interest and its surrounding 8 neighbors.
 	 * @param directions: directions to check for pheromones in the order that they should be checked.
 	 */
-	private ForagingAntsCell followPheromones(String type, Cell[][] neighborhood, List<Integer[]> directions) {
+	private ForagingAntsCell followPheromones(String type, ForagingAntsCell[][] neighborhood, List<Integer[]> directions) {
 		List<Integer[]> forwardDirections = directions.subList(0, NUM_FORWARD_NEIGHBORS - 1);
 		List<Integer[]> otherDirections = directions.subList(NUM_FORWARD_NEIGHBORS, directions.size() - 1); 
 		
-		ForagingAntsCell curLocation = (ForagingAntsCell) neighborhood[1][1];
+		ForagingAntsCell curLocation = neighborhood[1][1];
 		ForagingAntsCell nextLocation = selectLocation(type, neighborhood, forwardDirections, otherDirections);
 		
 		dropPheromones(type, curLocation);
@@ -130,7 +130,7 @@ public class Ant {
 	 * @param otherDirections: non-forward directions.
 	 * @return
 	 */
-	private ForagingAntsCell selectLocation(String type, Cell[][] neighborhood, List<Integer[]> forwardDirections, List<Integer[]> otherDirections) {
+	private ForagingAntsCell selectLocation(String type, ForagingAntsCell[][] neighborhood, List<Integer[]> forwardDirections, List<Integer[]> otherDirections) {
 		ForagingAntsCell nextLocation = null;
 		if (canMoveForward(neighborhood, forwardDirections)) {
 			Map<ForagingAntsCell, Integer> forwardWeights = assignWeights(type, neighborhood, forwardDirections);
@@ -141,7 +141,7 @@ public class Ant {
 		}
 		
 		while (nextLocation == null || nextLocation.isObstacle()) {
-			nextLocation = (ForagingAntsCell) neighborhood[myDirectionRow][myDirectionCol];
+			nextLocation = neighborhood[myDirectionRow][myDirectionCol];
 			setRandomDirection();
 		}
 		
@@ -192,14 +192,14 @@ public class Ant {
 	 * @param forwardDirections: forward directions based on ant's current orientation.
 	 * @return true if ant can move forward; false otherwise.
 	 */
-	private boolean canMoveForward(Cell[][] neighborhood, List<Integer[]> forwardDirections) {
+	private boolean canMoveForward(ForagingAntsCell[][] neighborhood, List<Integer[]> forwardDirections) {
 		int obstacleCount = 0;
 		int fullCount = 0;
 
 		for (int i = 0; i < forwardDirections.size(); i++) {
 			Integer[] dirToCheck = forwardDirections.get(i);
 
-			ForagingAntsCell neighbor = (ForagingAntsCell) neighborhood[dirToCheck[0]][dirToCheck[1]];
+			ForagingAntsCell neighbor = neighborhood[dirToCheck[0]][dirToCheck[1]];
 			if (neighbor != null) {
 				if (neighbor.isFull()) {
 					fullCount++;
@@ -220,12 +220,12 @@ public class Ant {
 	 * @param directions: directions to check in the order they should be checked.
 	 * @return
 	 */
-	private Map<ForagingAntsCell, Integer> assignWeights(String pheromoneType, Cell[][] neighborhood, List<Integer[]> directions) {
+	private Map<ForagingAntsCell, Integer> assignWeights(String pheromoneType, ForagingAntsCell[][] neighborhood, List<Integer[]> directions) {
 		Map<ForagingAntsCell, Integer> weights = new HashMap<ForagingAntsCell, Integer>();
 
 		for (int i = 0; i < directions.size(); i++) {
 			Integer[] dirToCheck = directions.get(i);
-			ForagingAntsCell neighbor = (ForagingAntsCell) neighborhood[dirToCheck[0]][dirToCheck[1]];
+			ForagingAntsCell neighbor = neighborhood[dirToCheck[0]][dirToCheck[1]];
 			if (neighbor != null) {
 				weights.put(neighbor, neighbor.getNumPheromones(pheromoneType));
 			}
@@ -252,7 +252,7 @@ public class Ant {
 	 * @param neighborhood: cell of interest and its surrounding 8 neighbors.
 	 * @param directions: directions to check for home pheromones in the order that they should be checked.
 	 */
-	public void followHomePheromones(Cell[][] neighborhood, List<Integer[]> directions) {
+	public void followHomePheromones(ForagingAntsCell[][] neighborhood, List<Integer[]> directions) {
 		ForagingAntsCell nextLocation = followPheromones(HOME, neighborhood, directions);
 		if (nextLocation.isHome()) {
 			hasFood = false;
@@ -265,13 +265,13 @@ public class Ant {
 	 * @param neighborhood: cell of interest and surrounding 8 neighbors.
 	 * @param directions: directions to check for pheromones in the order that they should be checked.
 	 */
-	public void returnToNest(ForagingAntsCell cell, Cell[][] neighborhood, List<Integer[]> directions) {
+	public void returnToNest(ForagingAntsCell cell, ForagingAntsCell[][] neighborhood, List<Integer[]> directions) {
 		if (cell.isFood()) {
 			System.out.println("ant found food");
 			Map<ForagingAntsCell, Integer> weights = assignWeights(HOME, neighborhood, directions);
 			ForagingAntsCell nextLocation = pickWeightedRandomCell(weights);
 			if (nextLocation != null) {
-				int[] relativeNextLocation = new int[]{cell.getCurRow() - nextLocation.getCurRow(), cell.getCurCol() - nextLocation.getCurCol()};
+				int[] relativeNextLocation = new int[]{cell.getCurRow() - nextLocation.getCurRow() + 1, cell.getCurCol() - nextLocation.getCurCol() + 1};
 				setDirection(relativeNextLocation);
 			}
 		}
@@ -285,7 +285,7 @@ public class Ant {
 	 * @param neighborhood: cell of interest and surrounding 8 neighbors.
 	 * @param directions: directions to check for pheromones in the order that they should be checked.
 	 */
-	public void findFoodSource(ForagingAntsCell cell, Cell[][] neighborhood, List<Integer[]> directions) {
+	public void findFoodSource(ForagingAntsCell cell, ForagingAntsCell[][] neighborhood, List<Integer[]> directions) {
 		if (cell.isHome()) {
 			Map<ForagingAntsCell, Integer> weights = assignWeights(FOOD, neighborhood, directions);
 			ForagingAntsCell nextLocation = pickWeightedRandomCell(weights);
