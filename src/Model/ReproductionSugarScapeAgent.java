@@ -100,13 +100,8 @@ public class ReproductionSugarScapeAgent extends SugarScapeAgent {
 	 * @return true if an adjacent cell is empty; false otherwise.
 	 */
 	private boolean hasEmptyNeighbor(Grid grid) {
-		SugarScapeCell[][] neighborhood = (SugarScapeCell[][]) grid.getNeighborhood(getRow(), getCol(), NUM_NEIGHBORS);
-		for (int row = 0; row < neighborhood.length; row++) {
-			for (int col = 0; col < neighborhood.length; col++) {
-				if (!neighborhood[row][col].hasAgent()) {
-					return true;
-				}
-			}
+		if (getEmptyNeighbor(grid) != null) {
+			return true;
 		}
 		return false;
 	}
