@@ -106,10 +106,16 @@ public class Cell {
 		myNextState = state;
 	}
 
+	/**
+	 * Description of cell.
+	 */
 	public String toString() {
 		return "(" + myCurState + ", " + myNextState + ")";
 	}
 	
+	/**
+	 * Updates the state of the cell based on the nextState.
+	 */
 	public void updateState(){
 		if (myNextState != null) {
 			myCurState = myNextState;

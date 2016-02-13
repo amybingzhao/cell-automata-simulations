@@ -4,9 +4,11 @@ public class StandardSugarScapeAgent extends SugarScapeAgent {
 
 	public StandardSugarScapeAgent(int initSugar, int metabolism, int vision, int row, int col) {
 		super(initSugar, metabolism, vision, row, col);
-		// TODO Auto-generated constructor stub
 	}
 	
+	/**
+	 * Description of the standard sugar scape agent.
+	 */
 	public String toString() {
 		return "[my Sugar: " + String.valueOf(this.getMySugarAmount()) + ", myMetabolism: " + String.valueOf(this.getMetabolism()) + ", myVision: " + String.valueOf(this.getVision() + "]");
 	}
