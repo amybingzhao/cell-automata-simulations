@@ -127,17 +127,6 @@ public abstract class SugarScapeAgent {
 	}
 	
 	/**
-	 * Checks if a cell at a given row and column are within the bounds of the grid.
-	 * @param row: row that the cell is in.
-	 * @param col: column that the cell is in.
-	 * @param grid: simulation grid.
-	 * @return
-	 */
-	private boolean inBounds(int row, int col, Grid grid) {
-		return (row < grid.getNumRows() && row >= 0 && col < grid.getNumCols() && col >= 0);
-	}
-	
-	/**
 	 * Checks if a neighbor cell is a viable candidate to move to.
 	 * @param row: row that the neighbor is in.
 	 * @param col: column that the neighbor is in.
@@ -145,7 +134,7 @@ public abstract class SugarScapeAgent {
 	 * @return true if the neighbor can be moved to; false otherwise.
 	 */
 	private boolean viableNeighbor(int row, int col, Grid grid) {
-		if (inBounds(row, col, grid)) {
+		if (grid.inBounds(row, col)) {
 			SugarScapeCell neighbor = (SugarScapeCell) grid.getCell(row, col);
 			if (!neighbor.hasAgent()) {
 				return true;

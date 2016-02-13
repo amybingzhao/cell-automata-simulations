@@ -107,7 +107,7 @@ public class Cell {
 	}
 
 	/**
-	 * Descripton of cell.
+	 * Description of cell.
 	 */
 	public String toString() {
 		return "(" + myCurState + ", " + myNextState + ")";

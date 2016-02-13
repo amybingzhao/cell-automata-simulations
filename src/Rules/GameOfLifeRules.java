@@ -7,7 +7,9 @@
 package Rules;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 import Model.Cell;
 import Model.Grid;
@@ -21,6 +23,8 @@ public class GameOfLifeRules extends Rules {
 	private static final String DEFAULT_STATE = DEAD;
 	private static final int MY_CELL_ROW = 1;
 	private static final int MY_CELL_COL = 1;
+	private static final List<Integer> NUM_ALLOWABLE_LIVE_NEIGHBORS = new ArrayList<Integer>(Arrays.asList(2, 3));
+	private static final int NUM_NEIGHBORS_NEEDED_TO_REPRODUCE = 3;
 	
 	/**
 	 * Apply the rules of the Game of Life simulation to a Cell based on its state.
@@ -67,7 +71,7 @@ public class GameOfLifeRules extends Rules {
 	 * @param numLiveNeighbors: number of live neighbors the cell has.
 	 */
 	private void handleAliveCells(Cell cell, int numLiveNeighbors) {
-		if (numLiveNeighbors < 2 || numLiveNeighbors > 3) {
+		if (!NUM_ALLOWABLE_LIVE_NEIGHBORS.contains(numLiveNeighbors)) {
 			cell.setNextState(DEAD);
 			addCellToBeUpdated(cell);
 		}
@@ -79,7 +83,7 @@ public class GameOfLifeRules extends Rules {
 	 * @param numLiveNeighbors: number of live neighbors the cell has.
 	 */
 	private void handleDeadCells(Cell cell, int numLiveNeighbors) {
-		if (numLiveNeighbors == 3) {
+		if (numLiveNeighbors == NUM_NEIGHBORS_NEEDED_TO_REPRODUCE) {
 			cell.setNextState(ALIVE);
 			addCellToBeUpdated(cell);
 		}

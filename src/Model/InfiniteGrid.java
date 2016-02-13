@@ -4,6 +4,8 @@ import Rules.Rules;
 
 public class InfiniteGrid extends Grid {
 	Rules myRules;
+	private static final int NEIGHBOR_GRID_SIDE_LENGTH = 3;
+	private static final int NUMBER_OF_NEW_ROWS_COLS = 2;
 	
 	/**
 	 * Constructs an infinite grid specific to a given simulation's rules.
@@ -25,7 +27,7 @@ public class InfiniteGrid extends Grid {
 	 * @param numNeighbors: 4 or 8 depending on simulation.
 	 */
 	public Cell[][] getNeighborhood(int row, int col, int numNeighbors) {
-		Cell[][] neighborhood = new Cell[3][3];
+		Cell[][] neighborhood = new Cell[NEIGHBOR_GRID_SIDE_LENGTH][NEIGHBOR_GRID_SIDE_LENGTH];
 		int[] rowDirections = new int[]{-1, 0, 1};
 		int[] colDirections = new int[]{-1, 0, 1};
 		
@@ -53,7 +55,7 @@ public class InfiniteGrid extends Grid {
 	private void resizeGrid() {
 		int curRows = getNumRows();
 		int curCols = getNumCols();
-		Cell[][] newGrid = new Cell[curRows + 2][curCols + 2];
+		Cell[][] newGrid = new Cell[curRows + NUMBER_OF_NEW_ROWS_COLS][curCols + NUMBER_OF_NEW_ROWS_COLS];
 		populateGridWithExistingCells(newGrid, curRows, curCols);
 		addTopLayer(newGrid);
 		addBotLayer(newGrid);

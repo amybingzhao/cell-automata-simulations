@@ -51,9 +51,6 @@ public class SegregationRules extends Rules {
 			handleAgentCell(cell, grid);
 		}
 		
-		if (cell.getCurRow() == 3 && cell.getCurCol() == 3) {
-			System.out.println();
-		}
 		if (isLastCellInGrid(cell, grid)) {
 			handleUnmovedCells();
 		}
