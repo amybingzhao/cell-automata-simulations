@@ -76,6 +76,12 @@ public abstract class Rules {
 	 */
 	protected abstract Cell createCell(String initialState, int row, int col);
 	
+	public Cell createDefaultCell(int row, int col) {
+		return createCell(getDefault(), row, col);
+	}
+	
+	protected abstract String getDefault();
+	
 	/**
 	 * Rules for each simulation to be implemented by simulation-specific subclasses.
 	 * @param cell: Cell to apply rules to.
@@ -189,7 +195,11 @@ public abstract class Rules {
 	}
 	
 	protected boolean isLastCellInGrid(Cell cell, Grid grid) {
-		return (cell.getCurRow() == (grid.getNumRows() - 1)) && (cell.getCurCol() == (grid.getNumCols() - 1));
+		if (grid.hasBeenResizedThisStep()) {
+			return (cell.getCurRow() == (grid.getNumRows() - 2)) && (cell.getCurCol() == (grid.getNumCols() - 2));
+		} else {
+			return (cell.getCurRow() == (grid.getNumRows() - 1)) && (cell.getCurCol() == (grid.getNumCols() - 1));
+		}
 	}
 
 	/**

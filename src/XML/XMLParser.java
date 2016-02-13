@@ -10,10 +10,13 @@ import org.xml.sax.SAXException;
 
 import Controller.Simulation;
 import Rules.FireRules;
+import Rules.ForagingAntsRules;
 import Rules.GameOfLifeRules;
 import Rules.PredatorPreyRules;
 import Rules.Rules;
 import Rules.SegregationRules;
+import Rules.SugarScapeMigrationPreset;
+import Rules.SugarScapeReproductionPreset;
 import javax.xml.parsers.*;
 import java.io.*;
 import java.util.ArrayList;
@@ -190,6 +193,29 @@ public class XMLParser {
 		case "Fire":
 			double probCatch = Double.parseDouble(splitEntry(data.get(1))[1]);
 			myRule = new FireRules(probCatch);
+			break;
+		case "ForagingAnts":
+			myRule = new ForagingAntsRules(Integer.parseInt(splitEntry(data.get(1))[1]));
+			break;
+		case "SugarScapeMigration":
+			int sugarGrowBackRate = Integer.parseInt(splitEntry(data.get(1))[1]);
+			int sugarGrowBackInterval = Integer.parseInt(splitEntry(data.get(2))[1]);
+			int maxSugarCapacity = Integer.parseInt(splitEntry(data.get(3))[1]);
+			int sugarLimit = Integer.parseInt(splitEntry(data.get(4))[1]);
+			int visionLimit = Integer.parseInt(splitEntry(data.get(5))[1]);
+			int metabolismLimit = Integer.parseInt(splitEntry(data.get(6))[1]);
+			myRule = new SugarScapeMigrationPreset(sugarGrowBackRate, sugarGrowBackInterval, maxSugarCapacity, sugarLimit, visionLimit, metabolismLimit);
+			break;
+		case "SugarScapeReproduction":
+			sugarGrowBackRate = Integer.parseInt(splitEntry(data.get(1))[1]);
+			sugarGrowBackInterval = Integer.parseInt(splitEntry(data.get(2))[1]);
+			maxSugarCapacity = Integer.parseInt(splitEntry(data.get(3))[1]);
+			sugarLimit = Integer.parseInt(splitEntry(data.get(4))[1]);
+			visionLimit = Integer.parseInt(splitEntry(data.get(5))[1]);
+			metabolismLimit = Integer.parseInt(splitEntry(data.get(6))[1]);
+			myRule = new SugarScapeReproductionPreset(sugarGrowBackRate, sugarGrowBackInterval, maxSugarCapacity, sugarLimit, visionLimit, metabolismLimit);
+			break;
+		default:
 			break;
 		}
 		return true;

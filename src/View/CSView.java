@@ -46,13 +46,11 @@ public class CSView {
 	private Text myTitleDisplay;
 	private Text mySpeedDisplay;
 	private LineChart<Number,Number> lineChart;
-	private Map<String, XYChart.Series> seriesMap;
+	private Map<String, XYChart.Series<Number, Number>> seriesMap;
 	private Map<String, Color> stateColorMap;
 	private Color borderColor;
 	
 	//UI Metrics
-	private int myGridWidth;
-	private int myGridHeight;
 	private int boardPixelSize;
 	private int cellPixelSize;
 	private int borderPixelSize;
@@ -225,31 +223,21 @@ public class CSView {
 	}
 	
 	/**
-	 * Loads in the grid's width, grid's height, and current simulation name
-	 * Displays the name of the simulation
-	 * @param w
-	 * @param h
-	 * @param current
-	 */
-	public void setGridInfo(int w, int h, String current){
-		myGridWidth = w;
-		myGridHeight = h;
-		cellPixelSize = (boardPixelSize / Math.min(maxCellsDisplayed, Math.max(myGridWidth, myGridHeight))) - 2 * borderPixelSize;
-		myTitleDisplay.setText("Current Simulation: " + current);
-	}
-	
-	/**
 	 * Sets up the board and the chart
 	 */
 	private void setupUI(){
-		setupBoard();
+		setupAndDisplayBoard();
 		setupChart();
 	}
 	
 	/**
 	 * builds board by adding rectangles, with the size and quantity based on xml input
 	 */
-	private void setupBoard(){
+	private void setupAndDisplayBoard(){
+		int myGridWidth = mySimulation.getGrid().getNumCols();
+		int myGridHeight = mySimulation.getGrid().getNumRows();
+		cellPixelSize = (boardPixelSize / Math.min(maxCellsDisplayed, Math.max(myGridWidth, myGridHeight))) - 2 * borderPixelSize;
+		
 		myBoardGroup.getChildren().clear();
 		myBoard = new Rectangle[myGridWidth][myGridHeight];
 		Grid grid = mySimulation.getGrid();
@@ -267,9 +255,9 @@ public class CSView {
 				rect.setLayoutX((c * (cellPixelSize + (2 * borderPixelSize))) + borderPixelSize);
 				rect.setWidth(cellPixelSize);
 				rect.setHeight(cellPixelSize);
-				int x = r;
-				int y = c;
-				rect.setOnMouseClicked(e -> respondToMouse(x, y));
+				int x = r; //java 8 MADE me do it Professor!
+				int y = c; //"effectively final" and whatnot.
+				rect.setOnMouseClicked(e -> respondToMouse(x, y)); 
 				myBoard[r][c] = rect;
 				myBoardGroup.getChildren().addAll(bg,rect);
 			}
@@ -284,15 +272,15 @@ public class CSView {
 	 */
 	private void setupChart(){
 		lineChart.getData().clear();
-	    seriesMap = new HashMap<String, XYChart.Series>();
+	    seriesMap = new HashMap<String, XYChart.Series<Number, Number>>();
 	    Map<String, Integer> statesCount = mySimulation.getRules().getMyStatesCount();
 	    //define series for each type of cell
 	    for(String key : statesCount.keySet()){
-	    	XYChart.Series series = new XYChart.Series();
+	    	XYChart.Series<Number, Number> series = new XYChart.Series<Number, Number>();
 	 	    series.setName(key);
 	 	    seriesMap.put(key, series);
 	 	    lineChart.getData().add(series);
-	 	    series.getData().add(new XYChart.Data(0, statesCount.get(key)));
+	 	    series.getData().add(new XYChart.Data<Number, Number>(0, statesCount.get(key)));
 	    }
 	}
 	
@@ -352,6 +340,7 @@ public class CSView {
 		if(file != null){
 			if(!mySimulation.useParser(file)) return;
 			stateColorMap = new HashMap<String, Color>(mySimulation.getRules().getMyStatesColors());
+			myTitleDisplay.setText("Current Simulation: " + mySimulation.getRules().toString());
 			setupUI();
 		}
 	}
@@ -373,6 +362,7 @@ public class CSView {
 	 */
 	private void restartPressed(){
 		if(mySimulation.getXML() != null){
+			mySimulation.setRunning(false);
 			mySimulation.loadFromXML(null);
 			setupUI();
 		}
@@ -476,7 +466,7 @@ public class CSView {
 		dialog.setContentText("Border thickness (pixels):");
 		Optional<Integer> result = dialog.showAndWait();
 		result.ifPresent(name -> borderPixelSize = result.get());
-		setupBoard();
+		setupAndDisplayBoard();
 	}
 	
 	/**
@@ -485,11 +475,11 @@ public class CSView {
 	private void openBorderColorConfig(){
 		final ColorPicker colorPicker = new ColorPicker(borderColor);
 		myBoardGroup.getChildren().add(colorPicker);
-        colorPicker.setOnAction(new EventHandler() {
-            public void handle(Event t) { 
+        colorPicker.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent t) { 
                 borderColor = colorPicker.getValue();
                 myBoardGroup.getChildren().remove(colorPicker);
-        		setupBoard();
+        		setupAndDisplayBoard();
             }
         });
 	}
@@ -498,7 +488,7 @@ public class CSView {
 	 * Updates the board and the chart 
 	 */
 	public void updateUI(){
-		displayGridToBoard();
+		setupAndDisplayBoard();
 		updateChart();
 	}
 	
@@ -522,7 +512,7 @@ public class CSView {
 	private void updateChart(){
 		Map<String, Integer> statesCount = mySimulation.getRules().getMyStatesCount();
 		for(String key : statesCount.keySet()){
-	 	    seriesMap.get(key).getData().add(new XYChart.Data(mySimulation.getTime()/100, statesCount.get(key)));
+	 	    seriesMap.get(key).getData().add(new XYChart.Data<Number, Number>(mySimulation.getTime()/100, statesCount.get(key)));
 	    }
 	}
 }
