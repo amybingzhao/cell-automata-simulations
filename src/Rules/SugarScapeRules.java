@@ -2,6 +2,7 @@ package Rules;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import Model.Cell;
 import Model.Grid;
@@ -9,7 +10,8 @@ import Model.SugarScapeAgent;
 import Model.SugarScapeCell;
 
 public abstract class SugarScapeRules extends Rules {
-	
+	public static final String DEFAULT_RESOURCE = "Rules/SugarScapeRules";
+	private ResourceBundle myResource = ResourceBundle.getBundle(DEFAULT_RESOURCE);
 	private int mySugarGrowBackRate;
 	private int mySugarGrowBackInterval;
 	private int mySugarGrowBackCountdown;
@@ -17,7 +19,7 @@ public abstract class SugarScapeRules extends Rules {
 	private int myAgentSugarLimit;
 	private int myAgentVisionLimit;
 	private int myAgentMetabolismLimit;
-	private static final String DEFAULT_STATE = "NONE";
+	private String DEFAULT_STATE = myResource.getString("DefaultState");
 	
 	public SugarScapeRules(int sugarGrowBackRate, int sugarGrowBackInterval, int maxSugarCapacity, int sugarLimit, int visionLimit, int metabolismLimit) {
 		mySugarGrowBackRate = sugarGrowBackRate;

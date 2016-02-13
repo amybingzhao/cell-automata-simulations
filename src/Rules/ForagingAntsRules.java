@@ -2,6 +2,8 @@ package Rules;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
+
 import Model.Cell;
 import Model.ForagingAntsCell;
 import Model.Grid;
@@ -9,9 +11,10 @@ import Model.Ant;
 
 public class ForagingAntsRules extends Rules {
 	private int numTotalAnts;
-	private static final String GROUND = "GROUND";
-	private static final String DEFAULT_STATE = GROUND;
-	private static final int NUM_NEIGHBORS = 8;
+	public static final String DEFAULT_RESOURCE = "Rules/ForagingAntsRules";
+	private ResourceBundle myResource = ResourceBundle.getBundle(DEFAULT_RESOURCE);
+	private String DEFAULT_STATE = myResource.getString("DefaultState");
+	private int NUM_NEIGHBORS = Integer.parseInt(myResource.getString("NumNeighbors"));
 	private static final Integer[] NORTH = new Integer[]{0, 1};
 	private static final Integer[] SOUTH = new Integer[]{2, 1};
 	private static final Integer[] WEST = new Integer[]{1, 0};

@@ -1,5 +1,7 @@
 package Rules;
 
+import java.util.ResourceBundle;
+
 import Model.Cell;
 import Model.Grid;
 import Model.StandardSugarScapeAgent;
@@ -7,8 +9,10 @@ import Model.SugarScapeAgent;
 import Model.SugarScapeCell;
 
 public class SugarScapeMigrationPreset extends SugarScapeRules {
-	private static final int PRESET_2_VISION_LIMIT = 10;
-	private static final int PRESET_2_GROW_BACK_INTERVAL = 2;
+	public static final String DEFAULT_RESOURCE = "Rules/SugarScapeMigrationRules";
+	private ResourceBundle myResource = ResourceBundle.getBundle(DEFAULT_RESOURCE);
+	private int PRESET_2_VISION_LIMIT = Integer.parseInt(myResource.getString("Preset2VisionLimit"));
+	private int PRESET_2_GROW_BACK_INTERVAL = Integer.parseInt(myResource.getString("Preset2GrowBackInterval"));
 	
 	public SugarScapeMigrationPreset(int sugarGrowBackRate, int sugarGrowBackInterval, int maxSugarCapacity, int sugarLimit,
 			int visionLimit, int metabolismLimit) {

@@ -8,21 +8,26 @@ package Rules;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
+
 import Model.Cell;
 import Model.Grid;
 import Model.PredatorPreyCell;
 
 public class PredatorPreyRules extends Rules {
+	public static final String DEFAULT_RESOURCE = "Rules/PredatorPreyRules";
+	private ResourceBundle myResource = ResourceBundle.getBundle(DEFAULT_RESOURCE);
+	private int NUM_NEIGHBORS = Integer.parseInt(myResource.getString("NumNeighbors"));
+	private String FISH = myResource.getString("Fish");
+	private String SHARK = myResource.getString("Shark");
+	private String WATER = myResource.getString("Water");
+	private String DEFAULT_STATE = myResource.getString("DefaultState");
 	private int myInitialSharkEnergy;
 	private int mySharkReproductionTime;
 	private int myFishReproductionTime;
 	private int myInitSharkReproductionTime;
 	private int myInitFishReproductionTime;
-	private static final String FISH = "FISH";
-	private static final String SHARK = "SHARK";
-	private static final String WATER = "WATER";
-	private static final int NUM_NEIGHBORS = 4;
-	private static final String DEFAULT_STATE = WATER;
+
 	
 	public PredatorPreyRules(int initialSharkEnergy, int sharkReproductionTime, int fishReproductionTime) {
 		mySharkReproductionTime = sharkReproductionTime;
@@ -196,18 +201,16 @@ public class PredatorPreyRules extends Rules {
 	 * @param cell: Cell to check for reproduction.
 	 */
 	private void checkForReproduction(PredatorPreyCell cell) {
-		switch (cell.getCurState()) {
-			case FISH:
-				if (fishCanReproduce()) {
-					cell.setNextState(FISH);
-					addCellToBeUpdated(cell);
-				}
-				break;
-			case SHARK:
-				if (sharkCanReproduce()) {
-					cell.initShark();
-					addCellToBeUpdated(cell);
-				}
+		if (cell.getCurState().equals(FISH)) {
+			if (fishCanReproduce()) {
+				cell.setNextState(FISH);
+				addCellToBeUpdated(cell);
+			}
+		} else if (cell.getCurState().equals(SHARK)) {
+			if (sharkCanReproduce()) {
+				cell.initShark();
+				addCellToBeUpdated(cell);
+			}
 		}
 	}
 	

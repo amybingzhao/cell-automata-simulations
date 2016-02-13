@@ -1,5 +1,7 @@
 package Rules;
 
+import java.util.ResourceBundle;
+
 import Model.Cell;
 import Model.Grid;
 import Model.ReproductionSugarScapeAgent;
@@ -7,11 +9,13 @@ import Model.SugarScapeAgent;
 import Model.SugarScapeCell;
 
 public class SugarScapeReproductionPreset extends SugarScapeRules{
-	private static final int MAX_AGE_MIN = 60;
-	private static final int MAX_AGE_MAX = 100;
-	private static final int FERTILITY_MIN = 18;
-	private static final int FERTILITY_MAX = 50;
-	private static final int NUM_GENDERS = 2;
+	public static final String DEFAULT_RESOURCE = "Rules/SugarScapeReproductionRules";
+	private ResourceBundle myResource = ResourceBundle.getBundle(DEFAULT_RESOURCE);
+	private int MAX_AGE_MIN = Integer.parseInt(myResource.getString("MaxAgeMinimum"));
+	private int MAX_AGE_MAX = Integer.parseInt(myResource.getString("MaxAgeMaximum"));
+	private int FERTILITY_MIN = Integer.parseInt(myResource.getString("FertilityMinimum"));
+	private int FERTILITY_MAX = Integer.parseInt(myResource.getString("FertilityMaximum"));
+	private int NUM_GENDERS = Integer.parseInt(myResource.getString("NumGenders"));
 	
 	public SugarScapeReproductionPreset(int sugarGrowBackRate, int sugarGrowBackInterval, int maxSugarCapacity,
 			int sugarLimit, int visionLimit, int metabolismLimit) {

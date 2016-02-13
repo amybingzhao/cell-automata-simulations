@@ -11,17 +11,20 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import java.util.ResourceBundle;
+
 import Model.Cell;
 import Model.Grid;
 import Model.StandardCell;
 
 public class SegregationRules extends Rules {
-
-	private static final int NUM_NEIGHBORS = 8;
-	private static final String EMPTY = "EMPTY";
-	private static final int MY_CELL_ROW = 1;
-	private static final int MY_CELL_COL = 1;
-	private static final String DEFAULT_STATE = EMPTY;
+	public static final String DEFAULT_RESOURCE = "Rules/SegregationRules";
+	private ResourceBundle myResource = ResourceBundle.getBundle(DEFAULT_RESOURCE);
+	private int NUM_NEIGHBORS = Integer.parseInt(myResource.getString("NumNeighbors"));
+	private String EMPTY = myResource.getString("Empty");
+	private int MY_CELL_ROW = Integer.parseInt(myResource.getString("MyCellRow"));
+	private int MY_CELL_COL = Integer.parseInt(myResource.getString("MyCellCol"));
+	private String DEFAULT_STATE = myResource.getString("DefaultState");
 	private ArrayList<Cell> toBeMoved;
 	private Queue<Cell> emptyCellList;
 	private double myThreshold;
