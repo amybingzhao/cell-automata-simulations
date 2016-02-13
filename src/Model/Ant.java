@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javafx.scene.control.Cell;
+
 public class Ant {
 	private static final int NUM_FORWARD_NEIGHBORS = 3;
 	private boolean hasFood;
@@ -68,9 +70,10 @@ public class Ant {
 	 * @param direction: integer array with index 0 holding the row and index 1 holding the column towards which the ant is
 	 * 		facing in a 3x3 grid of it and its neighbors.
 	 */
-	public void setDirection(int[] direction) {
-		myDirectionRow = direction[0];
-		myDirectionCol = direction[1];
+	public void setDirection(ForagingAntsCell curLocation, ForagingAntsCell nextLocation) {
+		int[] relativeNextLocation = new int[]{nextLocation.getCurRow() - curLocation.getCurRow() + 1, nextLocation.getCurCol() - curLocation.getCurCol() + 1};
+		myDirectionRow = relativeNextLocation[0];
+		myDirectionCol = relativeNextLocation[1];
 	}
 
 	/**
@@ -103,8 +106,7 @@ public class Ant {
 
 		System.out.println("Next: " + nextLocation);
 		if (nextLocation != null) {
-			int[] relativeNextLocation = new int[]{nextLocation.getCurRow() - curLocation.getCurRow() + 1, nextLocation.getCurCol() - curLocation.getCurCol() + 1};
-			setDirection(relativeNextLocation); 
+			setDirection(curLocation, nextLocation); 
 			moveToNextLocation(curLocation, nextLocation);
 		}
 		
@@ -266,15 +268,7 @@ public class Ant {
 	 * @param directions: directions to check for pheromones in the order that they should be checked.
 	 */
 	public void returnToNest(ForagingAntsCell cell, ForagingAntsCell[][] neighborhood, List<Integer[]> directions) {
-		if (cell.isFood()) {
-			System.out.println("ant found food");
-			ForagingAntsCell nextLocation = findNextLocation(HOME, neighborhood, directions);
-			if (nextLocation != null) {
-				int[] relativeNextLocation = new int[]{cell.getCurRow() - nextLocation.getCurRow() + 1, cell.getCurCol() - nextLocation.getCurCol() + 1};
-				setDirection(relativeNextLocation);
-			}
-		}
-		
+		pivotAtFood(cell, neighborhood, directions);		
 		followHomePheromones(neighborhood, directions);
 	}
 
@@ -285,15 +279,25 @@ public class Ant {
 	 * @param directions: directions to check for pheromones in the order that they should be checked.
 	 */
 	public void findFoodSource(ForagingAntsCell cell, ForagingAntsCell[][] neighborhood, List<Integer[]> directions) {
-		if (cell.isHome()) {
-			ForagingAntsCell nextLocation = findNextLocation(FOOD, neighborhood, directions);
+		pivotAtHome(cell, neighborhood, directions);
+		followFoodPheromones(neighborhood, directions);
+	}
+	
+	private void pivotAtHome(ForagingAntsCell cell, ForagingAntsCell[][] neighborhood, List<Integer[]> directions) {
+		pivotDirection(HOME, FOOD, cell, neighborhood, directions);
+	}
+	
+	private void pivotAtFood(ForagingAntsCell cell, ForagingAntsCell[][] neighborhood, List<Integer[]> directions) {
+		pivotDirection(FOOD, HOME, cell, neighborhood, directions);
+	}
+	
+	private void pivotDirection(String sourceType, String pheromoneType, ForagingAntsCell cell, ForagingAntsCell[][] neighborhood, List<Integer[]> directions) {
+		if (cell.at(sourceType)) {
+			ForagingAntsCell nextLocation = findNextLocation(pheromoneType, neighborhood, directions);
 			if (nextLocation != null) {
-				int[] relativeNextLocation = new int[]{nextLocation.getCurRow() - cell.getCurRow() + 1, nextLocation.getCurCol() - cell.getCurCol() + 1};
-				setDirection(relativeNextLocation);
+				setDirection(cell, nextLocation);
 			}
 		}
-		
-		followFoodPheromones(neighborhood, directions);
 	}
 	
 	/**

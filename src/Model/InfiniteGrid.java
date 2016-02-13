@@ -4,8 +4,6 @@ import Rules.Rules;
 
 public class InfiniteGrid extends Grid {
 	Rules myRules;
-	private static final int NEIGHBOR_GRID_SIDE_LENGTH = 3;
-	private static final int NUMBER_OF_NEW_ROWS_COLS = 2;
 	
 	/**
 	 * Constructs an infinite grid specific to a given simulation's rules.
@@ -27,7 +25,7 @@ public class InfiniteGrid extends Grid {
 	 * @param numNeighbors: 4 or 8 depending on simulation.
 	 */
 	public Cell[][] getNeighborhood(int row, int col, int numNeighbors) {
-		Cell[][] neighborhood = new Cell[NEIGHBOR_GRID_SIDE_LENGTH][NEIGHBOR_GRID_SIDE_LENGTH];
+		Cell[][] neighborhood = new Cell[getNeighborGridSideLength()][getNeighborGridSideLength()];
 		int[] rowDirections = new int[]{-1, 0, 1};
 		int[] colDirections = new int[]{-1, 0, 1};
 		
@@ -55,13 +53,13 @@ public class InfiniteGrid extends Grid {
 	private void resizeGrid() {
 		int curRows = getNumRows();
 		int curCols = getNumCols();
-		Cell[][] newGrid = new Cell[curRows + NUMBER_OF_NEW_ROWS_COLS][curCols + NUMBER_OF_NEW_ROWS_COLS];
+		Cell[][] newGrid = new Cell[curRows + getNumRowsColsToExpand()][curCols + getNumRowsColsToExpand()];
 		populateGridWithExistingCells(newGrid, curRows, curCols);
-		addTopLayer(newGrid);
-		addBotLayer(newGrid);
-		addLeftLayer(newGrid);
-		addRightLayer(newGrid);
-		setGrid(newGrid);
+		addTopOrBotLayer(newGrid, 0);
+		addTopOrBotLayer(newGrid, newGrid.length - 1);
+		addLeftOrRightLayer(newGrid, 0);
+		addLeftOrRightLayer(newGrid, newGrid[0].length - 1);
+
 	}
 	
 	/**
@@ -76,50 +74,27 @@ public class InfiniteGrid extends Grid {
 				Cell cell = getCell(row, col);
 				cell.setLocation(row + 1, col + 1);
 				newGrid[row + 1][col + 1] = cell;
-			
 			}
 		}
 	}
 
 	/**
-	 * Adds a layer of DEFAULT cells to the top of the grid.
+	 * Adds a layer of DEFAULT cells to the top or bottom of the grid.
 	 * @param grid: grid to add to.
+	 * @param relative row: 0 for top, grid.length - 1 for bot
 	 */
-	private void addTopLayer(Cell[][] grid) {
-		int row = 0;
+	private void addTopOrBotLayer(Cell[][] grid, int row) {
 		for (int col = 0; col < grid[0].length; col++) {
 			grid[row][col] = myRules.createDefaultCell(row, col);
 		}
 	}
 
 	/**
-	 * Adds a layer of DEFAULT cells to the bottom of the grid.
+	 * Adds a layer of DEFAULT cells to the left or right of the grid.
 	 * @param grid: grid to add to.
+	 * @param relative col: 0 for left, grid.length[0] - 1 for right
 	 */
-	private void addBotLayer(Cell[][] grid) {
-		int row = grid.length - 1;
-		for (int col = 0; col < grid[0].length; col++) {
-			grid[row][col] = myRules.createDefaultCell(row, col);
-		}
-	}
-
-	/**
-	 * Adds a layer of DEFAULT cells to the left of the grid.
-	 * @param grid: grid to add to.
-	 */
-	private void addLeftLayer(Cell[][] grid) {
-		int col = 0;
-		for (int row = 0; row < grid.length; row++) {
-			grid[row][col] = myRules.createDefaultCell(row, col);
-		}
-	}
-
-	/**
-	 * Adds a layer of DEFAULT cells to the right of the grid.
-	 * @param grid: grid to add to.
-	 */
-	private void addRightLayer(Cell[][] grid) {
-		int col = grid[0].length - 1;
+	private void addLeftOrRightLayer(Cell[][] grid, int col) {
 		for (int row = 0; row < grid.length; row++) {
 			grid[row][col] = myRules.createDefaultCell(row, col);
 		}
