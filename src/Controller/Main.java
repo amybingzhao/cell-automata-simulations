@@ -6,12 +6,9 @@
 package Controller;
 
 import View.CSView;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
 public class Main extends Application {
     private Simulation mySimulation;

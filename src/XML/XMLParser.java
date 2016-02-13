@@ -148,7 +148,8 @@ public class XMLParser {
 					for (String entry : extractedData) {
 						myGame.add(entry);
 					}
-				} else {
+				}
+				else {
 					myGame.add(dataElement.getNodeName() + ":" + dataElement.getTextContent());
 				}
 			}
