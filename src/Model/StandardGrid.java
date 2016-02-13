@@ -7,66 +7,38 @@ public class StandardGrid extends Grid{
 	public StandardGrid(int rows, int cols, String[][] initialStates) {
 		super(rows, cols, initialStates);
 		myGrid = this.getGrid();
-		// TODO Auto-generated constructor stub
 	}
 	
 	public Cell[][] getNeighborhood(int row, int col, int numNeighbors) {
 		Cell[][] neighborhood = new Cell[3][3];
-		neighborhood[1][1] = this.getGrid()[row][col];
-		int numRows = getNumRows();
-		int numCols = getNumCols();
-		
-		if (row - 1 >= 0) {
-			neighborhood[0][1] = myGrid[row-1][col];
-		} else {
-			neighborhood[0][1] = null;
-		}
-		
-		if (row + 1 < numRows) {
-			neighborhood[2][1] = myGrid[row+1][col];
-		} else {
-			neighborhood[2][1] = null;
-		}
-		
-		if (col - 1 >= 0) {
-			neighborhood[1][0] = myGrid[row][col-1];
-		} else {
-			neighborhood[1][0] = null;
-		}
-		
-		if (col + 1 < numCols) {
-			neighborhood[1][2] = myGrid[row][col+1];
-		} else {
-			neighborhood[1][2] = null;
-		}
-		
-		if (numNeighbors == 8) {
-			if (row - 1 >= 0) {
-				if (col - 1 >= 0) {
-					neighborhood[0][0] = myGrid[row-1][col-1];
-				} else {
-					neighborhood[0][0] = null;
-				}
-				if (col + 1 < numCols) {
-					neighborhood[0][2] = myGrid[row-1][col+1];
-				} else {
-					neighborhood[0][2] = null;
-				}
+		if (numNeighbors == 4) {
+			int[] rowDirections = new int[]{-1, 0, 1, 0};
+			int[] colDirections = new int[]{0, 1, 0, -1};
+			for (int rowOffset = 0; rowOffset < rowDirections.length; rowOffset++) {
+				int colOffset = rowOffset;
+				tryToAddNeighbor(row, col, rowDirections, colDirections, rowOffset, colOffset, neighborhood);
 			}
-			if (row + 1 < numRows) {
-				if (col - 1 >= 0) {
-					neighborhood[2][0] = myGrid[row+1][col-1];
-				} else {
-					neighborhood[2][0] = null;
-				}
-				if (col + 1 < numCols) {
-					neighborhood[2][2] = myGrid[row+1][col+1];
-				} else {
-					neighborhood[2][2] = null;
+		} else if (numNeighbors == 8) {
+			int[] rowDirections = new int[]{-1, 0, 1};
+			int[] colDirections = new int[]{-1, 0, 1};
+			for (int rowOffset = 0; rowOffset < rowDirections.length; rowOffset++) {
+				for (int colOffset = 0; colOffset < colDirections.length; colOffset++) {
+					tryToAddNeighbor(row, col, rowDirections, colDirections, rowOffset, colOffset, neighborhood);
 				}
 			}
 		}
+
 		return neighborhood;
+	}
+	
+	private void tryToAddNeighbor(int row, int col, int[] rowDirections, int[] colDirections, int rowOffset, int colOffset, Cell[][] neighborhood) {
+		int rowToCheck = row + rowDirections[rowOffset];
+		int colToCheck = col + colDirections[colOffset];
+		if (inBounds(rowToCheck, colToCheck)) {
+			neighborhood[rowDirections[rowOffset] + 1][colDirections[colOffset] + 1] = this.getCell(rowToCheck, colToCheck);
+		} else {
+			neighborhood[rowDirections[rowOffset] + 1][colDirections[colOffset] + 1] = null;
+		}
 	}
 
 }
