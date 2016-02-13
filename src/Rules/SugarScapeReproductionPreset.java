@@ -17,9 +17,11 @@ public class SugarScapeReproductionPreset extends SugarScapeRules{
 	public SugarScapeReproductionPreset(int sugarGrowBackRate, int sugarGrowBackInterval, int maxSugarCapacity,
 			int sugarLimit, int visionLimit, int metabolismLimit) {
 		super(sugarGrowBackRate, sugarGrowBackInterval, maxSugarCapacity, sugarLimit, visionLimit, metabolismLimit);
-		// TODO Auto-generated constructor stub
 	}
 
+	/**
+	 * Applies reproduction rules to the cells.
+	 */
 	@Override
 	public void applyExtraPresetRules(Cell cell, Grid grid) {
 		SugarScapeCell curCell = (SugarScapeCell) cell;
@@ -29,9 +31,20 @@ public class SugarScapeReproductionPreset extends SugarScapeRules{
 			if (mate != null) {
 				reproduce(agent, mate, grid);
 			}
+			agent.increaseAge();
+			if (agent.isTooOld()) {
+				agent.agentDies(curCell);
+			}
 		}
+		
 	}
 
+	/**
+	 * Creates a new child agent with half of each parent agent's sugar. 
+	 * @param curAgent: current agent being handled.
+	 * @param neighbor: neighbor agent to mate with.
+	 * @param grid: simulation grid.
+	 */
 	private void reproduce(ReproductionSugarScapeAgent curAgent, ReproductionSugarScapeAgent neighbor, Grid grid) {
 		int sugarForChild = curAgent.splitSugar(neighbor);
 		SugarScapeCell childCell = curAgent.getEmptyNeighbor(grid);
@@ -39,6 +52,9 @@ public class SugarScapeReproductionPreset extends SugarScapeRules{
 				generateLimitedRandom(MAX_AGE_MAX, MAX_AGE_MIN), FERTILITY_MIN, FERTILITY_MAX));
 	}
 	
+	/**
+	 * Creates a cell for the reproduction simulation and initializes an agent if the cell is occupied.
+	 */
 	@Override
 	protected Cell createCell(String initialState, int row, int col) {
 		SugarScapeAgent agent = null;
@@ -49,6 +65,12 @@ public class SugarScapeReproductionPreset extends SugarScapeRules{
 		return new SugarScapeCell(initialState, row, col, getMyMaxCellSugarCapacity(), agent);
 	}
 	
+	/**
+	 * Generates a random number between (min, max).
+	 * @param max: maximum number.
+	 * @param min: minimum number.
+	 * @return random neighbor within the limits.
+	 */
 	private int generateLimitedRandom(int max, int min) {
 		return generateRandom(max - min) + min;
 	}

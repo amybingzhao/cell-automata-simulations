@@ -30,17 +30,31 @@ public abstract class SugarScapeRules extends Rules {
 		setMyAgentMetabolismLimit(metabolismLimit);
 	}
 	
+	/**
+	 * Creates an instance of the cell required for the particular simulation.
+	 */
 	@Override
 	protected abstract Cell createCell(String initialState, int row, int col);
 	
+	/**
+	 * Sets the interval for sugar to grow back for this simulation.
+	 * @param interval: number of steps before sugar grows back.
+	 */
 	public void setMySugarGrowBackInterval(int interval) {
 		mySugarGrowBackInterval = interval;
 	}
 	
+	/**
+	 * Max vision an agent in this simulation can have.
+	 * @param limit: max vision for an agent.
+	 */
 	public void setMyVisionLimit(int limit) {
 		setMyAgentVisionLimit(limit);
 	}
 	
+	/**
+	 * Applies simulation rules to the cell.
+	 */
 	@Override
 	public void applyRulesToCell(Cell cell, Grid grid) {
 		SugarScapeCell sugarScapeCell = (SugarScapeCell) cell;
@@ -56,6 +70,7 @@ public abstract class SugarScapeRules extends Rules {
 					addCellToBeUpdated(nextPatch);
 					addCellToBeUpdated(sugarScapeCell);
 				}
+				applyExtraPresetRules(cell, grid); // is this the right place?
 			}
 		}
 		
@@ -69,6 +84,10 @@ public abstract class SugarScapeRules extends Rules {
 		}
 	}
 	
+	/**
+	 * Grows back the sugar in all cells in the grid.
+	 * @param grid: simulation grid.
+	 */
 	private void growBackSugarInCells(Grid grid) {
 		for (int row = 0; row < grid.getNumRows(); row++) {
 			for (int col = 0; col < grid.getNumCols(); col++) {
@@ -79,6 +98,10 @@ public abstract class SugarScapeRules extends Rules {
 		}
 	}
 	
+	/**
+	 * Checks if the sugar can grow back yet.
+	 * @return true if the sugar grow back interval has been satisfied; false otherwise.
+	 */
 	private boolean canGrowSugarBack() {
 		if (mySugarGrowBackCountdown == 0) {
 			System.out.println("hello");
@@ -89,50 +112,97 @@ public abstract class SugarScapeRules extends Rules {
 		}
 	}
 	
+	/**
+	 * Description of the simulation.
+	 */
 	@Override
 	public String toString() {
 		return "Sugarscape";
 	}
+	
+	/**
+	 * Gets the parameters of the simulation.
+	 */
 	@Override
 	public ArrayList<String> getParameters() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 	
+	/**
+	 * Applies extra rules specific to a given preset.
+	 * @param cell: cell to apply rules to.
+	 * @param grid: simulation grid.
+	 */
 	public abstract void applyExtraPresetRules(Cell cell, Grid grid);
 
+	/**
+	 * Max sugar an agent can start with.
+	 * @return max sugar an agent can start with.
+	 */
 	public int getMyAgentSugarLimit() {
 		return myAgentSugarLimit;
 	}
 
+	/**
+	 * Sets the max sugar an agent can start with.
+	 * @param myAgentSugarLimit: max sugar an agent can start with.
+	 */
 	public void setMyAgentSugarLimit(int myAgentSugarLimit) {
 		this.myAgentSugarLimit = myAgentSugarLimit;
 	}
 
+	/**
+	 * Gets the max amount of sugar a cell can hold.
+	 * @return max amount of sugar a cell can hold.
+	 */
 	public int getMyMaxCellSugarCapacity() {
 		return myMaxCellSugarCapacity;
 	}
 
+	/**
+	 * Sets the max amount of sugar a cell can hold.
+	 * @param myMaxCellSugarCapacity: max amount of sugar a cell can hold.
+	 */
 	public void setMyMaxCellSugarCapacity(int myMaxCellSugarCapacity) {
 		this.myMaxCellSugarCapacity = myMaxCellSugarCapacity;
 	}
 
+	/**
+	 * Gets the max metabolism an agent can have in this simulation.
+	 * @return the max metabolism an agent can have in this simulation.
+	 */
 	public int getMyAgentMetabolismLimit() {
 		return myAgentMetabolismLimit;
 	}
 
+	/**
+	 * Sets the max metabolism an agent can have in this simulation.
+	 * @param myAgentMetabolismLimit: the max metabolism an agent can have in this simulation.
+	 */
 	public void setMyAgentMetabolismLimit(int myAgentMetabolismLimit) {
 		this.myAgentMetabolismLimit = myAgentMetabolismLimit;
 	}
 
+	/**
+	 * Gets the max vision an agent can have in this simulation.
+	 * @return the max vision an agent can have in this simulation.
+	 */
 	public int getMyAgentVisionLimit() {
 		return myAgentVisionLimit;
 	}
 
+	/**
+	 * Sets the max vision an agent can have in this simulation.
+	 * @param myAgentVisionLimit: the max vision an agent can have in this simulation.
+	 */
 	public void setMyAgentVisionLimit(int myAgentVisionLimit) {
 		this.myAgentVisionLimit = myAgentVisionLimit;
 	}
 	
+	/**
+	 * Returns the default state for this simulation.
+	 */
 	@Override
 	protected String getDefault() {
 		return DEFAULT_STATE;

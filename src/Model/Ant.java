@@ -81,8 +81,8 @@ public class Ant {
 	public void followFoodPheromones(Cell[][] neighborhood, List<Integer[]> directions) {
 		ForagingAntsCell nextLocation = followPheromones(FOOD, neighborhood, directions);
 		if (nextLocation.isFood()) {
-				System.out.println("found da food stuffsz");
-				hasFood = true;
+			System.out.println("found da food stuffsz");
+			hasFood = true;
 		}
 	}
 	

@@ -12,6 +12,15 @@ public abstract class SugarScapeAgent {
 	private boolean hasMoved;
 	private static final int INIT_SUGAR_MIN = 5;
 	
+	/**
+	 * Constructs a sugar scape agent with an initial amount of sugar, a random metabolism within the limit of the simulation,
+	 * a random vision within the limit of the simulation, and a row and column of the cell that the agent is on.
+	 * @param initSugar: initial amount of sugar the agent has.
+	 * @param metabolism: amount of sugar consumed by agent per move.
+	 * @param vision: number of cells it can see in any given cardinal direction.
+	 * @param row: row of the cell the agent is on.
+	 * @param col: column of the cell the agent is on.
+	 */
 	public SugarScapeAgent(int initSugar, int metabolism, int vision, int row, int col) {
 		if (initSugar > INIT_SUGAR_MIN) {
 			mySugar = initSugar;
@@ -25,31 +34,56 @@ public abstract class SugarScapeAgent {
 		hasMoved = false;
 	}
 	
+	/**
+	 * Finds the closest highest-sugar neighbor cell in sight of the agent.
+	 * @param grid: simulation grid.
+	 * @return a SugarScapeCell that the agent will move to.
+	 */
 	public SugarScapeCell findNextPatch(Grid grid) {
 		List<SugarScapeCell> neighbors = getViableNeighbors(grid);
-		System.out.println(neighbors);
 		SugarScapeCell nextPatch = compareViableNeighbors(neighbors, grid);
-		System.out.println("my loc: (" + myRow + ", " + myCol + ")");
-		System.out.println("next: (" + nextPatch.getCurRow() + ", " + nextPatch.getCurCol() + ")");
+//		System.out.println("my loc: (" + myRow + ", " + myCol + ")");
+	//	System.out.println("next: (" + nextPatch.getCurRow() + ", " + nextPatch.getCurCol() + ")");
 		return nextPatch;
 	}
 	
+	/**
+	 * Gets the vision of the agent.
+	 * @return integer representing the vision of the agent.
+	 */
 	public int getVision() {
 		return myVision;
 	}
 	
+	/**
+	 * Gets the metabolism of the agent.
+	 * @return integer representing the sugar metabolism of the agent.
+	 */
 	public int getMetabolism() {
 		return mySugarMetabolism;
 	}
 	
+	/**
+	 * Gets the row of the cell that the agent is in.
+	 * @return row of the cell that the agent is in.
+	 */
 	public int getRow() {
 		return myRow;
 	}
 	
+	/**
+	 * Gets the column of the cell that the agent is in.
+	 * @return column of the cell that the agent is in.
+	 */
 	public int getCol() {
 		return myCol;
 	}
 	
+	/**
+	 * Gets the empty neighbor cells that're within the agent's vision (viable neighbors to move to).
+	 * @param grid: simulation grid.
+	 * @return a list of neighboring SugarScapeCells that the agent can move to.
+	 */
 	protected List<SugarScapeCell> getViableNeighbors(Grid grid) {
 		List<SugarScapeCell> neighbors = new ArrayList<SugarScapeCell>();
 		int row;
@@ -85,7 +119,6 @@ public abstract class SugarScapeAgent {
 		for (int distance = 1; distance <= myVision; distance++) {
 			row = myRow + distance;
 			col = myCol;
-			System.out.println("Hello");
 			if (viableNeighbor(row, col, grid)) {
 				neighbors.add((SugarScapeCell) grid.getCell(row, col));
 			}
@@ -93,13 +126,26 @@ public abstract class SugarScapeAgent {
 		return neighbors;
 	}
 	
+	/**
+	 * Checks if a cell at a given row and column are within the bounds of the grid.
+	 * @param row: row that the cell is in.
+	 * @param col: column that the cell is in.
+	 * @param grid: simulation grid.
+	 * @return
+	 */
 	private boolean inBounds(int row, int col, Grid grid) {
 		return (row < grid.getNumRows() && row >= 0 && col < grid.getNumCols() && col >= 0);
 	}
 	
+	/**
+	 * Checks if a neighbor cell is a viable candidate to move to.
+	 * @param row: row that the neighbor is in.
+	 * @param col: column that the neighbor is in.
+	 * @param grid: simulation grid.
+	 * @return true if the neighbor can be moved to; false otherwise.
+	 */
 	private boolean viableNeighbor(int row, int col, Grid grid) {
 		if (inBounds(row, col, grid)) {
-			System.out.println("(" + row + ", " + col + ")");
 			SugarScapeCell neighbor = (SugarScapeCell) grid.getCell(row, col);
 			if (!neighbor.hasAgent()) {
 				return true;
@@ -109,11 +155,17 @@ public abstract class SugarScapeAgent {
 		return false;
 	}
 	
+	/**
+	 * Compares the viable neighbors to determine the closest, highest-sugar neighbor.
+	 * @param neighbors: list of empty neighbors that the agent can move to.
+	 * @param grid: simulation grid.
+	 * @return closest, highest-sugar neighboring SugarScapeCell.
+	 */
 	private SugarScapeCell compareViableNeighbors(List<SugarScapeCell> neighbors, Grid grid) {
 		SugarScapeCell patchToMoveTo = null;
-		System.out.println(neighbors);
+	//	System.out.println(neighbors);
 		List<SugarScapeCell> highestSugarNeighbors = getHighestSugar(neighbors);
-		System.out.println("size: " + highestSugarNeighbors.size());
+	//	System.out.println("size: " + highestSugarNeighbors.size());
 		if (highestSugarNeighbors.size() > 0) {
 			patchToMoveTo = getClosestNeighbor(highestSugarNeighbors, grid);
 		}
@@ -121,6 +173,11 @@ public abstract class SugarScapeAgent {
 		return patchToMoveTo;
 	}
 	
+	/**
+	 * Finds the highest-sugar cells in a list.
+	 * @param neighbors: neighboring cells that can be moved to.
+	 * @return a list of neighboring cells with the highest-sugar amount.
+	 */
 	private List<SugarScapeCell> getHighestSugar(List<SugarScapeCell> neighbors) {
 		List<SugarScapeCell> highestSugarNeighbors = new ArrayList<SugarScapeCell>();
 		int maxSugar = 0;
@@ -141,6 +198,11 @@ public abstract class SugarScapeAgent {
 		return highestSugarNeighbors;
 	}
 	
+	/**
+	 * Finds the closest cell in a list.
+	 * @param neighbors: neighboring cells that can be moved to.
+	 * @return the closest cell in the list.
+	 */
 	private SugarScapeCell getClosestNeighbor(List<SugarScapeCell> neighbors, Grid grid) {
 		SugarScapeCell curCell = (SugarScapeCell) grid.getCell(myRow, myCol);
 		SugarScapeCell closestNeighbor = neighbors.get(0);
@@ -156,10 +218,21 @@ public abstract class SugarScapeAgent {
 		return closestNeighbor;
 	}
 	
+	/**
+	 * Calculates the relative distance between two cells. 
+	 * @param cell: cell the current agent is in.
+	 * @param neighbor: neighboring cell.
+	 * @return integer representing the relative distance between the two cells.
+	 */
 	private int getDist(SugarScapeCell cell, SugarScapeCell neighbor) {
 		return Math.abs((cell.getCurRow() - neighbor.getCurRow()) + (cell.getCurCol() - neighbor.getCurCol()));
 	}
 	
+	/**
+	 * Moves an agent to another patch and finishes its turn.
+	 * @param curPatch: cell the agent is currently on.
+	 * @param nextPatch: cell the agents wants to move to.
+	 */
 	public void moveToPatch(SugarScapeCell curPatch, SugarScapeCell nextPatch) {
 		curPatch.removeAgent();
 		nextPatch.setAgent(this);
@@ -173,23 +246,44 @@ public abstract class SugarScapeAgent {
 		}
 	}
 	
+	/**
+	 * Sets the agent's sugar amount.
+	 * @param amount: sugar amount.
+	 */
 	public void setSugar(int amount) {
 		mySugar = amount;
 	}
 	
-	private void agentDies(SugarScapeCell nextPatch) {
+	/**
+	 * Removes an agent if it dies.
+	 * @param nextPatch: cell the agent tried to move to.
+	 */
+	public void agentDies(SugarScapeCell nextPatch) {
 		nextPatch.removeAgent();
 	}
 	
+	/**
+	 * Gets the amount of sugar the agent has.
+	 * @return amount of sugar the agent has.
+	 */
 	public int getMySugarAmount() {
 		return mySugar;
 	}
 	
+	/**
+	 * Sets the location of the agent.
+	 * @param row: row of the cell the agent is in.
+	 * @param col: column of the cell the agent is in.
+	 */
 	public void setLocation(int row, int col) {
 		myRow = row;
 		myCol = col;
 	}
 	
+	/**
+	 * Checks if the agent has moved this turn yet.
+	 * @return true if the agent has not yet moved this turn; false otherwise.
+	 */
 	public boolean hasNotMoved() {
 		return hasMoved == false;
 	}
