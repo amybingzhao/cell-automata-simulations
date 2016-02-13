@@ -151,8 +151,7 @@ public class XMLParser {
 					for (String entry : extractedData) {
 						myGame.add(entry);
 					}
-				}
-				else {
+				} else {
 					myGame.add(dataElement.getNodeName() + ":" + dataElement.getTextContent());
 				}
 			}
@@ -177,44 +176,30 @@ public class XMLParser {
 			mySimulation.displayAlert(INVALID_PARAMETERS);
 			return false;
 		}
+		ArrayList<Integer> myData = (ArrayList<Integer>) getData(data);
+
 		switch (game) {
 		case "Segregation":
-			double threshold = Double.parseDouble(splitEntry(data.get(1))[1]);
-			myRule = new SegregationRules(threshold);
+			myRule = new SegregationRules(myData.get(0));
 			break;
 		case "PredatorPrey":
-			int initialSharkEnergy = Integer.parseInt(splitEntry(data.get(1))[1]);
-			int sharkReproductionTime = Integer.parseInt(splitEntry(data.get(2))[1]);
-			int fishReproductionTime = Integer.parseInt(splitEntry(data.get(3))[1]);
-			myRule = new PredatorPreyRules(initialSharkEnergy, sharkReproductionTime, fishReproductionTime);
+			myRule = new PredatorPreyRules(myData.get(0), myData.get(1), myData.get(2));
 			break;
 		case "GameOfLife":
 			myRule = new GameOfLifeRules();
 			break;
 		case "Fire":
-			double probCatch = Double.parseDouble(splitEntry(data.get(1))[1]);
-			myRule = new FireRules(probCatch);
+			myRule = new FireRules(myData.get(0));
 			break;
 		case "ForagingAnts":
-			myRule = new ForagingAntsRules(Integer.parseInt(splitEntry(data.get(1))[1]));
+			myRule = new ForagingAntsRules(myData.get(0));
 			break;
 		case "SugarScapeMigration":
-			int sugarGrowBackRate = Integer.parseInt(splitEntry(data.get(1))[1]);
-			int sugarGrowBackInterval = Integer.parseInt(splitEntry(data.get(2))[1]);
-			int maxSugarCapacity = Integer.parseInt(splitEntry(data.get(3))[1]);
-			int sugarLimit = Integer.parseInt(splitEntry(data.get(4))[1]);
-			int visionLimit = Integer.parseInt(splitEntry(data.get(5))[1]);
-			int metabolismLimit = Integer.parseInt(splitEntry(data.get(6))[1]);
-			myRule = new SugarScapeMigrationPreset(sugarGrowBackRate, sugarGrowBackInterval, maxSugarCapacity, sugarLimit, visionLimit, metabolismLimit);
+			myRule = new SugarScapeMigrationPreset(myData.get(0), myData.get(1), myData.get(2), myData.get(3),
+					myData.get(4), myData.get(5));
 			break;
 		case "SugarScapeReproduction":
-			sugarGrowBackRate = Integer.parseInt(splitEntry(data.get(1))[1]);
-			sugarGrowBackInterval = Integer.parseInt(splitEntry(data.get(2))[1]);
-			maxSugarCapacity = Integer.parseInt(splitEntry(data.get(3))[1]);
-			sugarLimit = Integer.parseInt(splitEntry(data.get(4))[1]);
-			visionLimit = Integer.parseInt(splitEntry(data.get(5))[1]);
-			metabolismLimit = Integer.parseInt(splitEntry(data.get(6))[1]);
-			myRule = new SugarScapeReproductionPreset(sugarGrowBackRate, sugarGrowBackInterval, maxSugarCapacity, sugarLimit, visionLimit, metabolismLimit);
+			myRule = new SugarScapeReproductionPreset(myData.get(0), myData.get(1), myData.get(2), myData.get(3), myData.get(4), myData.get(5));
 			break;
 		default:
 			break;
@@ -222,9 +207,20 @@ public class XMLParser {
 		return true;
 	}
 
+	public List<Integer> getData(List<String> data) {
+
+		ArrayList<Integer> myData = new ArrayList<Integer>();
+
+		for (int i = 1; i < data.size(); i++) {
+			myData.add(Integer.parseInt(splitEntry(data.get(i))[1]));
+		}
+
+		return myData;
+	}
+
 	/**
 	 * Checks to ensure the that correct number of parameters are provided for a
-	 * given set of rules
+	 * given set of rules.
 	 * 
 	 * @param data
 	 *            The information provided from the XML file's game section
