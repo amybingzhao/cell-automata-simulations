@@ -57,25 +57,30 @@ public abstract class SugarScapeRules extends Rules {
 	 */
 	@Override
 	public void applyRulesToCell(Cell cell, Grid grid) {
-		SugarScapeCell sugarScapeCell = (SugarScapeCell) cell;
-		
-		if (sugarScapeCell.hasAgent()) {
-			SugarScapeAgent agent = sugarScapeCell.getAgent();
+		applyRulesToCell((SugarScapeCell) cell, grid);
+	}
+	
+	/**
+	 * Applies simulation rules to a sugar scape cell.
+	 */
+	public void applyRulesToCell(SugarScapeCell cell, Grid grid) {		
+		if (cell.hasAgent()) {
+			SugarScapeAgent agent = cell.getAgent();
 			if (agent.hasNotMoved()) {
 				SugarScapeCell nextPatch = agent.findNextPatch(grid);
 				if (nextPatch != null) {
-					agent.moveToPatch(sugarScapeCell, nextPatch);
+					agent.moveToPatch(cell, nextPatch);
 					nextPatch.setNextState("OCCUPIED");
-					sugarScapeCell.setNextState("NONE");
+					cell.setNextState("NONE");
 					addCellToBeUpdated(nextPatch);
-					addCellToBeUpdated(sugarScapeCell);
+					addCellToBeUpdated(cell);
 				}
 				applyExtraPresetRules(cell, grid); // is this the right place?
 			}
 		}
 		
 		if (isLastCellInGrid(cell, grid)) {
-			System.out.println("sugar growback coutndown: " + mySugarGrowBackCountdown);
+			System.out.println("sugar growback countdown: " + mySugarGrowBackCountdown);
 			if (canGrowSugarBack()) {
 				growBackSugarInCells(grid);
 			} else {
@@ -125,8 +130,14 @@ public abstract class SugarScapeRules extends Rules {
 	 */
 	@Override
 	public ArrayList<String> getParameters() {
-		// TODO Auto-generated method stub
-		return null;
+		ArrayList<String> parameters = new ArrayList<String>();
+		parameters.add("SugarGrowBackInterval:" + mySugarGrowBackInterval);
+		parameters.add("SugarGrowBackCountdown:" + mySugarGrowBackCountdown);
+		parameters.add("MaxCellSugarCapacity:" + myMaxCellSugarCapacity);
+		parameters.add("AgentSugarLimit:" + myAgentSugarLimit);
+		parameters.add("AgentVisionLimit:" + myAgentVisionLimit);
+		parameters.add("AgentMetabolismLimit:" + myAgentMetabolismLimit);
+		return parameters;
 	}
 	
 	/**
