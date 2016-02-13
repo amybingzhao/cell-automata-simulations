@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
-
 import Controller.Simulation;
 import Model.Grid;
 import javafx.collections.FXCollections;
@@ -23,10 +22,12 @@ import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -278,9 +279,9 @@ public class CSView {
 		mySimulation.setRunning(false);
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Load XML File");
-		File xmlFile = fileChooser.showOpenDialog(myStage);
-		if(xmlFile != null){
-			mySimulation.loadXML(xmlFile);
+		File file = fileChooser.showOpenDialog(myStage);
+		if(file != null){
+			if(!mySimulation.useParser(file)) return;
 			stateColorMap = new HashMap<String, Color>(mySimulation.getRules().getMyStatesColors());
 			myTitleDisplay.setText("Current Simulation: " + mySimulation.getRules().toString());
 			setupUI();
@@ -312,7 +313,7 @@ public class CSView {
 	private void resetPressed(){
 		if(mySimulation.getXML() != null){
 			mySimulation.setRunning(false);
-			mySimulation.loadXML(null);
+			mySimulation.loadFromXML(null);
 			setupUI();
 		}
 	}
@@ -460,7 +461,7 @@ public class CSView {
 	 * updates the chart in time increments of 100 ms
 	 */
 	private void updateChart(){
-		Map<String, Integer> statesCount = mySimulation.getRules().getMyStatesCount();		 
+		Map<String, Integer> statesCount = mySimulation.getRules().getMyStatesCount();
 		for(String key : statesCount.keySet()){
 	 	    seriesMap.get(key).getData().add(new XYChart.Data<Number, Number>(mySimulation.getTime()/100, statesCount.get(key)));
 	    }
