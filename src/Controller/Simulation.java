@@ -9,6 +9,7 @@ import java.io.File;
 import java.util.ResourceBundle;
 import Model.Cell;
 import Model.Grid;
+import Model.InfiniteGrid;
 import Model.StandardGrid;
 import Model.ToroidalGrid;
 import Rules.Rules;
@@ -108,8 +109,8 @@ public class Simulation {
 		inputgrid = parser.getGrid();
 		rows = inputgrid[1].length;
 		cols = rows;
+		myRules = parser.getRules(); 
 		getGridObject();
-		myRules = parser.getRules();
 		myRules.populateStatesInfo();
 		myRules.initGrid(myGrid, inputgrid);
 		loaded = true;
@@ -127,6 +128,9 @@ public class Simulation {
 			break;
 		case "Toroidal":
 			myGrid = new ToroidalGrid(rows, cols, inputgrid);
+			break;
+		case "Infinite":
+			myGrid = new InfiniteGrid(rows, cols, inputgrid, myRules);
 			break;
 		default:
 			System.out.println("THAT IS NOT AN OPTION!");
@@ -175,19 +179,41 @@ public class Simulation {
 	}
 
 	/**
-	 * Helper method that applies the specified rules to each cell in the grid
+	 * Helper method that applies the specified rules to each cell in the grid (accommodates for resizing in the case
+	 * of an infinite grid).
 	 */
-	public void applyRulesToGrid() {
-		for (int r = 0; r < myGrid.getNumRows(); r++) {
-			for (int c = 0; c < myGrid.getNumCols(); c++) {
-				myRules.applyRulesToCell(myGrid.getCell(r, c), myGrid);
+	public void applyRulesToGrid(){
+		int rows = myGrid.getNumRows();
+		int cols = myGrid.getNumCols();
+		int r0 = 0;
+		int c0 = 0;
+				
+		for(int r = 0; r < rows; r++){
+			if (r == 0) {
+				r = r0;
+			}
+			for(int c = 0; c < cols; c++){
+				if (c == 0) {
+					c = c0;
+				}
+				myRules.applyRulesToCell(myGrid.getCell(r,c), myGrid);
+				if (myGrid.hasBeenResizedImmediatelyBefore()) {
+					r++;
+					c++;
+					r0++;
+					c0++;
+					rows++;
+					cols++;
+					myGrid.setResizedImmediatelyBefore(false);
+				}
 			}
 		}
+		myGrid.setResizedThisStep(false);
 	}
 
 	/**
-	 * Helper method that updates each state that needs to be updated Then
-	 * clears the
+	 * Helper method that updates each state that needs to be updated
+	 * Then clears the update list.
 	 */
 	private void updateEachState() {
 		for (Cell c : myRules.getToBeUpdatedList()) {

@@ -6,18 +6,16 @@
 package Rules;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-
 import Model.Cell;
 import Model.Grid;
 import Model.StandardCell;
-import javafx.scene.paint.Color;
 
 public class FireRules extends Rules {
 	private static final int NUM_NEIGHBORS = 4;
 	private static final String EMPTY = "EMPTY";
 	private static final String TREE = "TREE";
 	private static final String BURNING = "BURNING";
+	private static final String DEFAULT_STATE = TREE;
 	private double myProbCatch;
 
 	public FireRules(double probCatch) {
@@ -124,14 +122,29 @@ public class FireRules extends Rules {
 		return new StandardCell(initialState, row, col);
 	}
 
+	/**
+	 * Description of the simulation.
+	 */
 	public String toString() {
 		return "Fire";
 	}
 
+	/**
+	 * Gets the parameters for the Fire simulation.
+	 */
 	@Override
 	public ArrayList<String> getParameters() {
 		ArrayList<String> parameters = new ArrayList<String>();
 		parameters.add("ProbCatch:" + myProbCatch);
 		return parameters;
 	}
+
+	/**
+	 * Returns default state for the Fire simulation.
+	 */
+	@Override
+	protected String getDefault() {
+		return DEFAULT_STATE;
+	}
+
 }

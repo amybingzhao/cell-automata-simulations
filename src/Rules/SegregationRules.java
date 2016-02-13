@@ -8,23 +8,19 @@ package Rules;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
-
 import Model.Cell;
 import Model.Grid;
 import Model.StandardCell;
-import javafx.scene.paint.Color;
 
 public class SegregationRules extends Rules {
 
 	private static final int NUM_NEIGHBORS = 8;
 	private static final String EMPTY = "EMPTY";
-	private static final String RED = "RED";
-	private static final String BLUE = "BLUE";
 	private static final int MY_CELL_ROW = 1;
 	private static final int MY_CELL_COL = 1;
+	private static final String DEFAULT_STATE = EMPTY;
 	private ArrayList<Cell> toBeMoved;
 	private Queue<Cell> emptyCellList;
 	private double myThreshold;
@@ -49,6 +45,7 @@ public class SegregationRules extends Rules {
 		} else {
 			handleAgentCell(cell, grid);
 		}
+		
 		if (isLastCellInGrid(cell, grid)) {
 			handleUnmovedCells();
 		}
@@ -120,8 +117,7 @@ public class SegregationRules extends Rules {
 				}
 			}
 		}
-		
-		return ((((double) numSameNeighbors)/((double) numNeighbors) >= myThreshold) || numNeighbors == 0);
+		return ((((double) numSameNeighbors)/((double) numNeighbors)*100 >= myThreshold) || numNeighbors == 0);
 	}
 
 	/**
@@ -132,15 +128,28 @@ public class SegregationRules extends Rules {
 		return new StandardCell(initialState, row, col);
 	}
 	
-	
+	/**
+	 * Description of the simulation.
+	 */
 	public String toString(){
 		return "Segregation";
 	}
 
+	/**
+	 * Gets the parameters for the Segregation simulation.
+	 */
 	@Override
 	public ArrayList<String> getParameters() {
 		ArrayList<String> parameters = new ArrayList<String>();
 		parameters.add("Threshold:" + myThreshold);
 		return parameters;
+	}
+	
+	/**
+	 * Returns the default state for the Segregation simulation.
+	 */
+	@Override
+	protected String getDefault() {
+		return DEFAULT_STATE;
 	}
 }

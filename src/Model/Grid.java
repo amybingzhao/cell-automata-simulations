@@ -7,9 +7,11 @@
 package Model;
 
 public abstract class Grid {
-	private static int myRows;
-	private static int myCols;
+	private int myRows;
+	private int myCols;
 	private Cell[][] myGrid;
+	private boolean resizedImmediatelyBefore;
+	private boolean resizedThisStep;
 	
 	/**
 	 * Sets the rules, possible states, grid size, and initial states for the current simulation.
@@ -22,6 +24,40 @@ public abstract class Grid {
 		myRows = rows;
 		myCols = cols;
 		myGrid = new Cell[myRows][myCols];
+		resizedImmediatelyBefore = false;
+		resizedThisStep = false;
+	}
+	
+	/**
+	 * Sets a flag indicating whether the grid was resized when checking the current cell.
+	 * @param bool: true if the grid was resized when checking the current cell; false otherwise.
+	 */
+	public void setResizedImmediatelyBefore(boolean bool) {
+		resizedImmediatelyBefore = bool;
+	}
+	
+	/**
+	 * Gets whether or not the grid was resized when checking the current cell.
+	 * @return true if the grid was resized when checking the current cell; false otherwise.
+	 */
+	public boolean hasBeenResizedImmediatelyBefore() {
+		return resizedImmediatelyBefore;
+	}
+	
+	/**
+	 * Sets a flag indicating whether the grid was resized during this step.
+	 * @param bool: true if the grid was resized at any point during this step; false otherwise.
+	 */
+	public void setResizedThisStep(boolean bool) {
+		resizedThisStep = bool;
+	}
+	
+	/**
+	 * Gets whether or not the grid was resized during this step.
+	 * @return true if the grid was resized at any point during this step; false otherwise.
+	 */
+	public boolean hasBeenResizedThisStep() {
+		return resizedThisStep;
 	}
 	
 	/**
@@ -42,6 +78,10 @@ public abstract class Grid {
 	 */
 	public abstract Cell[][] getNeighborhood(int row, int col, int numNeighbors);
 	
+	/**
+	 * Gets number of rows in the Grid.
+	 * @return number of rows in the grid.
+	 */
 	public int getNumRows() {
 		return myRows;
 	}
@@ -78,7 +118,33 @@ public abstract class Grid {
 		}
 		return sb.toString();
 	}
+
+	/**
+	 * Sets the grid if it has been resized.
+	 * @param newGrid: resized grid.
+	 */
+	protected void setGrid(Cell[][] newGrid) {
+		myGrid = newGrid;
+		myRows = newGrid.length;
+		myCols = newGrid[0].length;
+		setResizedImmediatelyBefore(true);
+		setResizedThisStep(true);
+	}
 	
+	/**
+	 * Checks whether a cell at (row, col) is within the bounds of the grid.
+	 * @param row: row of cell to check.
+	 * @param col: column of cell to check.
+	 * @return true if in bounds; false otherwise.
+	 */
+	public boolean inBounds(int row, int col) {
+		return (row >= 0 && row < myRows && col >= 0 && col < myCols);
+	}
+
+	/**
+	 * Gets this grid.
+	 * @return myGrid.
+	 */
 	public Cell[][] getGrid(){
 		return myGrid;
 	}
