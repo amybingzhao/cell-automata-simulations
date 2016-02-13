@@ -37,6 +37,9 @@ public class ForagingAntsCell extends Cell {
 		myHomePheromones = 0;
 	}
 
+	public boolean at(String sourceType) {
+		return getCurState().equals(sourceType);
+	}
 	/**
 	 * Gets number of ants currently on this cell.
 	 * @return number of ants in this cell.
