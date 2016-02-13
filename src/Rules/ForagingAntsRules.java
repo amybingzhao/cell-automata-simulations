@@ -32,6 +32,9 @@ public class ForagingAntsRules extends Rules {
 		initDirections();
 	}
 	
+	/**
+	 * Initializes an array of the possible directions an ant can face.
+	 */
 	private void initDirections() {
 		myDirections = new ArrayList<Integer[]>();
 		myDirections.add(NORTH);
@@ -44,11 +47,19 @@ public class ForagingAntsRules extends Rules {
 		myDirections.add(SW);
 	}
 
+	/**
+	 * Creates a ForagingAntsCell for use by this simulation.
+	 */
 	@Override
 	protected Cell createCell(String initialState, int row, int col) {
 		return new ForagingAntsCell(initialState, row, col, numTotalAnts);
 	}
 
+	/**
+	 * Applies rules to ants in each cell according to the rules of the Foraging Ants simulation.
+	 * @param cell: cell that ants occupy.
+	 * @param grid: simulation grid.
+	 */
 	public void applyRulesToCell(ForagingAntsCell cell, Grid grid) {
 		if (cell.getNumAnts() > 0) {
 			List<Ant> ants = cell.getAnts();
@@ -67,6 +78,10 @@ public class ForagingAntsRules extends Rules {
 		}
 	}
 	
+	/**
+	 * Resets hasMoved flags for all ants at the end of each step.
+	 * @param grid: simulation grid.
+	 */
 	private void resetAllAntHasMovedFlags(Grid grid) {
 		for (int row = 0; row < grid.getNumRows(); row++) {
 			for (int col = 0; col < grid.getNumCols(); col++) {
@@ -81,6 +96,12 @@ public class ForagingAntsRules extends Rules {
 		}
 	}
 	
+	/**
+	 * Handle movement of a single ant.
+	 * @param ant: ant to be moved.
+	 * @param cell: cell that ant occupies.
+	 * @param grid: simulation grid.
+	 */
 	private void handleAnt(Ant ant, ForagingAntsCell cell, Grid grid) {
 		Cell[][] neighborhood = grid.getNeighborhood(cell.getCurRow(), cell.getCurCol(), NUM_NEIGHBORS);
 		List<Integer[]> directions = getDirectionsToCheck(ant);
@@ -91,6 +112,11 @@ public class ForagingAntsRules extends Rules {
 		}
 	}
 
+	/**
+	 * Gets the directions that the ant should check with the forward directions at the front end of the list.
+	 * @param ant: ant being handled currently.
+	 * @return directions that ant should check in the order it should check them.
+	 */
 	private List<Integer[]> getDirectionsToCheck(Ant ant) {
 		List<Integer[]> directions = new ArrayList<Integer[]>();
 		directions.addAll(getForwardDirections(ant.getDirection()));
@@ -104,6 +130,11 @@ public class ForagingAntsRules extends Rules {
 		return directions;
 	}
 	
+	/**
+	 * Gets the forward directions based on the ant's current direction.
+	 * @param curDirection: ant's current direction.
+	 * @return list of forward directions.
+	 */
 	private List<Integer[]> getForwardDirections(Integer[] curDirection) {
 		int curRow = curDirection[0];
 		int curCol = curDirection[1];
@@ -146,22 +177,34 @@ public class ForagingAntsRules extends Rules {
 		return forwardDirections;
 	}
 	
+	/**
+	 * Applies rules of this specific simulation to cells.
+	 */
 	@Override
 	public void applyRulesToCell(Cell cell, Grid grid) {
 		applyRulesToCell((ForagingAntsCell) cell, grid);
 	}
 
+	/**
+	 * Description of the simulation rules.
+	 */
 	@Override
 	public String toString() {
 		return "Foraging Ants";
 	}
 
+	/**
+	 * Gets the parameters for this simulation.
+	 */
 	@Override
 	public ArrayList<String> getParameters() {
 		ArrayList<String> parameters = new ArrayList<String>();
 		return parameters;
 	}
 	
+	/**
+	 * Default state for a cell in this simulation.
+	 */
 	@Override
 	protected String getDefault() {
 		return DEFAULT_STATE;

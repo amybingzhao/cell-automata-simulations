@@ -161,16 +161,15 @@ public class Simulation {
 	}
 	
 	/**
-	 * Helper method that applies the specified rules to each cell in the grid
+	 * Helper method that applies the specified rules to each cell in the grid (accommodates for resizing in the case
+	 * of an infinite grid).
 	 */
 	public void applyRulesToGrid(){
 		int rows = myGrid.getNumRows();
 		int cols = myGrid.getNumCols();
 		int r0 = 0;
 		int c0 = 0;
-		
-		System.out.println(myGrid);
-		
+				
 		for(int r = 0; r < rows; r++){
 			if (r == 0) {
 				r = r0;
