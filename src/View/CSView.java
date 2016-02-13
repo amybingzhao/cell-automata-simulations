@@ -1,22 +1,18 @@
 package View;
 
 import java.io.File;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.ResourceBundle;
-
 import Controller.Simulation;
 import Model.Grid;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
 import javafx.scene.Group;
@@ -24,15 +20,13 @@ import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.ColorPicker;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.ScrollBar;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
-import javafx.scene.control.TextInputDialog;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -354,9 +348,9 @@ public class CSView {
 		mySimulation.setRunning(false);
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Load XML File");
-		File xmlFile = fileChooser.showOpenDialog(myStage);
-		if(xmlFile != null){
-			mySimulation.loadXML(xmlFile);
+		File file = fileChooser.showOpenDialog(myStage);
+		if(file != null){
+			if(!mySimulation.useParser(file)) return;
 			stateColorMap = new HashMap<String, Color>(mySimulation.getRules().getMyStatesColors());
 			setupUI();
 		}
@@ -379,7 +373,7 @@ public class CSView {
 	 */
 	private void restartPressed(){
 		if(mySimulation.getXML() != null){
-			mySimulation.loadXML(null);
+			mySimulation.loadFromXML(null);
 			setupUI();
 		}
 	}
@@ -526,7 +520,7 @@ public class CSView {
 	 * updates the chart in time increments of 100 ms
 	 */
 	private void updateChart(){
-		Map<String, Integer> statesCount = mySimulation.getRules().getMyStatesCount();		 
+		Map<String, Integer> statesCount = mySimulation.getRules().getMyStatesCount();
 		for(String key : statesCount.keySet()){
 	 	    seriesMap.get(key).getData().add(new XYChart.Data(mySimulation.getTime()/100, statesCount.get(key)));
 	    }

@@ -46,8 +46,8 @@ public class Simulation {
 	private int time;
 	private int mySpeed;
 	private XMLParser parser;
-	
-	//xml determined variables
+
+	// xml determined variables
 	private File xmlFile;
 	private Grid myGrid;
 	private Rules myRules;
@@ -55,26 +55,29 @@ public class Simulation {
 	private int cols;
 	private String[][] inputgrid;
 	private String gridType;
-	
+
 	private CSView myView;
 
 	public static final String DEFAULT_CONTROLLER_RESOURCE = "Controller/Controller";
+	public static final String ERROR_RESOURCE = "Controller/ErrorMessages";
 	private ResourceBundle myControllerResources;
-	
-	public Simulation(){
+	private ResourceBundle myErrorResources;
+
+	public Simulation() {
 		myControllerResources = ResourceBundle.getBundle(DEFAULT_CONTROLLER_RESOURCE);
 		mySpeed = Integer.parseInt(myControllerResources.getString("InitialSpeed"));
 		msDelay = Integer.parseInt(myControllerResources.getString("MsDelay"));
+		myErrorResources = ResourceBundle.getBundle(ERROR_RESOURCE);
 		time = 0;
-		
+
 		// sets the simulation's loop
-        KeyFrame frame = new KeyFrame(Duration.millis(msDelay), e -> step(false));
-        Timeline animation = new Timeline();
-        animation.setCycleCount(Timeline.INDEFINITE);
-        animation.getKeyFrames().add(frame);
-        animation.play();
+		KeyFrame frame = new KeyFrame(Duration.millis(msDelay), e -> step(false));
+		Timeline animation = new Timeline();
+		animation.setCycleCount(Timeline.INDEFINITE);
+		animation.getKeyFrames().add(frame);
+		animation.play();
 	}
-	
+
 	/**
 	 * Returns name of the program.
 	 */
@@ -82,29 +85,44 @@ public class Simulation {
 		return myControllerResources.getString("Title");
 	}
 
+	/**
+	 * 
+	 * @param myFile
+	 * @return returns whether or not xml file is properly formatted
+	 */
+	public boolean useParser(File file) {
+		parser = new XMLParser(this);
+		if (!parser.parse(file))
+			return false;
+		loadFromXML(file);
+		return true;
+	}
 
 	/**
-	 * Method that loads XML with the parser and then sets instance variables
+	 * Method that loads XML with the parser and then sets instance variables If
+	 * passed null, that means restart
 	 */
-	public void loadXML(File file){
-		if(file != null)
+	public void loadFromXML(File file) {
+		if (file != null)
 			xmlFile = file;
-		parser = new XMLParser();
-		parser.parse(xmlFile);
 		inputgrid = parser.getGrid();
 		rows = inputgrid[1].length;
 		cols = rows;
 		getGridObject();
-		myRules = parser.getRules(); 
+		myRules = parser.getRules();
 		myRules.populateStatesInfo();
 		myRules.initGrid(myGrid, inputgrid);
 		myView.setGridInfo(inputgrid.length, inputgrid[1].length, myRules.toString());
 		loaded = true;
 	}
-	
-	public void getGridObject(){
+
+	/**
+	 * Sets the grid instance variable to be the correct instance of the Grid
+	 * abstract class
+	 */
+	public void getGridObject() {
 		gridType = parser.getGridType();
-		switch(gridType){
+		switch (gridType) {
 		case "Standard":
 			myGrid = new StandardGrid(rows, cols, inputgrid);
 			break;
@@ -115,14 +133,13 @@ public class Simulation {
 			System.out.println("THAT IS NOT AN OPTION!");
 		}
 	}
-	
 
 	/**
-	 * Saves a XML file 
+	 * Saves a XML file
 	 */
-	public void saveXML(){
+	public void saveXML() {
 		running = false;
-		if (!loaded){
+		if (!loaded) {
 			Alert myAlert = new Alert(AlertType.INFORMATION);
 			myAlert.setTitle("Saving Error");
 			myAlert.setHeaderText(null);
@@ -133,20 +150,21 @@ public class Simulation {
 		XMLGenerator myGenerator = new XMLGenerator();
 		String myRulesName = myRules.toString().replaceAll(" ", "");
 		File myFile = myView.promptForFileName();
-		if (myFile == null) return;
+		if (myFile == null)
+			return;
 		myGenerator.save(myRulesName, myGrid.getNumRows(), myGrid.getGrid(), myRules.getParameters(), myFile, gridType);
 	}
-	
+
 	/**
-	 * Applies rules to cells, updates their states, displays new states
-	 * Fastest is every 100 ms, slowest is every 2 seconds. 
-	 * Changing the speed will not change the time on the graph- 
-	 * i.e. 2 seconds on graph will always be 2 seconds on graph,
-	 * However, changes in cell # will be spread of great delta time 
+	 * Applies rules to cells, updates their states, displays new states Fastest
+	 * is every 100 ms, slowest is every 2 seconds. Changing the speed will not
+	 * change the time on the graph- i.e. 2 seconds on graph will always be 2
+	 * seconds on graph, However, changes in cell # will be spread of great
+	 * delta time
 	 */
 	public void step(boolean stepping) {
-		if(running || stepping){
-			if(time % ((21 - mySpeed) * 100) != 0 && !stepping){
+		if (running || stepping) {
+			if (time % ((21 - mySpeed) * 100) != 0 && !stepping) {
 				time += msDelay;
 				return;
 			}
@@ -156,100 +174,110 @@ public class Simulation {
 			myView.updateUI();
 		}
 	}
-	
+
 	/**
 	 * Helper method that applies the specified rules to each cell in the grid
 	 */
-	public void applyRulesToGrid(){
-		for(int r = 0; r < myGrid.getNumRows(); r++){
-			for(int c = 0; c < myGrid.getNumCols(); c++){
-				myRules.applyRulesToCell(myGrid.getCell(r,c), myGrid);
+	public void applyRulesToGrid() {
+		for (int r = 0; r < myGrid.getNumRows(); r++) {
+			for (int c = 0; c < myGrid.getNumCols(); c++) {
+				myRules.applyRulesToCell(myGrid.getCell(r, c), myGrid);
 			}
 		}
 	}
-	
+
 	/**
-	 * Helper method that updates each state that needs to be updated
-	 * Then clears the 
+	 * Helper method that updates each state that needs to be updated Then
+	 * clears the
 	 */
-	private void updateEachState(){
-		for(Cell c: myRules.getToBeUpdatedList()){
+	private void updateEachState() {
+		for (Cell c : myRules.getToBeUpdatedList()) {
 			myRules.updateStateCount(c);
 			c.updateState();
 		}
 		myRules.clearToBeUpdatedList();
 	}
-	
+
 	/**
 	 * returns the current speed
 	 */
-
-	public int getSpeed(){
+	public int getSpeed() {
 		return mySpeed;
 	}
-	
+
 	/**
 	 * setter method to change current speed by del
+	 * 
 	 * @param del
 	 * @return returns new speed
 	 */
-	public int changeSpeed(int del){
+	public int changeSpeed(int del) {
 		mySpeed += del;
 		return mySpeed;
 	}
-	
+
 	/**
 	 * @return returns the current simulation
 	 */
-	public String getName(){
+	public String getName() {
 		return myRules.toString();
 	}
-	
+
 	/**
 	 * sets the current state of running to the value of b
-	 * @param b a boolean indicating running or not
+	 * 
+	 * @param b
+	 *            a boolean indicating running or not
 	 */
-	public void setRunning(boolean b){
+	public void setRunning(boolean b) {
 		running = b;
 	}
-	
+
 	/**
 	 * @return returns the grid that this simulation is using
 	 */
-	public Grid getGrid(){
+	public Grid getGrid() {
 		return myGrid;
 	}
-	
+
 	/**
-	 * @return returns the rules that this simulation is using
-	 * Applies rules to cells, updates their states, displays new states
+	 * @return returns the rules that this simulation is using Applies rules to
+	 *         cells, updates their states, displays new states
 	 */
-	public Rules getRules(){
+	public Rules getRules() {
 		return myRules;
 	}
-	
+
 	/**
 	 * @return returns the XMLFile that this simulation is using
 	 */
-	public File getXML(){
+	public File getXML() {
 		return xmlFile;
 	}
-	
+
 	/**
-	 * @param sets the myView instance variable equal to v
+	 * @param sets
+	 *            the myView instance variable equal to v
 	 */
-	public void setView(CSView v){
+	public void setView(CSView v) {
 		myView = v;
 	}
-	
+
 	/**
 	 * 
 	 * @return returns the number of milliseconds since current execution start
 	 */
-	public int getTime(){
+	public int getTime() {
 		return time;
 	}
-	
-	
-	
+
+	public void displayAlert(String message) {
+		String[] errorData = myErrorResources.getString(message).split(",");
+		Alert myAlert = new Alert(AlertType.INFORMATION);
+		myAlert.setTitle(errorData[0]);
+		myAlert.setHeaderText(null);
+		myAlert.setContentText(errorData[1]);
+		myAlert.showAndWait();
+	}
+
 }

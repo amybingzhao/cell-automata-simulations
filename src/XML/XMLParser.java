@@ -6,20 +6,33 @@
 package XML;
 
 import org.w3c.dom.*;
+import org.xml.sax.SAXException;
 
+import Controller.Simulation;
 import Rules.FireRules;
 import Rules.GameOfLifeRules;
 import Rules.PredatorPreyRules;
 import Rules.Rules;
 import Rules.SegregationRules;
-
 import javax.xml.parsers.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 public class XMLParser {
 
+	private static final String NONE = "NONE";
+	private static final String PARAMETERS = "Parameters";
+	private static final String INVALID_PARAMETERS = "InvalidParameters";
+	private static final String RULE_TYPES = "RuleTypes";
+	private static final String STATE_TYPE = "StateType";
+	private static final String STATES = "States";
+	private static final String GRID_TYPES = "GridTypes";
+	private static final String INVALID_GRID_TYPE = "InvalidGridType";
+	private static final String FILE_TYPE = "FileType";
+	private static final String OUT_OF_BOUNDS = "OutOfBounds";
+	private static final String RULES_PROPERTIES = "Rules/Rules";
 	private DocumentBuilderFactory myFactory;
 	private DocumentBuilder myBuilder;
 	private String[][] cellGrid;
@@ -27,6 +40,13 @@ public class XMLParser {
 	private int cols;
 	private String gridType;
 	private Rules myRule;
+	private ResourceBundle myRules;
+	private Simulation mySimulation;
+
+	public XMLParser(Simulation sim) {
+		mySimulation = sim;
+		myRules = ResourceBundle.getBundle(RULES_PROPERTIES);
+	}
 
 	/**
 	 * Parses a provided XML file to extract the simulation data
@@ -34,7 +54,7 @@ public class XMLParser {
 	 * @param myFile
 	 *            A provided XML file containing the simulation data
 	 */
-	public void parse(File myFile) {
+	public boolean parse(File myFile) {
 		try {
 			myFactory = DocumentBuilderFactory.newInstance();
 			myBuilder = myFactory.newDocumentBuilder();
@@ -47,25 +67,67 @@ public class XMLParser {
 					Element entryElement = (Element) entry;
 					switch (entryElement.getNodeName()) {
 					case "Config":
-						List<String> myConfig = extract(entryElement);
-						rows = Integer.parseInt(splitEntry(myConfig.get(0))[1]);
-						cols = Integer.parseInt(splitEntry(myConfig.get(1))[1]);
-						gridType = splitEntry(myConfig.get(2))[1];
-						cellGrid = new String[rows][cols];
+						if (!parseConfig(entryElement))
+							return false;
 						break;
 					case "Cells":
-						extractCells(entryElement);
+						if (!extractCells(entryElement))
+							return false;
 						break;
 					case "Game":
 						List<String> data = extract(entryElement);
-						initializeGame(data);
+						if (!initializeGame(data))
+							return false;
 						break;
 					}
 				}
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (IOException | ParserConfigurationException | SAXException e) {
+			mySimulation.displayAlert(FILE_TYPE);
+			return false;
 		}
+		return true;
+	}
+
+	/**
+	 * A boolean function
+	 * 
+	 * @param entryElement
+	 * @return
+	 */
+	public boolean parseConfig(Element entryElement) {
+		List<String> myConfig = extract(entryElement);
+		rows = Integer.parseInt(splitEntry(myConfig.get(0))[1]);
+		cols = Integer.parseInt(splitEntry(myConfig.get(1))[1]);
+		gridType = splitEntry(myConfig.get(2))[1];
+		if (!exists(gridType, GRID_TYPES)) {
+			mySimulation.displayAlert(INVALID_GRID_TYPE);
+			return false;
+		}
+		cellGrid = new String[rows][cols];
+		return true;
+	}
+
+	/**
+	 * Give some string item and name of a category in the Rules resource file,
+	 * checks to see if the item is contained in the list items corresponding to
+	 * that category
+	 * 
+	 * @param item
+	 *            The String item that is being accounted for
+	 * @param category
+	 *            The Rules resource file keyword to be referenced
+	 * @return A boolean indicating if the category contains the items
+	 */
+	private boolean exists(String item, String category) {
+		ArrayList<String> types = new ArrayList<String>();
+		String[] items = myRules.getString(category.replaceAll(" ", "")).split(",");
+		for (String myItem : items) {
+			types.add(myItem);
+		}
+		if (types.contains(item))
+			return true;
+		return false;
 	}
 
 	/**
@@ -81,7 +143,7 @@ public class XMLParser {
 			Node dataNode = dataList.item(i);
 			if (dataNode instanceof Element) {
 				Element dataElement = (Element) dataNode;
-				if (dataElement.getNodeName() == "Parameters") {
+				if (dataElement.getNodeName() == PARAMETERS) {
 					List<String> extractedData = extract(dataElement);
 					for (String entry : extractedData) {
 						myGame.add(entry);
@@ -101,8 +163,16 @@ public class XMLParser {
 	 * @param data
 	 *            A string arraylist containing the data to be interpreted
 	 */
-	public void initializeGame(List<String> data) {
+	public boolean initializeGame(List<String> data) {
 		String game = splitEntry(data.get(0))[1];
+		if (!exists(game, RULE_TYPES)) {
+			mySimulation.displayAlert("RuleType");
+			return false;
+		}
+		if (!checkNumParams(data, game)) {
+			mySimulation.displayAlert(INVALID_PARAMETERS);
+			return false;
+		}
 		switch (game) {
 		case "Segregation":
 			double threshold = Double.parseDouble(splitEntry(data.get(1))[1]);
@@ -121,9 +191,28 @@ public class XMLParser {
 			double probCatch = Double.parseDouble(splitEntry(data.get(1))[1]);
 			myRule = new FireRules(probCatch);
 			break;
-		default:
-			break;
 		}
+		return true;
+	}
+
+	/**
+	 * Checks to ensure the that correct number of parameters are provided for a
+	 * given set of rules
+	 * 
+	 * @param data
+	 *            The information provided from the XML file's game section
+	 * @param game
+	 *            The type of rules used
+	 * @return A boolean representing whether or not the parameters provided are
+	 *         satisfactory for the set of rules
+	 */
+	private boolean checkNumParams(List<String> data, String game) {
+		String[] params = myRules.getString(game.replaceAll(" ", "") + PARAMETERS).split(",");
+		if (params[0].equals(NONE) && data.size() - 1 == 0)
+			return true;
+		if (data.size() - 1 == params.length && !params[0].equals(NONE))
+			return true;
+		return false;
 	}
 
 	/**
@@ -134,19 +223,31 @@ public class XMLParser {
 	 *            A Java element containing the data about the cells from the
 	 *            XML
 	 */
-	public void extractCells(Element data) {
+	public boolean extractCells(Element data) {
 		NodeList dataList = data.getChildNodes();
-		for (int i = 0; i < dataList.getLength(); i++) {
-			Node dataNode = dataList.item(i);
-			if (dataNode instanceof Element) {
-				Element dataElement = (Element) dataNode;
-				List<String> extractedData = extract(dataElement);
-				int x = Integer.parseInt(splitEntry(extractedData.get(0))[1]);
-				int y = Integer.parseInt(splitEntry(extractedData.get(1))[1]);
-				String state = splitEntry(extractedData.get(2))[1];
-				cellGrid[x][y] = state;
+		try {
+			for (int i = 0; i < dataList.getLength(); i++) {
+				Node dataNode = dataList.item(i);
+				if (dataNode instanceof Element) {
+					Element dataElement = (Element) dataNode;
+					List<String> extractedData = extract(dataElement);
+					int x = Integer.parseInt(splitEntry(extractedData.get(0))[1]);
+					int y = Integer.parseInt(splitEntry(extractedData.get(1))[1]);
+					String state = splitEntry(extractedData.get(2))[1];
+					if (!exists(state, myRule.toString() + STATES)) {
+						mySimulation.displayAlert(STATE_TYPE);
+						return false;
+					}
+					cellGrid[x][y] = state;
+				}
 			}
 		}
+
+		catch (Exception e) {
+			mySimulation.displayAlert(OUT_OF_BOUNDS);
+			return false;
+		}
+		return true;
 	}
 
 	/**
@@ -197,8 +298,8 @@ public class XMLParser {
 	public Rules getRules() {
 		return myRule;
 	}
-	
-	public String getGridType(){
+
+	public String getGridType() {
 		return gridType;
 	}
 }
