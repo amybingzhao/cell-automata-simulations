@@ -166,14 +166,25 @@ public class Simulation {
 	public void applyRulesToGrid(){
 		int rows = myGrid.getNumRows();
 		int cols = myGrid.getNumCols();
+		int r0 = 0;
+		int c0 = 0;
+		
 		for(int r = 0; r < rows; r++){
+			if (r == 0) {
+				r = r0;
+			}
 			for(int c = 0; c < cols; c++){
+				if (c == 0) {
+					c = c0;
+				}
 				myRules.applyRulesToCell(myGrid.getCell(r,c), myGrid);
 				if (myGrid.hasBeenResizedImmediatelyBefore()) {
-					r += 1;
-					c += 1;
-					rows += 1;
-					cols += 1;
+					r++;
+					c++;
+					r0++;
+					c0++;
+					rows++;
+					cols++;
 					myGrid.setResizedImmediatelyBefore(false);
 				}
 			}

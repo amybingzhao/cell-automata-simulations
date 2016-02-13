@@ -50,16 +50,6 @@ public class FireRules extends Rules {
 	 */
 	private void handleTreeCell(Cell cell, Grid grid) {
 		Cell[][] neighborhood = grid.getNeighborhood(cell.getCurRow(), cell.getCurCol(), NUM_NEIGHBORS);
-		System.out.println("check for burning cell for cell at: (" + cell.getCurRow() + ", " + cell.getCurCol() + ")");
-		System.out.println(neighborIsBurning(cell, neighborhood, grid));
-
-		for (int i = 0; i < 3; i++) {
-			for (int j = 0; j < 3; j++) {
-				System.out.print(neighborhood[i][j]);
-			}
-			System.out.println();
-		}
-		System.out.println();
 
 		if (neighborIsBurning(cell, neighborhood, grid)) {
 			double x = Math.random();
@@ -121,7 +111,6 @@ public class FireRules extends Rules {
 	 */
 	private boolean cellIsBurning(Cell cell) {
 		if (cell != null) {
-			System.out.println(cell.getCurState());
 			return cell.getCurState().equals(BURNING);
 		} else {
 			return false;
