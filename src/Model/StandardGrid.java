@@ -9,6 +9,12 @@ public class StandardGrid extends Grid{
 		myGrid = this.getGrid();
 	}
 	
+	/**
+	 * Get neighborhood of the cell at (row, col) in the grid.
+	 * @param row: row of the cell of interest.
+	 * @param col: column of the cell of interest.
+	 * @param numNeighbors: number of neighbors to get based on simulation type (4 or 8).
+	 */
 	public Cell[][] getNeighborhood(int row, int col, int numNeighbors) {
 		Cell[][] neighborhood = new Cell[3][3];
 		if (numNeighbors == 4) {
@@ -31,6 +37,16 @@ public class StandardGrid extends Grid{
 		return neighborhood;
 	}
 	
+	/**
+	 * Check if the desired neighbor is within the bounds of the grid; otherwise add a null to signify there is no neighbor.
+	 * @param row: row of cell whose neighbors you are getting.
+	 * @param col: column of cell whose neighbors you are getting.
+	 * @param rowDirections: relative directions to check in the row dimension.
+	 * @param colDirections: relative directions to check in the column dimension.
+	 * @param rowOffset: index within the rowDirections array.
+	 * @param colOffset: index within the colDirections array.
+	 * @param neighborhood: neighborhood to add to.
+	 */
 	private void tryToAddNeighbor(int row, int col, int[] rowDirections, int[] colDirections, int rowOffset, int colOffset, Cell[][] neighborhood) {
 		int rowToCheck = row + rowDirections[rowOffset];
 		int colToCheck = col + colDirections[colOffset];

@@ -63,6 +63,9 @@ public class PredatorPreyCell extends Cell {
 		myEnergy = energy;
 	}
 	
+	/**
+	 * Description of cell.
+	 */
 	public String toString() {
 		return "(" + getCurState() + ", " + getNextState() + ")";
 	}
