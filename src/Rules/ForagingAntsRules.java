@@ -196,8 +196,8 @@ public class ForagingAntsRules extends Rules {
 	 * Gets the parameters for this simulation.
 	 */
 	@Override
-	public ArrayList<String> getParameters() {
-		ArrayList<String> parameters = new ArrayList<String>();
+	public List<String> getParameters() {
+		List<String> parameters = new ArrayList<String>();
 		parameters.add("TotalNumAnts:" + numTotalAnts);
 		return parameters;
 	}
