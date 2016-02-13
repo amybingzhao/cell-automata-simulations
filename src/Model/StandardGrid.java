@@ -2,12 +2,10 @@ package Model;
 
 public class StandardGrid extends Grid{
 	
-	private Cell[][] myGrid;
 	private static final int NEIGHBOR_GRID_SIDE_LENGTH = 3;
 
 	public StandardGrid(int rows, int cols, String[][] initialStates) {
 		super(rows, cols, initialStates);
-		myGrid = this.getGrid();
 	}
 	
 	/**

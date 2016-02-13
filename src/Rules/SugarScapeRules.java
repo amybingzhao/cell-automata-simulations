@@ -4,10 +4,8 @@ import java.util.ArrayList;
 
 import Model.Cell;
 import Model.Grid;
-import Model.StandardSugarScapeAgent;
 import Model.SugarScapeAgent;
 import Model.SugarScapeCell;
-import javafx.scene.paint.Color;
 
 public abstract class SugarScapeRules extends Rules {
 	

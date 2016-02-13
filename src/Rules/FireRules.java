@@ -6,12 +6,9 @@
 package Rules;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-
 import Model.Cell;
 import Model.Grid;
 import Model.StandardCell;
-import javafx.scene.paint.Color;
 
 public class FireRules extends Rules {
 	private static final int NUM_NEIGHBORS = 4;

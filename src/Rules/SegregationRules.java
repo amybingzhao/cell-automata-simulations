@@ -8,21 +8,16 @@ package Rules;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
-
 import Model.Cell;
 import Model.Grid;
 import Model.StandardCell;
-import javafx.scene.paint.Color;
 
 public class SegregationRules extends Rules {
 
 	private static final int NUM_NEIGHBORS = 8;
 	private static final String EMPTY = "EMPTY";
-	private static final String RED = "RED";
-	private static final String BLUE = "BLUE";
 	private static final int MY_CELL_ROW = 1;
 	private static final int MY_CELL_COL = 1;
 	private static final String DEFAULT_STATE = EMPTY;

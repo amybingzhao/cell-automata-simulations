@@ -3,7 +3,6 @@ package Rules;
 import Model.Cell;
 import Model.Grid;
 import Model.ReproductionSugarScapeAgent;
-import Model.StandardSugarScapeAgent;
 import Model.SugarScapeAgent;
 import Model.SugarScapeCell;
 

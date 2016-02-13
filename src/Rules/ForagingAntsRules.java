@@ -5,15 +5,11 @@ import java.util.List;
 import Model.Cell;
 import Model.ForagingAntsCell;
 import Model.Grid;
-import javafx.scene.paint.Color;
 import Model.Ant;
 
 public class ForagingAntsRules extends Rules {
 	private int numTotalAnts;
-	private static final String HOME = "HOME";
 	private static final String GROUND = "GROUND";
-	private static final String OBSTACLE = "OBSTACLE";
-	private static final String FOOD = "FOOD";
 	private static final String DEFAULT_STATE = GROUND;
 	private static final int NUM_NEIGHBORS = 8;
 	private static final Integer[] NORTH = new Integer[]{0, 1};

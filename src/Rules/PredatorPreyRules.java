@@ -7,14 +7,10 @@
 package Rules;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-
 import Model.Cell;
-import Model.ForagingAntsCell;
 import Model.Grid;
 import Model.PredatorPreyCell;
-import javafx.scene.paint.Color;
 
 public class PredatorPreyRules extends Rules {
 	private int myInitialSharkEnergy;

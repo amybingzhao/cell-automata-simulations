@@ -8,13 +8,10 @@ package Rules;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-
 import Model.Cell;
 import Model.Grid;
 import Model.StandardCell;
-import javafx.scene.paint.Color;
 
 public class GameOfLifeRules extends Rules {
 	private static final int NUM_NEIGHBORS = 8;
