@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import Model.Cell;
+import Model.ForagingAntsCell;
 import Model.Grid;
 import Model.PredatorPreyCell;
 import javafx.scene.paint.Color;
@@ -41,11 +42,12 @@ public class PredatorPreyRules extends Rules {
 	public void applyRulesToCell(PredatorPreyCell cell, Grid grid) {
 		String curState = cell.getCurState();
 		Cell[][] neighborhood = grid.getNeighborhood(cell.getCurRow(), cell.getCurCol(), NUM_NEIGHBORS);
-
+		PredatorPreyCell[][] predatorPreyNeighborhood = convertToPredatorPreyCellNeighborhood(neighborhood);
+		
 		if (curState.equals(FISH)) {
-			handleFishCell(cell, grid, neighborhood);
+			handleFishCell(cell, grid, predatorPreyNeighborhood);
 		} else if (curState.equals(SHARK)) {
-			handleSharkCell(cell, grid, neighborhood);
+			handleSharkCell(cell, grid, predatorPreyNeighborhood);
 		}
 
 		if (cell.getCurRow() == grid.getNumRows() - 1 && cell.getCurCol() == grid.getNumCols() - 1) {
@@ -75,7 +77,7 @@ public class PredatorPreyRules extends Rules {
 	 * @param cell: fish Cell of interest.
 	 * @param grid: Simulation grid.
 	 */
-	private void handleFishCell(PredatorPreyCell cell, Grid grid, Cell[][] neighborhood) {
+	private void handleFishCell(PredatorPreyCell cell, Grid grid, PredatorPreyCell[][] neighborhood) {
 		if (!fishHasAlreadyBeenEaten(cell)) {
 			Cell nextLocation = cellToMoveTo(neighborhood, WATER);
 
@@ -84,6 +86,17 @@ public class PredatorPreyRules extends Rules {
 				checkForReproduction(cell);
 			}
 		}
+	}
+	
+	private PredatorPreyCell[][] convertToPredatorPreyCellNeighborhood(Cell[][] neighborhood) {
+		PredatorPreyCell[][] predatorPreyNeighborhood = new PredatorPreyCell[neighborhood.length][neighborhood[0].length];
+		for (int row = 0; row < neighborhood.length; row++) {
+			for (int col = 0; col < neighborhood[0].length; col++) {
+				predatorPreyNeighborhood[row][col] = (PredatorPreyCell) neighborhood[row][col];
+			}
+		}
+		
+		return predatorPreyNeighborhood;
 	}
 
 	private boolean fishHasAlreadyBeenEaten(Cell fish) {
@@ -94,8 +107,8 @@ public class PredatorPreyRules extends Rules {
 	 * @param cell: shark Cell of interest.
 	 * @param grid: Simulation grid.
 	 */
-	private void handleSharkCell(PredatorPreyCell cell, Grid grid, Cell[][] neighborhood) {		
-		PredatorPreyCell fishToEat = (PredatorPreyCell) cellToMoveTo(neighborhood, FISH);
+	private void handleSharkCell(PredatorPreyCell cell, Grid grid, PredatorPreyCell[][] neighborhood) {		
+		PredatorPreyCell fishToEat = cellToMoveTo(neighborhood, FISH);
 		if (fishToEat != null) {
 			eatFish(fishToEat, cell, grid);
 			checkForReproduction(cell);
@@ -104,7 +117,7 @@ public class PredatorPreyRules extends Rules {
 				cell.sharkDies();
 				addCellToBeUpdated(cell);
 			} else {
-				PredatorPreyCell newSharkLocation = (PredatorPreyCell) cellToMoveTo(neighborhood, WATER);
+				PredatorPreyCell newSharkLocation = cellToMoveTo(neighborhood, WATER);
 				if (newSharkLocation != null) {
 					moveShark(cell, newSharkLocation, WATER);
 					checkForReproduction(cell);
@@ -224,8 +237,8 @@ public class PredatorPreyRules extends Rules {
 	 * @param stateToMoveTo: state of the Cells that can be taken over.
 	 * @return Cell that current Cell wants to move to.
 	 */
-	private Cell cellToMoveTo(Cell[][] neighborhood, String stateToMoveTo) {
-		List<Cell> optionList = new ArrayList<Cell>();
+	private PredatorPreyCell cellToMoveTo(PredatorPreyCell[][] neighborhood, String stateToMoveTo) {
+		List<PredatorPreyCell> optionList = new ArrayList<PredatorPreyCell>();
 
 		checkIfCanMoveTo(neighborhood[0][1], stateToMoveTo, optionList);
 		checkIfCanMoveTo(neighborhood[1][0], stateToMoveTo, optionList);
@@ -245,7 +258,7 @@ public class PredatorPreyRules extends Rules {
 	 * @param stateToMoveTo: state that can be moved to.
 	 * @param optionList: list of options for Cells that you can move to.
 	 */
-	private void checkIfCanMoveTo(Cell cellToCheck, String stateToMoveTo, List<Cell> optionList) {
+	private void checkIfCanMoveTo(PredatorPreyCell cellToCheck, String stateToMoveTo, List<PredatorPreyCell> optionList) {
 		if (canMoveTo(cellToCheck, stateToMoveTo)) {
 			optionList.add(cellToCheck);
 		}
