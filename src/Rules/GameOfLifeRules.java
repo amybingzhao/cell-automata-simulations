@@ -105,8 +105,8 @@ public class GameOfLifeRules extends Rules {
 	 * Parameters for Game of Life simulation.
 	 */
 	@Override
-	public ArrayList<String> getParameters() {
-		ArrayList<String> parameters = new ArrayList<String>();
+	public List<String> getParameters() {
+		List<String> parameters = new ArrayList<String>();
 		return parameters;
 	}
 	

@@ -221,5 +221,5 @@ public abstract class Rules {
 	 * @return
 	 * An ArrayList of Strings containing the game parameters
 	 */
-	public abstract ArrayList<String> getParameters();
+	public abstract List<String> getParameters();
 }

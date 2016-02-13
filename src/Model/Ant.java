@@ -268,8 +268,7 @@ public class Ant {
 	public void returnToNest(ForagingAntsCell cell, ForagingAntsCell[][] neighborhood, List<Integer[]> directions) {
 		if (cell.isFood()) {
 			System.out.println("ant found food");
-			Map<ForagingAntsCell, Integer> weights = assignWeights(HOME, neighborhood, directions);
-			ForagingAntsCell nextLocation = pickWeightedRandomCell(weights);
+			ForagingAntsCell nextLocation = findNextLocation(HOME, neighborhood, directions);
 			if (nextLocation != null) {
 				int[] relativeNextLocation = new int[]{cell.getCurRow() - nextLocation.getCurRow() + 1, cell.getCurCol() - nextLocation.getCurCol() + 1};
 				setDirection(relativeNextLocation);
@@ -287,8 +286,7 @@ public class Ant {
 	 */
 	public void findFoodSource(ForagingAntsCell cell, ForagingAntsCell[][] neighborhood, List<Integer[]> directions) {
 		if (cell.isHome()) {
-			Map<ForagingAntsCell, Integer> weights = assignWeights(FOOD, neighborhood, directions);
-			ForagingAntsCell nextLocation = pickWeightedRandomCell(weights);
+			ForagingAntsCell nextLocation = findNextLocation(FOOD, neighborhood, directions);
 			if (nextLocation != null) {
 				int[] relativeNextLocation = new int[]{nextLocation.getCurRow() - cell.getCurRow() + 1, nextLocation.getCurCol() - cell.getCurCol() + 1};
 				setDirection(relativeNextLocation);
@@ -298,6 +296,17 @@ public class Ant {
 		followFoodPheromones(neighborhood, directions);
 	}
 	
+	/**
+	 * Finds the next location that the ant should move to based on pheromone weights.
+	 * @param pheromoneType: type of pheromone the ant is following (FOOD or HOME).
+	 * @param neighborhood: cell of interest and 8 surrounding cells.
+	 * @param directions: list of directions to check in order that they should be checked.
+	 * @return ForagingAntsCell to move to.
+	 */
+	private ForagingAntsCell findNextLocation(String pheromoneType, ForagingAntsCell[][] neighborhood, List<Integer[]> directions) {
+		Map<ForagingAntsCell, Integer> weights = assignWeights(FOOD, neighborhood, directions);
+		return pickWeightedRandomCell(weights);
+	}
 	/**
 	 * Sets a random direction for the ant's orientation within a neighbors grid. (Cannot be [1, 1] as that is the current
 	 * cell itself).

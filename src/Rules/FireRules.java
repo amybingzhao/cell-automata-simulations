@@ -6,6 +6,8 @@
 package Rules;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import Model.Cell;
 import Model.Grid;
 import Model.StandardCell;
@@ -133,8 +135,8 @@ public class FireRules extends Rules {
 	 * Gets the parameters for the Fire simulation.
 	 */
 	@Override
-	public ArrayList<String> getParameters() {
-		ArrayList<String> parameters = new ArrayList<String>();
+	public List<String> getParameters() {
+		List<String> parameters = new ArrayList<String>();
 		parameters.add("ProbCatch:" + myProbCatch);
 		return parameters;
 	}
