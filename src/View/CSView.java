@@ -11,6 +11,8 @@ import java.util.ResourceBundle;
 
 import Controller.Simulation;
 import Model.Grid;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -47,6 +49,7 @@ public class CSView {
 	private LineChart<Number,Number> lineChart;
 	private Map<String, XYChart.Series<Number, Number>> seriesMap;
 	private Map<String, Color> stateColorMap;
+	private Map<String, Button> buttonMap;
 	private Color borderColor;
 	
 	//UI Metrics
@@ -59,7 +62,6 @@ public class CSView {
 	//resources
 	public static final String DEFAULT_VIEW_RESOURCE = "View/View";
 	private ResourceBundle myViewResources;
-	
 
 	private Simulation mySimulation;
 	
@@ -73,6 +75,7 @@ public class CSView {
 		myViewResources = ResourceBundle.getBundle(DEFAULT_VIEW_RESOURCE);
 		loadResources(myViewResources);
 		borderColor = Color.BLACK;
+		buttonMap = new HashMap<String, Button>();
 	}
 	
 	/**
@@ -103,7 +106,7 @@ public class CSView {
 	private Group buildUI(){
 		Group group = new Group();
 		
-		VBox vbox = new VBox(4);
+		VBox vbox = new VBox(5);
 		vbox.setPrefWidth(Integer.parseInt(myViewResources.getString("WindowWidth")));
 		vbox.setAlignment(Pos.CENTER);
 		
@@ -114,7 +117,7 @@ public class CSView {
 		buildChart(chartVBox);
 		
 		//add board
-		HBox spHBox = new HBox();
+		HBox spHBox = new HBox(5);
 		myBoardGroup = new Group();
 		myBoardGroup.getChildren().add(getBackground());
 		
@@ -127,11 +130,12 @@ public class CSView {
 		spHBox.setAlignment(Pos.CENTER);
 		spHBox.setMaxSize(uiWidth, uiWidth);
 		
-		VBox buttonsVBox = new VBox(2);
+		VBox buttonsVBox = new VBox(5);
 		buttonsVBox.setMaxWidth(uiWidth);
 		attachButtonsToVBox(buttonsVBox);
+		enableButtons();
 		
-		VBox fieldsVBox = new VBox();
+		VBox fieldsVBox = new VBox(5);
 		fieldsVBox.setMaxWidth(uiWidth);
 		attachFieldsToVBox(fieldsVBox);
 		
@@ -174,8 +178,8 @@ public class CSView {
 	private void attachButtonsToVBox(VBox vbox){
 		String[] firstrow = myViewResources.getString("ButtonRowOne").split(",");
 		String[] secondrow= myViewResources.getString("ButtonRowTwo").split(",");
-		HBox hbox1 = new HBox(firstrow.length);
-		HBox hbox2 = new HBox(secondrow.length);
+		HBox hbox1 = new HBox(5);
+		HBox hbox2 = new HBox(5);
 		for(int i = 0; i < firstrow.length; i++){
 			addButtonToHbox(firstrow[i], hbox1);
 		}
@@ -194,6 +198,7 @@ public class CSView {
 	 */
 	private void addButtonToHbox(String name, HBox hbox){
 		Button button = new Button(name);
+		buttonMap.put(name, button);
 		button.setOnAction(new EventHandler<ActionEvent>() {
 		    @Override public void handle(ActionEvent e) {
 		        respondToButton(e.toString().split("'")[1]);
@@ -209,13 +214,13 @@ public class CSView {
 	 * @param group
 	 */
 	private void attachFieldsToVBox(VBox vbox){
-		HBox hbox = new HBox(2);
+		HBox hbox = new HBox(20);
 		myTitleDisplay = new Text();
 		myTitleDisplay.setText("Current Simulation: None");
 		myTitleDisplay.setFont(new Font(14));
 		mySpeedDisplay = new Text();
 		mySpeedDisplay.setFont(new Font(14));
-		mySpeedDisplay.setText("    Current Speed: " + mySimulation.getSpeed());		
+		mySpeedDisplay.setText("Current Speed: " + mySimulation.getSpeed());
 	    hbox.getChildren().add(myTitleDisplay);
 		hbox.getChildren().add(mySpeedDisplay);
 		vbox.getChildren().add(hbox);
@@ -225,14 +230,14 @@ public class CSView {
 	 * Sets up the board and the chart
 	 */
 	private void setupUI(){
-		setupAndDisplayBoard();
+		displayBoard();
 		setupChart();
 	}
 	
 	/**
 	 * builds board by adding rectangles, with the size and quantity based on xml input
 	 */
-	private void setupAndDisplayBoard(){
+	private void displayBoard(){
 		int myGridWidth = mySimulation.getGrid().getNumCols();
 		int myGridHeight = mySimulation.getGrid().getNumRows();
 		cellPixelSize = (boardPixelSize / Math.min(maxCellsDisplayed, Math.max(myGridWidth, myGridHeight))) - 2 * borderPixelSize;
@@ -288,44 +293,34 @@ public class CSView {
 	 */
 	private void respondToButton(String button){
 		switch(button) {
-		case "Start":
-			if(mySimulation.getRules() != null)
-				mySimulation.setRunning(true);
-			break;
-		case "Stop":
-			mySimulation.setRunning(false);
-			break;
-		case "Step":
-			if(mySimulation.getRules() != null)
-				mySimulation.step(true);
-			break;
+		case "Start": mySimulation.setRunning(true); break;
+		case "Stop": mySimulation.setRunning(false); break;
+		case "Step": mySimulation.step(true); break;
 		case "Speed Up":
-			if(mySimulation.getSpeed() < 20)
-				mySpeedDisplay.setText("    Current Speed: " + mySimulation.changeSpeed(1));
-			break;
+			mySpeedDisplay.setText("Current Speed: " + mySimulation.changeSpeed(1)); break;
 		case "Slow Down":
-			if(mySimulation.getSpeed() > 1)
-				mySpeedDisplay.setText("    Current Speed: " + mySimulation.changeSpeed(-1));
-			break;
-		case "Load XML":
-			loadXMLPressed();
-			break;
-		case "Restart":
-			if(mySimulation.getRules() != null){
-				restartPressed();
-			}
-			break;
-		case "Save":
-			if(mySimulation.getRules() != null){
-				mySimulation.setRunning(false);
-				mySimulation.saveXML();
-			}
-			break;
-		case "Config":
-			if(mySimulation.getRules() != null){
-				createConfigPanel();
-			}
+			mySpeedDisplay.setText("Current Speed: " + mySimulation.changeSpeed(-1)); break;
+		case "Generate XML": generateXML(); break;
+		case "Load XML": loadXMLPressed(); break;
+		case "Restart": restartPressed(); break;
+		case "Save": mySimulation.saveXML(); break;
+		case "Config": createConfigPanel();break;
 		}
+		enableButtons();
+	}
+	
+	/**
+	 * Enables and disables buttons as necessary
+	 */
+	private void enableButtons(){
+		for(String k: buttonMap.keySet()){
+			buttonMap.get(k).setDisable(mySimulation.getRules() == null);
+		}
+		buttonMap.get("Speed Up").setDisable(mySimulation.getRules() == null && mySimulation.getSpeed() >= 20);
+		buttonMap.get("Slow Down").setDisable(mySimulation.getRules() == null && mySimulation.getSpeed() <= 1);
+		buttonMap.get("Generate XML").setDisable(false);
+		buttonMap.get("Load XML").setDisable(false);
+		
 	}
 	
 	/**
@@ -354,6 +349,13 @@ public class CSView {
 		myFileChooser.getExtensionFilters().add(myFilter);
 		File fileName = myFileChooser.showSaveDialog(myStage);
 		return fileName;
+	}
+	
+	/**
+	 * Creates a new window to generate an xml
+	 */
+	private void generateXML(){
+		XMLGeneratorView xgview = new XMLGeneratorView();
 	}
 	
 	/**
@@ -465,7 +467,7 @@ public class CSView {
 		dialog.setContentText("Border thickness (pixels):");
 		Optional<Integer> result = dialog.showAndWait();
 		result.ifPresent(name -> borderPixelSize = result.get());
-		setupAndDisplayBoard();
+		displayBoard();
 	}
 	
 	/**
@@ -478,7 +480,7 @@ public class CSView {
             public void handle(ActionEvent t) { 
                 borderColor = colorPicker.getValue();
                 myBoardGroup.getChildren().remove(colorPicker);
-        		setupAndDisplayBoard();
+        		displayBoard();
             }
         });
 	}
@@ -487,7 +489,7 @@ public class CSView {
 	 * Updates the board and the chart 
 	 */
 	public void updateUI(){
-		setupAndDisplayBoard();
+		displayBoard();
 		updateChart();
 	}
 	

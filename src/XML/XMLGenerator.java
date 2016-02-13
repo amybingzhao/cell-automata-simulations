@@ -47,7 +47,7 @@ public class XMLGenerator {
 		}
 	}
 
-	public XMLGenerator(HashMap<String, Double> myWeights) {
+	public XMLGenerator(Map<String, Double> myWeights) {
 		this();
 		stateWeights = myWeights;
 		weighted = true;
