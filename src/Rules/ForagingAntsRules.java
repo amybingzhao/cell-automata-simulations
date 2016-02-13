@@ -152,37 +152,29 @@ public class ForagingAntsRules extends Rules {
 
 		List<Integer[]> forwardDirections = new ArrayList<Integer[]>();
 		forwardDirections.add(curDirection);
-		
-		if (curRow == 0) {
-			if (curCol == 0) {
-				forwardDirections.add(NORTH);
-				forwardDirections.add(WEST);
-			} else if (curCol == 1) {
-				forwardDirections.add(NW);
-				forwardDirections.add(NE);
-			} else if (curCol == 2) {
-				forwardDirections.add(NORTH);
-				forwardDirections.add(EAST);
-			}
-		} else if (curRow == 1) {
-			if (curCol == 0) {
-				forwardDirections.add(NW);
-				forwardDirections.add(SW);
-			} else if (curCol == 2) {
-				forwardDirections.add(NE);
-				forwardDirections.add(SE);
-			}
-		} else if (curRow == 2) {
-			if (curCol == 0) {
-				forwardDirections.add(WEST);
-				forwardDirections.add(SOUTH);
-			} else if (curCol == 1) {
-				forwardDirections.add(SW);
-				forwardDirections.add(SE);
-			} else if (curCol == 2) {
-				forwardDirections.add(EAST);
-				forwardDirections.add(SOUTH);
-			}
+		if (curRow == 0 && (curCol == 0 || curCol == 2)) {
+			forwardDirections.add(NORTH);
+		}
+		if ((curRow == 0 || curRow == 2) && curCol == 0) {
+			forwardDirections.add(WEST);
+		}
+		if ((curRow == 0 || curRow == 2) && curCol == 2) {
+			forwardDirections.add(EAST);
+		}
+		if (curRow == 2 && (curCol == 0 || curCol == 2)) {
+			forwardDirections.add(SOUTH);
+		}
+		if ((curRow == 0 && curCol == 1) || (curRow == 1 && curCol == 0)) {
+			forwardDirections.add(NW);
+		}
+		if ((curRow == 0 && curCol == 1) || (curRow == 1 && curCol == 2)) {
+			forwardDirections.add(NE);
+		}
+		if ((curRow == 1 && curCol == 0) || (curRow == 2 && curCol == 1)) {
+			forwardDirections.add(SW);
+		}
+		if ((curRow == 1 && curCol == 2) || (curRow == 2 && curCol == 1)) {
+			forwardDirections.add(SE);
 		}
 		
 		return forwardDirections;
