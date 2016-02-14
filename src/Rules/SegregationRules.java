@@ -149,7 +149,7 @@ public class SegregationRules extends Rules {
 	 * Returns the default state for the Segregation simulation.
 	 */
 	@Override
-	protected String getDefault() {
+	public String getDefault() {
 		return DEFAULT_STATE;
 	}
 }

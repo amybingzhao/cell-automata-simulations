@@ -80,7 +80,7 @@ public abstract class Rules {
 		return createCell(getDefault(), row, col);
 	}
 	
-	protected abstract String getDefault();
+	public abstract String getDefault();
 	
 	/**
 	 * Rules for each simulation to be implemented by simulation-specific subclasses.

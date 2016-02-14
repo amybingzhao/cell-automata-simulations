@@ -313,7 +313,7 @@ public class PredatorPreyRules extends Rules {
 	 * Gets the default state for the Predator Prey simulation.
 	 */
 	@Override
-	protected String getDefault() {
+	public String getDefault() {
 		return DEFAULT_STATE;
 	}
 }
