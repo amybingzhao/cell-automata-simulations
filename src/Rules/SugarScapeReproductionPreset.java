@@ -37,6 +37,7 @@ public class SugarScapeReproductionPreset extends SugarScapeRules{
 			ReproductionSugarScapeAgent agent = (ReproductionSugarScapeAgent) curCell.getAgent();
 			ReproductionSugarScapeAgent mate = agent.findMate(grid);
 			if (mate != null) {
+				System.out.println("tryna reporduce tbh");
 				reproduce(agent, mate, grid);
 			}
 			agent.increaseAge();
@@ -75,7 +76,7 @@ public class SugarScapeReproductionPreset extends SugarScapeRules{
 	 */
 	@Override
 	protected SugarScapeAgent createPresetAgent(int row, int col) {
-		return new ReproductionSugarScapeAgent(generateRandom(getMyAgentSugarLimit()) + 1, generateRandom(getMyAgentMetabolismLimit()) + 1, generateRandom(getMyAgentVisionLimit()) + 1, row, col, generateRandom(NUM_GENDERS - 1),
+		return new ReproductionSugarScapeAgent(generateRandom(getMyAgentSugarLimit()) + 1, generateRandom(getMyAgentMetabolismLimit()) + 1, generateRandom(getMyAgentVisionLimit()) + 1, row, col, generateRandom(NUM_GENDERS),
 				generateLimitedRandom(MAX_AGE_MAX, MAX_AGE_MIN), FERTILITY_MIN, FERTILITY_MAX);
 	
 	}

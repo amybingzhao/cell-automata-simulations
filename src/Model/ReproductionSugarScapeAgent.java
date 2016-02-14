@@ -40,6 +40,7 @@ public class ReproductionSugarScapeAgent extends SugarScapeAgent {
 		myMaxAge = maxAge;
 		myFertileMin = fertileMin;
 		myFertileMax = fertileMax;
+		System.out.println(myGender);
 	}
 	
 	/**
@@ -66,6 +67,8 @@ public class ReproductionSugarScapeAgent extends SugarScapeAgent {
 					if (neighborAgent.isFertile() && neighborAgent.isOppositeGender(this) && (this.hasEmptyNeighbor(grid) || neighborAgent.hasEmptyNeighbor(grid))) {
 						return neighborAgent;
 					}
+				} else {
+					neighbors.remove(neighbor);
 				}
 			}
 		}
