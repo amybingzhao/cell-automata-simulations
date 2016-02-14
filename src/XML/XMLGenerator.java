@@ -29,6 +29,7 @@ import Model.Cell;
 
 public class XMLGenerator {
 
+	private static final String CELLS = "Cells";
 	private static final String CELL = "Cell";
 	private static final String OUT_OF_BOUNDS = "OutOfBounds";
 	private static final String CONFIG = "Config";
@@ -190,7 +191,7 @@ public class XMLGenerator {
 	 */
 	public Element createRandomCells(int rows, int cols, String rule) {
 		String[] states = getStates(rule);
-		Element myCells = myDocument.createElement("Cells");
+		Element myCells = myDocument.createElement(CELLS);
 		Random myRandom = new Random();
 		for (int row = 0; row < rows; row++) {
 			for (int col = 0; col < cols; col++) {
@@ -260,7 +261,7 @@ public class XMLGenerator {
 	public Element createWeightedRandomCells(int rows, int cols, String rule) {
 		fillMap(rule);
 		fillStack(rows, cols);
-		Element myCells = myDocument.createElement("Cells");
+		Element myCells = myDocument.createElement(CELLS);
 		for (String state : stateWeights.keySet()) {
 			int numCells = (int) Math.round(((stateWeights.get(state) / 100) * (rows * cols)));
 			for (int i = 0; i < numCells && !myStack.isEmpty(); i++) {
@@ -297,7 +298,7 @@ public class XMLGenerator {
 		myDocument = myBuilder.newDocument();
 		Element saveConfig = getConfig(rows, cols, gridType);
 		Element saveRules = getRules(rulesType, params);
-		Element saveCells = myDocument.createElement("Cells");
+		Element saveCells = myDocument.createElement(CELLS);
 		for (int myRow = 0; myRow < rows; myRow++) {
 			for (int myCol = 0; myCol < cols; myCol++) {
 				Element myCell = makeCellEntry(myRow, myCol, gameGrid[myRow][myCol].getCurState());
