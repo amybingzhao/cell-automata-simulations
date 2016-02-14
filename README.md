@@ -5,7 +5,7 @@ Duke CompSci 308 Cell Society Project
 
 **Date Started:** 1/30/16
 
-**Date Finished:** 2/6/16
+**Date Finished:** 2/13/16
 
 **Team Roles:**
 
@@ -23,44 +23,81 @@ Duke CompSci 308 Cell Society Project
 
 To start the simulation, run Main.java, load a file in the GUI, and press start or step through with the step button.
 
-To generate a new XML file, open XMLGenerator.java, set the arguments in the `generateFile(int rows, int cols, String gameName, List<String> parameters, List<String> states, String filename)` function as desired.
+Adjust the appearance to your liking using the config button.
+
+Use the built in file generator to create your own XML file with your preferred abundance percentages of cell states.
+
+XML generation can also be done directly from the XMLGenerator Class. You must provide the `public void generateFile(int row, int col, String rules, String fileName, String gridType)` method with the necessary information and pass a map with your desired state abundances into the XMLGenerator constructor.
+
 
 **Testing the Project:**
 
 We have included pregenerated test files in our data folder
 
 * Game of Life
-  * glider.xml
-  * oscilators.xml
-  * GameOfLife1.xml
-  * GameOfLife2.xml
-  * GameOfLife3.xml
+  * GameOfLifeSt30.xml
+  * GameOfLifeTor30.xml
+  * GameOfLifeSt80.xml
+  * GameOfLifeTor80.xml
+  * GliderSt20.xml
+  * GliderTor20.xml (Good example of Toroidal Grid)
 
 * Fire
-  * Fire1.xml
-  * Fire2.xml
-  * Fire3.xml
+  * FireSt30.xml
+  * FireTor30.xml
+  * FireSt80.xml
+  * FireTor80.xml
+  * FireSt30BadParams.xml (Demonstrates Improper Parameters Error Checking)
+  * FireSt30OutOfBounds.xml (Demonstrates Cell Out of Bounds Error Checking)
 
 * Predator Prey
-  * fish.xml
-  * shark.xml
-  * sharkEatsFish.xml
-  * sharkEatsFishThatAlreadyMoved.xml
-  * PredatorPrey1.xml
-  * PredatorPrey2.xml
-  * PredatorPrey3.xml
+  * PredatorPreySt30.xml
+  * PredatorPreyTor30.xml
+  * PredatorPreySt80.xml
+  * PredatorPreyTor80.xml
 
 * Segregation
-  * Segregation1.xml
-  * Segregation2.xml
-  * Segregation3.xml
+  * SegregationSt30.xml
+  * SegregationTor30.xml
+  * SegregationSt80.xml
+  * SegregationTor80.xml
 
-**Resource Files Required:** None
+* Foraging Ants
+  * ForagingAnts2.xml
+  * ForagingAnts3.xml
+
+* Sugar Scape
+
+* Other
+  * WrongFileType.txt (Demonstrates Wrong File Type Error Checking)
+
+**Resource Files Required:**
+* Controller.properties
+* ErrorMessages.properties
+* View.properties
+* Grid.properties
+* Rules.properties
+* FireRules.properties
+* Controller.properties
+* GameOfLife.properties
+* SugarScapeRules.properties
+* SegregationRules.properties
+* ForagingAntsRules.properties
+* PredatorPreyRules.properties
+* SugarScapeMigrationRules.properties
+* SugarScapeReproductionRules.properties
 
 **Interesting Information:** None
 
-**Known Bugs:** None
+**Known Bugs:** File generation for ForagingAnts requires non-automated editing to add a home cell
 
-**Extra Features:** As described above, we have included an XML file generator that randomly generates XML simulation setup files. These files can be loaded from the data folder using the simulation GUI.
+**Extra Features:**
+* Toroidal Grid
+* Infinite Grid
+* XML Error Checking
+* XML File Generation from GUI
+* Configure Simulation Appearance from GUI
+* Weighted States XML File Generation
+* Configure a Cell's State and Characteristics Live from GUI
 
-**Impressions:** So far, we have found the project to be very manageable. We got started early and got our functionality working fairly quickly. We have worked well together as a group.
+**Impressions:** We found this assignment to be reasonable. At the beginning of each sprint, we clearly defined each team member's responsibilities and stayed on track. We were always communicating about pull requests and bugs that we were facing. This made the overall project experience much more enjoyable. We are very satisfied with how our project came out.

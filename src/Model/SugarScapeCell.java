@@ -9,8 +9,6 @@ public class SugarScapeCell extends Cell {
 	private int mySugar;
 	private int myMaxSugarCapacity;
 	private SugarScapeAgent myAgent;
-	private int myRow;
-	private int myCol;
 	
 	public SugarScapeCell(String initialState, int row, int col, int maxSugar, SugarScapeAgent agent) {
 		super(initialState, row, col);
@@ -45,7 +43,7 @@ public class SugarScapeCell extends Cell {
 	 */
 	public void setAgent(SugarScapeAgent agent) {
 		myAgent = agent;
-		agent.setLocation(myRow, myCol);
+		agent.setLocation(getCurRow(), getCurCol());
 	}
 	
 	/**
