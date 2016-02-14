@@ -69,9 +69,11 @@ public class SugarScapeBoardBuilder extends BoardBuilder {
 				
 				Color cellcolor = myView.getStateColorMap().get(grid.getCell(r,c).getCurState());
 				if(grid.getCell(r, c).getCurState().equals(mySimulation.getRules().getDefault())){
+					System.out.println(r +"_" + c);
 					myCircles[r][c].setFill(sugaramountcolor);
+				} else {
+					myCircles[r][c].setFill(cellcolor);
 				}
-				myCircles[r][c].setFill(cellcolor);
 			}
 		}
 	}
