@@ -98,6 +98,30 @@ public abstract class SugarScapeAgent {
 		return neighbors;
 	}
 	
+	protected List<SugarScapeCell> getVisibleNeighbors(Grid grid) {
+		List<SugarScapeCell> neighbors = new ArrayList<SugarScapeCell>();
+		getNeighborsInOneDirection(neighbors, 1, ROW, grid);
+		getNeighborsInOneDirection(neighbors, -1, ROW, grid);
+		getNeighborsInOneDirection(neighbors, 1, COL, grid);
+		getNeighborsInOneDirection(neighbors, -1, COL, grid);
+		return neighbors;
+	}
+	
+	protected void getNeighborsInOneDirection(List<SugarScapeCell> neighbors, int offset, String rowOrCol, Grid grid) {
+		for (int distance = 1; distance <= myVision; distance++) {
+			int row = myRow;
+			int col = myCol;
+			if (rowOrCol.equals(ROW)) {
+				row = myRow + offset * distance;
+			} else {
+				col = myCol + offset * distance;
+			}
+			if (grid.inBounds(row, col)) {
+				neighbors.add((SugarScapeCell) grid.getCell(row, col));
+			}
+		}
+	}
+	
 	/**
 	 * Checks the neighbors in one direction (left, right, up, or down) for unoccupied neighboring cells.
 	 * @param neighbors: list of neighbors to add onto.

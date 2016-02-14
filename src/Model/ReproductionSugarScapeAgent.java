@@ -58,7 +58,7 @@ public class ReproductionSugarScapeAgent extends SugarScapeAgent {
 	 */
 	public ReproductionSugarScapeAgent findMate(Grid grid) {
 		if (this.isFertile()) {
-			List<SugarScapeCell> neighbors = getViableNeighbors(grid);
+			List<SugarScapeCell> neighbors = getVisibleNeighbors(grid);
 			while (!neighbors.isEmpty()) {
 				int rand = (int) Math.round(Math.random() * (neighbors.size()-1));
 				SugarScapeCell neighbor = neighbors.get(rand);
@@ -67,9 +67,8 @@ public class ReproductionSugarScapeAgent extends SugarScapeAgent {
 					if (neighborAgent.isFertile() && neighborAgent.isOppositeGender(this) && (this.hasEmptyNeighbor(grid) || neighborAgent.hasEmptyNeighbor(grid))) {
 						return neighborAgent;
 					}
-				} else {
-					neighbors.remove(neighbor);
 				}
+				neighbors.remove(neighbor);
 			}
 		}
 		return null;
@@ -120,11 +119,12 @@ public class ReproductionSugarScapeAgent extends SugarScapeAgent {
 	 * @return adjacent sugar scape cell that has no agent.
 	 */
 	public SugarScapeCell getEmptyNeighbor(Grid grid) {
-		SugarScapeCell[][] neighborhood = (SugarScapeCell[][]) grid.getNeighborhood(getRow(), getCol(), NUM_NEIGHBORS);
+		Cell[][] neighborhood = grid.getNeighborhood(getRow(), getCol(), NUM_NEIGHBORS);
 		for (int row = 0; row < neighborhood.length; row++) {
 			for (int col = 0; col < neighborhood.length; col++) {
-				if (!neighborhood[row][col].hasAgent()) {
-					return neighborhood[row][col];
+				SugarScapeCell neighbor = (SugarScapeCell) neighborhood[row][col];
+				if (neighbor != null && !neighbor.hasAgent()) {
+					return neighbor;
 				}
 			}
 		}
