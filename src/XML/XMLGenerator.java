@@ -371,6 +371,6 @@ public class XMLGenerator {
 		myMap.put("TREE", 90.0);
 		myMap.put("BURNING", .25);
 		XMLGenerator myGenerator = new XMLGenerator(myMap);
-		myGenerator.generateFile(80, "Fire", "FireSt80.xml", "Standard");
+		myGenerator.generateFile(40, "PredatorPrey", "SegregationTor40.xml", "Toroidal");
 	}
 }
