@@ -116,11 +116,22 @@ public class XMLGenerator {
 		List<String> inputs = new ArrayList<String>();
 		inputs.addAll(Arrays.asList("" + row, "" + col, gridType));
 		String[] params = XMLResources.getString(CONFIG).split(",");
-		Element configElement = createEntry(CONFIG, params, inputs);
+		Element configElement = createElement(CONFIG, params, inputs);
 		return configElement;
 	}
 
-	public Element createEntry(String parent, String[] childrenElements, List<String> inputs) {
+	/**
+	 * Creates a DOM element from provided date
+	 * 
+	 * @param parent
+	 *            The name of the element to be made
+	 * @param childrenElements
+	 *            The titles for the name of each element child
+	 * @param inputs
+	 *            The values for each DOM entry
+	 * @return A DOM element containing the provided data
+	 */
+	public Element createElement(String parent, String[] childrenElements, List<String> inputs) {
 		Element myElement = myDocument.createElement(parent);
 		try {
 			for (int i = 0; i < childrenElements.length; i++) {
@@ -202,6 +213,13 @@ public class XMLGenerator {
 		return myCells;
 	}
 
+	/**
+	 * Returns a list of the states for a particular type of rules
+	 * 
+	 * @param rule
+	 *            The type of rules to get the states for
+	 * @return A string array of containing the states for the rule type
+	 */
 	private String[] getStates(String rule) {
 		String statesString = myRulesResources.getString(rule);
 		String[] states = statesString.split(",");
@@ -272,19 +290,20 @@ public class XMLGenerator {
 				myCells.appendChild(myCell);
 			}
 		}
-		
-		if (myStack.isEmpty()) return myCells;
- 		Random myRandom = new Random();
- 		String statesString = myRulesResources.getString(rule);
- 		String[] states = statesString.split(",");
- 		while(!myStack.isEmpty()){
- 			String[] coordinates = myStack.pop().split(",");
- 			int row = Integer.parseInt(coordinates[0]);
- 			int col = Integer.parseInt(coordinates[1]);
- 			Element myCell = makeCellEntry(row, col, states[myRandom.nextInt(states.length)]);
- 			myCells.appendChild(myCell);
- 		}
- 			
+
+		if (myStack.isEmpty())
+			return myCells;
+		Random myRandom = new Random();
+		String statesString = myRulesResources.getString(rule);
+		String[] states = statesString.split(",");
+		while (!myStack.isEmpty()) {
+			String[] coordinates = myStack.pop().split(",");
+			int row = Integer.parseInt(coordinates[0]);
+			int col = Integer.parseInt(coordinates[1]);
+			Element myCell = makeCellEntry(row, col, states[myRandom.nextInt(states.length)]);
+			myCells.appendChild(myCell);
+		}
+
 		return myCells;
 	}
 
@@ -305,7 +324,6 @@ public class XMLGenerator {
 	 * @param myFile
 	 *            The file to be saved to
 	 */
-
 	public void save(String rulesType, int rows, int cols, Cell[][] gameGrid, ArrayList<String> params, File myFile,
 			String gridType) {
 		myDocument = myBuilder.newDocument();
@@ -366,7 +384,7 @@ public class XMLGenerator {
 		String[] params = XMLResources.getString(CELL).split(",");
 		List<String> inputs = new ArrayList<String>();
 		inputs.addAll(Arrays.asList("" + row, "" + col, state));
-		Element myCell = createEntry(CELL, params, inputs);
+		Element myCell = createElement(CELL, params, inputs);
 		return myCell;
 
 	}
@@ -396,7 +414,8 @@ public class XMLGenerator {
 
 	public static void main(String[] args) {
 		HashMap<String, Double> myMap = new HashMap<String, Double>();
+		myMap.put("BURNING", 0.25);
 		XMLGenerator myGenerator = new XMLGenerator(myMap);
-		myGenerator.generateFile(20, 20, "Fire", "FireTor20.xml", "Toroidal");
+		myGenerator.generateFile(30, 30, "Fire", "FireSt30.xml", "Standard");
 	}
 }
