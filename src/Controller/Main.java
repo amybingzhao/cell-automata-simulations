@@ -25,7 +25,6 @@ public class Main extends Application {
         myView = new CSView(mySimulation);
         
         stage.setTitle(mySimulation.getTitle());
-        
         Scene scene = myView.getScene(stage);
         stage.setScene(scene);
         stage.show();

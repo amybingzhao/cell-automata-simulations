@@ -292,15 +292,15 @@ public class XMLGenerator {
 	 *            The file to be saved to
 	 */
 
-	public void save(String rulesType, int row, int col, Cell[][] gameGrid, ArrayList<String> params, File myFile,
+	public void save(String rulesType, int rows, int cols, Cell[][] gameGrid, ArrayList<String> params, File myFile,
 			String gridType) {
 		myDocument = myBuilder.newDocument();
-		Element saveConfig = getConfig(row, col, gridType);
+		Element saveConfig = getConfig(rows, cols, gridType);
 		Element saveRules = getRules(rulesType, params);
 		Element saveCells = myDocument.createElement("Cells");
-		for (int myRow = 0; row < gameGrid.length; row++) {
-			for (int myCol = 0; col < gameGrid[row].length; col++) {
-				Element myCell = makeCellEntry(row, col, gameGrid[row][col].getCurState());
+		for (int myRow = 0; myRow < rows; myRow++) {
+			for (int myCol = 0; myCol < cols; myCol++) {
+				Element myCell = makeCellEntry(myRow, myCol, gameGrid[myRow][myCol].getCurState());
 				saveCells.appendChild(myCell);
 			}
 		}
