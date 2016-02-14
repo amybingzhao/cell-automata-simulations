@@ -1,3 +1,8 @@
+/**
+ * @author Amy Zhao
+ * Defines the variables and methods for each rules object for the Sugar Scape simulation's Reproduction preset.
+ */
+
 package Rules;
 
 import java.util.ResourceBundle;

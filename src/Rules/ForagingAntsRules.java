@@ -1,3 +1,8 @@
+/**
+ * @author Amy Zhao
+ * Defines the variables and methods for each rules object for the Foraging Ants simulation.
+ */
+
 package Rules;
 
 import java.util.ArrayList;

@@ -1,3 +1,8 @@
+/**
+ * @author Amy Zhao
+ * Defines the variables and methods for each ant object in the Foraging Ants simulation.
+ */
+
 package Model;
 
 import java.util.HashMap;

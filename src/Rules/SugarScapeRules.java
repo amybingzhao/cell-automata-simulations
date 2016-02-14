@@ -1,3 +1,8 @@
+/**
+ * @author Amy Zhao
+ * Defines the basic variables and methods for each rules object for the Sugar Scape simulation.
+ */
+
 package Rules;
 
 import java.util.ArrayList;

@@ -1,3 +1,8 @@
+/**
+ * @author Amy Zhao
+ * Defines the variables and methods for an infinite grid object.
+ */
+
 package Model;
 
 import Rules.Rules;

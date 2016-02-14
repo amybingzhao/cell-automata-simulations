@@ -1,3 +1,8 @@
+/**
+ * @author Amy Zhao
+ * Defines the variables and methods for a cell object for the Foraging Ants simulation.
+ */
+
 package Model;
 
 import java.util.ArrayList;

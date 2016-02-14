@@ -1,3 +1,8 @@
+/**
+ * @author Amy Zhao
+ * Defines the variables and methods for each sugar scape cell object
+ */
+
 package Model;
 
 public class SugarScapeCell extends Cell {

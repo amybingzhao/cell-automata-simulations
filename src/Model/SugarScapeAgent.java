@@ -1,3 +1,8 @@
+/**
+ * @author Amy Zhao
+ * Defines the variables and methods for each sugar scape agent object
+ */
+
 package Model;
 
 import java.util.ArrayList;

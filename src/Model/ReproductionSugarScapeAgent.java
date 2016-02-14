@@ -1,3 +1,8 @@
+/**
+ * @author Amy Zhao
+ * Defines the variables and methods for a sugar scape agent for the Sugar Scape simulation's Reproduction preset.
+ */
+
 package Model;
 
 import java.util.ArrayList;

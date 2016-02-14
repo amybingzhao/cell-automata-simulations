@@ -1,3 +1,9 @@
+/**
+ * @author Amy Zhao
+ * @author Blake Kaplan
+ * Defines the variables and methods for a standard grid object.
+ */
+
 package Model;
 
 public class StandardGrid extends Grid{
