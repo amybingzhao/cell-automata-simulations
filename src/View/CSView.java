@@ -308,7 +308,7 @@ public class CSView {
 		if(mySimulation.getRules() instanceof ForagingAntsRules){
 			bb = new ForagingAntsBoardBuilder(this, mySimulation);
 		} else if (mySimulation.getRules() instanceof SugarScapeRules) {
-			bb = new StandardBoardBuilder(this, mySimulation);
+			bb = new SugarScapeBoardBuilder(this, mySimulation);
 		} else {
 			bb = new StandardBoardBuilder(this, mySimulation);
 		}

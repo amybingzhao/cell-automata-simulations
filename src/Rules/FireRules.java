@@ -138,7 +138,7 @@ public class FireRules extends Rules {
 	 * Returns default state for the Fire simulation.
 	 */
 	@Override
-	protected String getDefault() {
+	public String getDefault() {
 		return DEFAULT_STATE;
 	}
 

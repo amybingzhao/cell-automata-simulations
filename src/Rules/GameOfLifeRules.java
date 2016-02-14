@@ -103,7 +103,7 @@ public class GameOfLifeRules extends Rules {
 	 * Gets the default state for the Game of Life simulation.
 	 */
 	@Override
-	protected String getDefault() {
+	public String getDefault() {
 		return DEFAULT_STATE;
 	}
 	

@@ -224,7 +224,7 @@ public class ForagingAntsRules extends Rules {
 	 * Default state for a cell in this simulation.
 	 */
 	@Override
-	protected String getDefault() {
+	public String getDefault() {
 		return DEFAULT_STATE;
 	}
 }

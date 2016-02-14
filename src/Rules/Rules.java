@@ -119,7 +119,7 @@ public abstract class Rules {
 	 * Returns the default state of the simulation.
 	 * @return default state of the simulation.
 	 */
-	protected abstract String getDefault();
+	public abstract String getDefault();
 	
 	/**
 	 * Rules for each simulation to be implemented by simulation-specific subclasses.
