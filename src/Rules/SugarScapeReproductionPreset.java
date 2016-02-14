@@ -57,8 +57,10 @@ public class SugarScapeReproductionPreset extends SugarScapeRules{
 	private void reproduce(ReproductionSugarScapeAgent curAgent, ReproductionSugarScapeAgent neighbor, Grid grid) {
 		int sugarForChild = curAgent.splitSugar(neighbor);
 		SugarScapeCell childCell = curAgent.getEmptyNeighbor(grid);
-		childCell.setAgent(new ReproductionSugarScapeAgent(sugarForChild, generateRandom(getMyAgentMetabolismLimit()), generateRandom(getMyAgentVisionLimit()), childCell.getCurRow(), childCell.getCurCol(), generateRandom(NUM_GENDERS - 1),
+		if (childCell != null) {
+			childCell.setAgent(new ReproductionSugarScapeAgent(sugarForChild, generateRandom(getMyAgentMetabolismLimit()), generateRandom(getMyAgentVisionLimit()), childCell.getCurRow(), childCell.getCurCol(), generateRandom(NUM_GENDERS - 1),
 				generateLimitedRandom(MAX_AGE_MAX, MAX_AGE_MIN), FERTILITY_MIN, FERTILITY_MAX));
+		}
 	}
 	
 	/**

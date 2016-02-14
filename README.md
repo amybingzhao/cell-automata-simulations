@@ -41,6 +41,7 @@ We have included pregenerated test files in our data folder
   * GameOfLifeTor80.xml
   * GliderSt20.xml
   * GliderTor20.xml (Good example of Toroidal Grid)
+  * GameOfLifeInfTest.xml
 
 * Fire
   * FireSt30.xml
@@ -49,24 +50,32 @@ We have included pregenerated test files in our data folder
   * FireTor80.xml
   * FireSt30BadParams.xml (Demonstrates Improper Parameters Error Checking)
   * FireSt30OutOfBounds.xml (Demonstrates Cell Out of Bounds Error Checking)
+  * FireInfTest.xml
 
 * Predator Prey
   * PredatorPreySt30.xml
   * PredatorPreyTor30.xml
   * PredatorPreySt80.xml
   * PredatorPreyTor80.xml
+  * PredatorPreyInfTest.xml
 
 * Segregation
   * SegregationSt30.xml
   * SegregationTor30.xml
   * SegregationSt80.xml
   * SegregationTor80.xml
+  * SegregationInfTest.xml
 
 * Foraging Ants
   * ForagingAnts2.xml
   * ForagingAnts3.xml
+  * ForagingAntsSt7.xml
+  * ForagingAntsTor7.xml
+  * ForagingAntsInf7.xml
 
 * Sugar Scape
+  * SSMigrationSt10.xml
+  * SSReproductionSt5.xml
 
 * Other
   * WrongFileType.txt (Demonstrates Wrong File Type Error Checking)
@@ -89,7 +98,7 @@ We have included pregenerated test files in our data folder
 
 **Interesting Information:** None
 
-**Known Bugs:** File generation for ForagingAnts requires non-automated editing to add a home cell
+**Known Bugs:** File generation for ForagingAnts requires non-automated editing to add a home cell, toroidal and infinite grids do not work for sugar scape simulations.
 
 **Extra Features:**
 * Toroidal Grid
