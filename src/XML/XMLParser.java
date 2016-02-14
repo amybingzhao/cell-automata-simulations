@@ -93,10 +93,12 @@ public class XMLParser {
 	}
 
 	/**
-	 * A boolean function
+	 * A boolean function that parses the information related to the simulation configuration
 	 * 
 	 * @param entryElement
+	 * An element from the XML file that contains information about the simulation's configuration
 	 * @return
+	 * A boolean that says whether or not the parsing was successful
 	 */
 	public boolean parseConfig(Element entryElement) {
 		List<String> myConfig = extract(entryElement);
@@ -199,7 +201,8 @@ public class XMLParser {
 					myData.get(4), myData.get(5));
 			break;
 		case "SugarScapeReproduction":
-			myRule = new SugarScapeReproductionPreset(myData.get(0), myData.get(1), myData.get(2), myData.get(3), myData.get(4), myData.get(5));
+			myRule = new SugarScapeReproductionPreset(myData.get(0), myData.get(1), myData.get(2), myData.get(3),
+					myData.get(4), myData.get(5));
 			break;
 		default:
 			break;
@@ -207,6 +210,14 @@ public class XMLParser {
 		return true;
 	}
 
+	/**
+	 * Formats information contained in a list of strings to become a list of
+	 * integers
+	 * 
+	 * @param data
+	 *            A list of strings containing the necessary data
+	 * @return A list of integers in the correct format
+	 */
 	public List<Integer> getData(List<String> data) {
 
 		ArrayList<Integer> myData = new ArrayList<Integer>();

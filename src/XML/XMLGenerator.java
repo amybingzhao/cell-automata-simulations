@@ -29,6 +29,9 @@ import Model.Cell;
 
 public class XMLGenerator {
 
+	private static final String PARAMETERS = "Parameters";
+	private static final String NAME = "Name";
+	private static final String GAME = "Game";
 	private static final String CELLS = "Cells";
 	private static final String CELL = "Cell";
 	private static final String OUT_OF_BOUNDS = "OutOfBounds";
@@ -116,11 +119,22 @@ public class XMLGenerator {
 		List<String> inputs = new ArrayList<String>();
 		inputs.addAll(Arrays.asList("" + row, "" + col, gridType));
 		String[] params = XMLResources.getString(CONFIG).split(",");
-		Element configElement = createEntry(CONFIG, params, inputs);
+		Element configElement = createElement(CONFIG, params, inputs);
 		return configElement;
 	}
 
-	public Element createEntry(String parent, String[] childrenElements, List<String> inputs) {
+	/**
+	 * Creates a DOM element from provided date
+	 * 
+	 * @param parent
+	 *            The name of the element to be made
+	 * @param childrenElements
+	 *            The titles for the name of each element child
+	 * @param inputs
+	 *            The values for each DOM entry
+	 * @return A DOM element containing the provided data
+	 */
+	public Element createElement(String parent, String[] childrenElements, List<String> inputs) {
 		Element myElement = myDocument.createElement(parent);
 		try {
 			for (int i = 0; i < childrenElements.length; i++) {
@@ -145,8 +159,8 @@ public class XMLGenerator {
 	 */
 	public Element getRules(String rules, List<String> params) {
 
-		Element gameElement = myDocument.createElement("Game");
-		Element myName = myDocument.createElement("Name");
+		Element gameElement = myDocument.createElement(GAME);
+		Element myName = myDocument.createElement(NAME);
 		myName.appendChild(myDocument.createTextNode(rules));
 		Element myParams = parametersAsElement(params);
 		gameElement.appendChild(myName);
@@ -165,7 +179,7 @@ public class XMLGenerator {
 	 *         parameters
 	 */
 	public Element parametersAsElement(List<String> parameters) {
-		Element paramElement = myDocument.createElement("Parameters");
+		Element paramElement = myDocument.createElement(PARAMETERS);
 		for (String param : parameters) {
 			String[] splitParam = param.split(":");
 			Element paramType = myDocument.createElement(splitParam[0]);
@@ -202,6 +216,13 @@ public class XMLGenerator {
 		return myCells;
 	}
 
+	/**
+	 * Returns a list of the states for a particular type of rules
+	 * 
+	 * @param rule
+	 *            The type of rules to get the states for
+	 * @return A string array of containing the states for the rule type
+	 */
 	private String[] getStates(String rule) {
 		String statesString = myRulesResources.getString(rule);
 		String[] states = statesString.split(",");
@@ -265,27 +286,46 @@ public class XMLGenerator {
 		for (String state : stateWeights.keySet()) {
 			int numCells = (int) Math.round(((stateWeights.get(state) / 100) * (rows * cols)));
 			for (int i = 0; i < numCells && !myStack.isEmpty(); i++) {
-				String[] coordinates = myStack.pop().split(",");
-				int myRow = Integer.parseInt(coordinates[0]);
-				int myCol = Integer.parseInt(coordinates[1]);
-				Element myCell = makeCellEntry(myRow, myCol, state);
-				myCells.appendChild(myCell);
+				myCells.appendChild(getCoordinates(state, rule));
 			}
 		}
-		
-		if (myStack.isEmpty()) return myCells;
- 		Random myRandom = new Random();
- 		String statesString = myRulesResources.getString(rule);
- 		String[] states = statesString.split(",");
- 		while(!myStack.isEmpty()){
- 			String[] coordinates = myStack.pop().split(",");
- 			int row = Integer.parseInt(coordinates[0]);
- 			int col = Integer.parseInt(coordinates[1]);
- 			Element myCell = makeCellEntry(row, col, states[myRandom.nextInt(states.length)]);
- 			myCells.appendChild(myCell);
- 		}
- 			
+
+		if (myStack.isEmpty())
+			return myCells;
+
+		while (!myStack.isEmpty()) {
+			myCells.appendChild(getCoordinates(null, rule));
+		}
+
 		return myCells;
+	}
+
+	/**
+	 * Creates a cell element for a given state and rule at a location taken
+	 * from the stack
+	 * 
+	 * @param state
+	 *            A cell state
+	 * @param rule
+	 *            The type of the rule for the current simulation
+	 * @return An cell DOM element
+	 */
+	public Element getCoordinates(String state, String rule) {
+		String coordinates = myStack.pop();
+		int[] myCoordinates = new int[2];
+		String[] inputData = coordinates.split(",");
+		Element myCell;
+		myCoordinates[0] = Integer.parseInt(inputData[0]);
+		myCoordinates[1] = Integer.parseInt(inputData[1]);
+		if (state == null) {
+			Random myRandom = new Random();
+			String statesString = myRulesResources.getString(rule);
+			String[] states = statesString.split(",");
+			myCell = makeCellEntry(myCoordinates[0], myCoordinates[1], states[myRandom.nextInt(states.length)]);
+		} else {
+			myCell = makeCellEntry(myCoordinates[0], myCoordinates[1], state);
+		}
+		return myCell;
 	}
 
 	/**
@@ -305,7 +345,6 @@ public class XMLGenerator {
 	 * @param myFile
 	 *            The file to be saved to
 	 */
-
 	public void save(String rulesType, int rows, int cols, Cell[][] gameGrid, List<String> params, File myFile,
 			String gridType) {
 		myDocument = myBuilder.newDocument();
@@ -366,7 +405,7 @@ public class XMLGenerator {
 		String[] params = XMLResources.getString(CELL).split(",");
 		List<String> inputs = new ArrayList<String>();
 		inputs.addAll(Arrays.asList("" + row, "" + col, state));
-		Element myCell = createEntry(CELL, params, inputs);
+		Element myCell = createElement(CELL, params, inputs);
 		return myCell;
 
 	}
@@ -381,7 +420,7 @@ public class XMLGenerator {
 	 */
 	public List<String> promptForParameters(String rule) {
 		ArrayList<String> parameters = new ArrayList<String>();
-		String[] resourcesParams = myRulesResources.getString(rule + "Parameters").split(",");
+		String[] resourcesParams = myRulesResources.getString(rule + PARAMETERS).split(",");
 		Scanner myScanner = new Scanner(System.in);
 		for (String param : resourcesParams) {
 			if (param.equals("NONE"))
@@ -396,7 +435,9 @@ public class XMLGenerator {
 
 	public static void main(String[] args) {
 		HashMap<String, Double> myMap = new HashMap<String, Double>();
+		myMap.put("BURNING", 0.25);
+		myMap.put("TREE", 90.0);
 		XMLGenerator myGenerator = new XMLGenerator(myMap);
-		myGenerator.generateFile(20, 20, "Fire", "FireTor20.xml", "Toroidal");
+		myGenerator.generateFile(40, 40, "Fire", "FireSt40.xml", "Standard");
 	}
 }
