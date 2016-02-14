@@ -105,6 +105,14 @@ public class XMLGenerator {
 
 	}
 
+	public Element makeElement(int row, int col, String item, String key) {
+		List<String> input = new ArrayList<String>();
+		input.addAll(Arrays.asList("" + row, "" + col, item));
+		String[] params = XMLResources.getString(key).split(",");
+		Element myElement = createElement(key, params, input);
+		return myElement;
+	}
+
 	/**
 	 * Creates the data for the Config section of the XML file
 	 * 
@@ -115,12 +123,7 @@ public class XMLGenerator {
 	 * @return An element containing the data to be put in the file
 	 */
 	public Element getConfig(int row, int col, String gridType) {
-
-		List<String> inputs = new ArrayList<String>();
-		inputs.addAll(Arrays.asList("" + row, "" + col, gridType));
-		String[] params = XMLResources.getString(CONFIG).split(",");
-		Element configElement = createElement(CONFIG, params, inputs);
-		return configElement;
+		return makeElement(row, col, gridType, CONFIG);
 	}
 
 	/**
@@ -402,11 +405,7 @@ public class XMLGenerator {
 	 */
 	Element makeCellEntry(int row, int col, String state) {
 
-		String[] params = XMLResources.getString(CELL).split(",");
-		List<String> inputs = new ArrayList<String>();
-		inputs.addAll(Arrays.asList("" + row, "" + col, state));
-		Element myCell = createElement(CELL, params, inputs);
-		return myCell;
+		return makeElement(row, col, state, CELL);
 
 	}
 

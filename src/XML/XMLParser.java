@@ -178,31 +178,31 @@ public class XMLParser {
 			mySimulation.displayAlert(INVALID_PARAMETERS);
 			return false;
 		}
-		ArrayList<Integer> myData = (ArrayList<Integer>) getData(data);
+		ArrayList<Number> myData = (ArrayList<Number>) getData(data, game);
 
 		switch (game) {
 		case "Segregation":
-			myRule = new SegregationRules(myData.get(0));
+			myRule = new SegregationRules((double) myData.get(0));
 			break;
 		case "PredatorPrey":
-			myRule = new PredatorPreyRules(myData.get(0), myData.get(1), myData.get(2));
+			myRule = new PredatorPreyRules((int) myData.get(0), (int) myData.get(1), (int) myData.get(2));
 			break;
 		case "GameOfLife":
 			myRule = new GameOfLifeRules();
 			break;
 		case "Fire":
-			myRule = new FireRules(myData.get(0));
+			myRule = new FireRules((double) myData.get(0));
 			break;
 		case "ForagingAnts":
-			myRule = new ForagingAntsRules(myData.get(0));
+			myRule = new ForagingAntsRules((int) myData.get(0));
 			break;
 		case "SugarScapeMigration":
-			myRule = new SugarScapeMigrationPreset(myData.get(0), myData.get(1), myData.get(2), myData.get(3),
-					myData.get(4), myData.get(5));
+			myRule = new SugarScapeMigrationPreset((int) myData.get(0), (int) myData.get(1), (int) myData.get(2), (int) myData.get(3),
+					(int) myData.get(4), (int) myData.get(5));
 			break;
 		case "SugarScapeReproduction":
-			myRule = new SugarScapeReproductionPreset(myData.get(0), myData.get(1), myData.get(2), myData.get(3),
-					myData.get(4), myData.get(5));
+			myRule = new SugarScapeReproductionPreset((int) myData.get(0), (int) myData.get(1), (int) myData.get(2), (int) myData.get(3),
+					(int) myData.get(4), (int) myData.get(5));
 			break;
 		default:
 			break;
@@ -218,12 +218,17 @@ public class XMLParser {
 	 *            A list of strings containing the necessary data
 	 * @return A list of integers in the correct format
 	 */
-	public List<Integer> getData(List<String> data) {
+	public List<Number> getData(List<String> data, String myRule) {
 
-		ArrayList<Integer> myData = new ArrayList<Integer>();
-
+		ArrayList<Number> myData = new ArrayList<Number>();
+		
 		for (int i = 1; i < data.size(); i++) {
-			myData.add(Integer.parseInt(splitEntry(data.get(i))[1]));
+			if (myRule.equals("Segregation") || myRule.equals("Fire")){
+				myData.add(Double.parseDouble(splitEntry(data.get(i))[1]));
+			}
+			else{
+				myData.add(Integer.parseInt(splitEntry(data.get(i))[1]));
+			}
 		}
 
 		return myData;
