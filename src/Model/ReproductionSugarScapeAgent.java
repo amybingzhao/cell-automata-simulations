@@ -58,7 +58,7 @@ public class ReproductionSugarScapeAgent extends SugarScapeAgent {
 	 */
 	public ReproductionSugarScapeAgent findMate(Grid grid) {
 		if (this.isFertile()) {
-			List<SugarScapeCell> neighbors = getVisibleNeighbors(grid);
+			List<SugarScapeCell> neighbors = getVisibleNeighbors(grid, false);
 			while (!neighbors.isEmpty()) {
 				int rand = (int) Math.round(Math.random() * (neighbors.size()-1));
 				SugarScapeCell neighbor = neighbors.get(rand);
@@ -134,7 +134,7 @@ public class ReproductionSugarScapeAgent extends SugarScapeAgent {
 	/**
 	 * Checks if another agent is of the opposite gender.
 	 * @param agent: agent to check.
-	 * @return true if of the opposite gender; flase otherwise.
+	 * @return true if of the opposite gender; false otherwise.
 	 */
 	private boolean isOppositeGender(ReproductionSugarScapeAgent agent) {
 		return agent.getGender() != myGender;

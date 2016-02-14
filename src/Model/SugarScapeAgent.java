@@ -47,7 +47,7 @@ public abstract class SugarScapeAgent {
 	 * @return a SugarScapeCell that the agent will move to.
 	 */
 	public SugarScapeCell findNextPatch(Grid grid) {
-		List<SugarScapeCell> neighbors = getViableNeighbors(grid);
+		List<SugarScapeCell> neighbors = getVisibleNeighbors(grid, true);
 		SugarScapeCell nextPatch = compareViableNeighbors(neighbors, grid);
 		return nextPatch;
 	}
@@ -89,25 +89,16 @@ public abstract class SugarScapeAgent {
 	 * @param grid: simulation grid.
 	 * @return a list of neighboring SugarScapeCells that the agent can move to.
 	 */
-	protected List<SugarScapeCell> getViableNeighbors(Grid grid) {
+	protected List<SugarScapeCell> getVisibleNeighbors(Grid grid, boolean mustBeEmpty) {
 		List<SugarScapeCell> neighbors = new ArrayList<SugarScapeCell>();
-		checkNeighborsInOneDirection(neighbors, 1, ROW, grid);
-		checkNeighborsInOneDirection(neighbors, -1, ROW, grid);
-		checkNeighborsInOneDirection(neighbors, 1, COL, grid);
-		checkNeighborsInOneDirection(neighbors, -1, COL, grid);
+		getNeighborsInOneDirection(neighbors, 1, ROW, grid, mustBeEmpty);
+		getNeighborsInOneDirection(neighbors, -1, ROW, grid, mustBeEmpty);
+		getNeighborsInOneDirection(neighbors, 1, COL, grid, mustBeEmpty);
+		getNeighborsInOneDirection(neighbors, -1, COL, grid, mustBeEmpty);
 		return neighbors;
 	}
 	
-	protected List<SugarScapeCell> getVisibleNeighbors(Grid grid) {
-		List<SugarScapeCell> neighbors = new ArrayList<SugarScapeCell>();
-		getNeighborsInOneDirection(neighbors, 1, ROW, grid);
-		getNeighborsInOneDirection(neighbors, -1, ROW, grid);
-		getNeighborsInOneDirection(neighbors, 1, COL, grid);
-		getNeighborsInOneDirection(neighbors, -1, COL, grid);
-		return neighbors;
-	}
-	
-	protected void getNeighborsInOneDirection(List<SugarScapeCell> neighbors, int offset, String rowOrCol, Grid grid) {
+	protected void getNeighborsInOneDirection(List<SugarScapeCell> neighbors, int offset, String rowOrCol, Grid grid, boolean mustBeEmpty) {
 		for (int distance = 1; distance <= myVision; distance++) {
 			int row = myRow;
 			int col = myCol;
@@ -116,30 +107,14 @@ public abstract class SugarScapeAgent {
 			} else {
 				col = myCol + offset * distance;
 			}
-			if (grid.inBounds(row, col)) {
-				neighbors.add((SugarScapeCell) grid.getCell(row, col));
-			}
-		}
-	}
-	
-	/**
-	 * Checks the neighbors in one direction (left, right, up, or down) for unoccupied neighboring cells.
-	 * @param neighbors: list of neighbors to add onto.
-	 * @param offset: +1 or -1 for which relative direction to look in.
-	 * @param rowOrCol: ROW or COL depending on whether offsetting current row or current column.
-	 * @param grid: simulation grid.
-	 */
-	protected void checkNeighborsInOneDirection(List<SugarScapeCell> neighbors, int offset, String rowOrCol, Grid grid) {
-		for (int distance = 1; distance <= myVision; distance++) {
-			int row = myRow;
-			int col = myCol;
-			if (rowOrCol.equals(ROW)) {
-				row = myRow + offset * distance;
+			if (mustBeEmpty) {
+				if (viableNeighbor(row, col, grid)) {
+					neighbors.add((SugarScapeCell) grid.getCell(row, col));
+				}
 			} else {
-				col = myCol + offset * distance;
-			}
-			if (viableNeighbor(row, col, grid)) {
-				neighbors.add((SugarScapeCell) grid.getCell(row, col));
+				if (grid.inBounds(row, col)) {
+					neighbors.add((SugarScapeCell) grid.getCell(row, col));
+				}
 			}
 		}
 	}
