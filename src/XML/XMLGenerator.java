@@ -292,28 +292,37 @@ public class XMLGenerator {
 
 		if (myStack.isEmpty())
 			return myCells;
-		
+
 		while (!myStack.isEmpty()) {
 			myCells.appendChild(getCoordinates(null, rule));
 		}
 
 		return myCells;
 	}
-	
-	public Element getCoordinates(String state, String rule){
+
+	/**
+	 * Creates a cell element for a given state and rule at a location taken
+	 * from the stack
+	 * 
+	 * @param state
+	 *            A cell state
+	 * @param rule
+	 *            The type of the rule for the current simulation
+	 * @return An cell DOM element
+	 */
+	public Element getCoordinates(String state, String rule) {
 		String coordinates = myStack.pop();
 		int[] myCoordinates = new int[2];
 		String[] inputData = coordinates.split(",");
 		Element myCell;
 		myCoordinates[0] = Integer.parseInt(inputData[0]);
 		myCoordinates[1] = Integer.parseInt(inputData[1]);
-		if (state == null){
+		if (state == null) {
 			Random myRandom = new Random();
 			String statesString = myRulesResources.getString(rule);
 			String[] states = statesString.split(",");
 			myCell = makeCellEntry(myCoordinates[0], myCoordinates[1], states[myRandom.nextInt(states.length)]);
-		}
-		else{
+		} else {
 			myCell = makeCellEntry(myCoordinates[0], myCoordinates[1], state);
 		}
 		return myCell;
