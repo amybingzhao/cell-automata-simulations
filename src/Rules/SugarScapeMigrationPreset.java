@@ -11,7 +11,6 @@ import Model.Cell;
 import Model.Grid;
 import Model.StandardSugarScapeAgent;
 import Model.SugarScapeAgent;
-import Model.SugarScapeCell;
 
 public class SugarScapeMigrationPreset extends SugarScapeRules {
 	public static final String DEFAULT_RESOURCE = "Rules/SugarScapeMigrationRules";

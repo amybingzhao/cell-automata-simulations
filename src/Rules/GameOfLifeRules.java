@@ -7,13 +7,11 @@
 package Rules;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 
 import Model.Cell;
 import Model.Grid;
-import Model.StandardCell;
 
 public class GameOfLifeRules extends Rules {
 	public static final String DEFAULT_RESOURCE = "Rules/GameOfLifeRules";
@@ -22,8 +20,6 @@ public class GameOfLifeRules extends Rules {
 	private String DEAD = myResource.getString("Dead");
 	private String ALIVE = myResource.getString("Alive");
 	private String DEFAULT_STATE = myResource.getString("DefaultState");
-	private int MY_CELL_ROW = Integer.parseInt(myResource.getString("MyCellRow"));
-	private int MY_CELL_COL = Integer.parseInt(myResource.getString("MyCellCol"));
 	private List<Integer> NUM_ALLOWABLE_LIVE_NEIGHBORS = new ArrayList<Integer>();
 	private int NUM_NEIGHBORS_NEEDED_TO_REPRODUCE = Integer.parseInt(myResource.getString("NumNeighborsNeededToReproduce"));
 	

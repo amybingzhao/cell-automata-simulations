@@ -1,12 +1,9 @@
 package View;
 
-import java.util.Map;
 import java.util.ResourceBundle;
 
 import Controller.Simulation;
-import Model.Grid;
 import javafx.scene.Group;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 public abstract class BoardBuilder {

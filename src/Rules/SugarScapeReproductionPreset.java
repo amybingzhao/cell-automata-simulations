@@ -37,7 +37,6 @@ public class SugarScapeReproductionPreset extends SugarScapeRules{
 			ReproductionSugarScapeAgent agent = (ReproductionSugarScapeAgent) curCell.getAgent();
 			ReproductionSugarScapeAgent mate = agent.findMate(grid);
 			if (mate != null) {
-				System.out.println("tryna reporduce tbh");
 				reproduce(agent, mate, grid);
 			}
 			agent.increaseAge();

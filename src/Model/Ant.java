@@ -9,8 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javafx.scene.control.Cell;
-
 public class Ant {
 	private static final int NUM_FORWARD_NEIGHBORS = 3;
 	private boolean hasFood;
@@ -116,7 +114,6 @@ public class Ant {
 	public void followFoodPheromones(ForagingAntsCell[][] neighborhood, List<Integer[]> directions) {
 		ForagingAntsCell nextLocation = followPheromones(FOOD, neighborhood, directions);
 		if (nextLocation.isFood()) {
-			System.out.println("found da food stuffsz");
 			hasFood = true;
 			arrivedAtFood = true;
 		}

@@ -1,6 +1,6 @@
 /**
  * @author Amy Zhao
- * @autho Austin Wu
+ * @author Austin Wu
  * Defines the rules of the Segregation simulation
  */
 
@@ -15,7 +15,6 @@ import java.util.ResourceBundle;
 
 import Model.Cell;
 import Model.Grid;
-import Model.StandardCell;
 
 public class SegregationRules extends Rules {
 	public static final String DEFAULT_RESOURCE = "Rules/SegregationRules";

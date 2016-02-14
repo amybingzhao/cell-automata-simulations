@@ -16,7 +16,6 @@ public class ReproductionSugarScapeAgent extends SugarScapeAgent {
 	private int myFertileMax;
 	private int myInitSugar;
 	private List<ReproductionSugarScapeAgent> myChildren;
-	private static final int MAX_AGE_MINIMUM = 60;
 	private static final int NUM_NEIGHBORS = 4;
 	
 	/**
@@ -40,7 +39,6 @@ public class ReproductionSugarScapeAgent extends SugarScapeAgent {
 		myMaxAge = maxAge;
 		myFertileMin = fertileMin;
 		myFertileMax = fertileMax;
-		System.out.println(myGender);
 	}
 	
 	/**
