@@ -86,10 +86,7 @@ public class SugarScapeBoardBuilder extends BoardBuilder {
 		double mysugar = cell.getMySugarAmount();
 		double maxsugar = ((SugarScapeRules) mySimulation.getRules()).getMyMaxCellSugarCapacity();
 		double ratio = mysugar/maxsugar;
-		System.out.println(mysugar);
-		System.out.println(maxsugar);
-		System.out.println(ratio);
-		Color color = cellcolor.deriveColor(0, 0.8 * ratio, 1, 1);
+		Color color = cellcolor.deriveColor(0, 0.9 * ratio, 1, 1);
 		return color;
 	}
 
