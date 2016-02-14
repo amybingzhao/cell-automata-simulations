@@ -230,7 +230,7 @@ public abstract class SugarScapeRules extends Rules {
 	 * Returns the default state for this simulation.
 	 */
 	@Override
-	protected String getDefault() {
+	public String getDefault() {
 		return DEFAULT_STATE;
 	}
 }

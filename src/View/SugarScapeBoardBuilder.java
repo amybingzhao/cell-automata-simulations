@@ -1,22 +1,22 @@
 package View;
 
 import Controller.Simulation;
-import Model.ForagingAntsCell;
 import Model.Grid;
+import Model.SugarScapeCell;
+import Rules.SugarScapeRules;
 import javafx.scene.Group;
-import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
 
-public class ForagingAntsBoardBuilder extends BoardBuilder{
+public class SugarScapeBoardBuilder extends BoardBuilder {
 
-	private Label[][] antcounts;
+	Circle[][] myCircles;
 	
-	public ForagingAntsBoardBuilder(CSView view, Simulation sim) {
+	public SugarScapeBoardBuilder(CSView view, Simulation sim) {
 		super(view, sim);
 	}
-
+	
 	/**
 	 * Builds a board onto the current board group if necessary (if board size changes)
 	 * @param myBoardGroup
@@ -25,7 +25,7 @@ public class ForagingAntsBoardBuilder extends BoardBuilder{
 		cellPixelSize = (boardPixelSize / Math.min(maxCellsDisplayed, Math.max(myGridWidth, myGridHeight))) - 2 * borderPixelSize;
 		myBoardGroup.getChildren().clear();
 		myBoard = new Rectangle[myGridHeight][myGridWidth];
-		antcounts = new Label[myGridWidth][myGridHeight];
+		myCircles = new Circle[myGridHeight][myGridWidth];
 		Grid grid = mySimulation.getGrid();
 		for (int r = 0; r < grid.getNumRows(); r++) {
 			for (int c = 0; c < grid.getNumCols(); c++) {
@@ -36,16 +36,12 @@ public class ForagingAntsBoardBuilder extends BoardBuilder{
 				bg.setHeight(cellPixelSize + (2 * borderPixelSize));
 				bg.setFill(myView.getBorderColor());
 				
-				Label antcount = new Label();
-				antcount.setFont(new Font("Arial", 15));
-				antcount.setLayoutY((r * (cellPixelSize + (2 * borderPixelSize))) + borderPixelSize);
-				antcount.setLayoutX((c * (cellPixelSize + (2 * borderPixelSize))) + borderPixelSize);
-				antcount.setMaxWidth(cellPixelSize);
-				antcount.setMaxHeight(cellPixelSize);
-				/*
-				 * make numbers more visible, centered, and dynamic size 
-				 */
-				antcounts[r][c] = antcount;
+				Circle cir = new Circle();
+				cir.setCenterY(((double) r + .5) * (cellPixelSize + (2 * borderPixelSize)));
+				cir.setCenterX(((double) c + .5) * (cellPixelSize + (2 * borderPixelSize)));
+				cir.setRadius(cellPixelSize/4);
+				cir.setFill(myView.getBorderColor());
+				myCircles[r][c] = cir;
 				
 				Rectangle rect = new Rectangle();
 				rect.setLayoutY((r * (cellPixelSize + (2 * borderPixelSize))) + borderPixelSize);
@@ -56,7 +52,7 @@ public class ForagingAntsBoardBuilder extends BoardBuilder{
 				int y = c; //"effectively final" and whatnot.
 				rect.setOnMouseClicked(e -> myView.respondToMouse(x, y)); 
 				myBoard[r][c] = rect;
-				myBoardGroup.getChildren().addAll(bg,rect, antcount);
+				myBoardGroup.getChildren().addAll(bg,rect, cir);
 			}
 		}
 	}
@@ -68,14 +64,28 @@ public class ForagingAntsBoardBuilder extends BoardBuilder{
 		Grid grid = mySimulation.getGrid();
 		for(int r = 0; r < grid.getNumRows(); r++){
 			for(int c = 0; c < grid.getNumCols(); c++){
+				Color sugaramountcolor = sugarColor((SugarScapeCell) grid.getCell(r, c), myView.getStateColorMap().get("OCCUPIED"));
+				myBoard[r][c].setFill(sugaramountcolor);
+				
 				Color cellcolor = myView.getStateColorMap().get(grid.getCell(r,c).getCurState());
-				myBoard[r][c].setFill(cellcolor);
-				ForagingAntsCell ant = (ForagingAntsCell) mySimulation.getGrid().getCell(r, c);
-				antcounts[r][c].setText(Integer.toString(ant.getNumAnts()));
-				antcounts[r][c].setTextFill(cellcolor.invert());
+				if(grid.getCell(r, c).getCurState().equals(mySimulation.getRules().getDefault())){
+					myCircles[r][c].setFill(sugaramountcolor);
+				}
+				myCircles[r][c].setFill(cellcolor);
 			}
 		}
 	}
 	
-	
+	/**
+	 * Generates a correct color for a given amount of sugar
+	 * @return
+	 */
+	private Color sugarColor(SugarScapeCell cell, Color cellcolor){
+		int mysugar = cell.getMySugarAmount();
+		int maxsugar = ((SugarScapeRules) mySimulation.getRules()).getMyMaxCellSugarCapacity();
+		double ratio = mysugar/maxsugar;
+		Color color = cellcolor.deriveColor(0, 0.5 * ratio, 1, 1);
+		return color;
+	}
+
 }
