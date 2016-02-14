@@ -385,7 +385,6 @@ public class XMLGenerator {
 			DOMSource mySource = new DOMSource(myDocument);
 			StreamResult myResult = new StreamResult(myFile);
 			myTransformer.transform(mySource, myResult);
-			System.out.println("DONE");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

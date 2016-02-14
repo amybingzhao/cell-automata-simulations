@@ -53,6 +53,7 @@ public class XMLGeneratorView {
 	private Map<String, ComboBox<String>> configmap;
 	private Map<String, TextField> customparamsmap;
 	private XMLGenerator generator;
+	private String myRule;
 
 	public XMLGeneratorView() {
 		stage = new Stage();
@@ -152,6 +153,7 @@ public class XMLGeneratorView {
 			public void changed(ObservableValue ov, String oldsim, String newsim) {
 				if(name.equals("Simulation")){
 					updateStateOptions(newsim);
+					myRule = newsim;
 				} 
 			}
 		});
@@ -281,8 +283,11 @@ public class XMLGeneratorView {
 		String rules = (String) configmap.get("Simulation").getValue();
 		String gridtypes = (String) configmap.get("GridTypes").getValue();
 		List<String> params = new ArrayList<String>();
-		for(String k: customparamsmap.keySet()){
-			params.add(k + ":" + customparamsmap.get(k).getText());
+		
+		String[] resourcesParams = myRulesResources.getString(myRule + PARAMETERS).split(",");
+		
+		for(String s : resourcesParams){
+			params.add(s + ":" + customparamsmap.get(s).getText());
 		}
 		
 		FileChooser myFileChooser = new FileChooser();

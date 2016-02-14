@@ -89,7 +89,7 @@ public class SugarScapeBoardBuilder extends BoardBuilder {
 		System.out.println(mysugar);
 		System.out.println(maxsugar);
 		System.out.println(ratio);
-		Color color = cellcolor.deriveColor(0, 0.7 * ratio, 1, 1);
+		Color color = cellcolor.deriveColor(0, 0.8 * ratio, 1, 1);
 		return color;
 	}
 
