@@ -29,6 +29,9 @@ import Model.Cell;
 
 public class XMLGenerator {
 
+	private static final String PARAMETERS = "Parameters";
+	private static final String NAME = "Name";
+	private static final String GAME = "Game";
 	private static final String CELLS = "Cells";
 	private static final String CELL = "Cell";
 	private static final String OUT_OF_BOUNDS = "OutOfBounds";
@@ -156,8 +159,8 @@ public class XMLGenerator {
 	 */
 	public Element getRules(String rules, List<String> params) {
 
-		Element gameElement = myDocument.createElement("Game");
-		Element myName = myDocument.createElement("Name");
+		Element gameElement = myDocument.createElement(GAME);
+		Element myName = myDocument.createElement(NAME);
 		myName.appendChild(myDocument.createTextNode(rules));
 		Element myParams = parametersAsElement(params);
 		gameElement.appendChild(myName);
@@ -176,7 +179,7 @@ public class XMLGenerator {
 	 *         parameters
 	 */
 	public Element parametersAsElement(List<String> parameters) {
-		Element paramElement = myDocument.createElement("Parameters");
+		Element paramElement = myDocument.createElement(PARAMETERS);
 		for (String param : parameters) {
 			String[] splitParam = param.split(":");
 			Element paramType = myDocument.createElement(splitParam[0]);
@@ -283,28 +286,37 @@ public class XMLGenerator {
 		for (String state : stateWeights.keySet()) {
 			int numCells = (int) Math.round(((stateWeights.get(state) / 100) * (rows * cols)));
 			for (int i = 0; i < numCells && !myStack.isEmpty(); i++) {
-				String[] coordinates = myStack.pop().split(",");
-				int myRow = Integer.parseInt(coordinates[0]);
-				int myCol = Integer.parseInt(coordinates[1]);
-				Element myCell = makeCellEntry(myRow, myCol, state);
-				myCells.appendChild(myCell);
+				myCells.appendChild(getCoordinates(state, rule));
 			}
 		}
 
 		if (myStack.isEmpty())
 			return myCells;
-		Random myRandom = new Random();
-		String statesString = myRulesResources.getString(rule);
-		String[] states = statesString.split(",");
+		
 		while (!myStack.isEmpty()) {
-			String[] coordinates = myStack.pop().split(",");
-			int row = Integer.parseInt(coordinates[0]);
-			int col = Integer.parseInt(coordinates[1]);
-			Element myCell = makeCellEntry(row, col, states[myRandom.nextInt(states.length)]);
-			myCells.appendChild(myCell);
+			myCells.appendChild(getCoordinates(null, rule));
 		}
 
 		return myCells;
+	}
+	
+	public Element getCoordinates(String state, String rule){
+		String coordinates = myStack.pop();
+		int[] myCoordinates = new int[2];
+		String[] inputData = coordinates.split(",");
+		Element myCell;
+		myCoordinates[0] = Integer.parseInt(inputData[0]);
+		myCoordinates[1] = Integer.parseInt(inputData[1]);
+		if (state == null){
+			Random myRandom = new Random();
+			String statesString = myRulesResources.getString(rule);
+			String[] states = statesString.split(",");
+			myCell = makeCellEntry(myCoordinates[0], myCoordinates[1], states[myRandom.nextInt(states.length)]);
+		}
+		else{
+			myCell = makeCellEntry(myCoordinates[0], myCoordinates[1], state);
+		}
+		return myCell;
 	}
 
 	/**
@@ -399,7 +411,7 @@ public class XMLGenerator {
 	 */
 	public List<String> promptForParameters(String rule) {
 		ArrayList<String> parameters = new ArrayList<String>();
-		String[] resourcesParams = myRulesResources.getString(rule + "Parameters").split(",");
+		String[] resourcesParams = myRulesResources.getString(rule + PARAMETERS).split(",");
 		Scanner myScanner = new Scanner(System.in);
 		for (String param : resourcesParams) {
 			if (param.equals("NONE"))
@@ -415,7 +427,8 @@ public class XMLGenerator {
 	public static void main(String[] args) {
 		HashMap<String, Double> myMap = new HashMap<String, Double>();
 		myMap.put("BURNING", 0.25);
+		myMap.put("TREE", 90.0);
 		XMLGenerator myGenerator = new XMLGenerator(myMap);
-		myGenerator.generateFile(30, 30, "Fire", "FireSt30.xml", "Standard");
+		myGenerator.generateFile(40, 40, "Fire", "FireSt40.xml", "Standard");
 	}
 }
