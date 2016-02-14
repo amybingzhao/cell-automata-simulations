@@ -211,8 +211,7 @@ public class XMLGeneratorView {
 		int sideLength = (int) gridsizeslider.getValue();
 		String rules = (String) configmap.get("Simulation").getValue();
 		String gridType = (String) configmap.get("GridType").getValue();
-		generator.generateFile(sideLength, rules, filename.getText() + ".xml", gridType);
+		generator.generateFile(sideLength, sideLength, rules, filename.getText() + ".xml", gridType);
 
 	}
-
 }
