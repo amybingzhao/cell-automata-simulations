@@ -83,6 +83,12 @@ public abstract class Rules {
 		return new StandardCell(initialState, row, col);
 	}
 	
+	/**
+	 * Counts the number of neighbors of a certain state.
+	 * @param neighborhood: Cell[][] containing neighboring cells to check.
+	 * @param state: state of cells to count.
+	 * @return number of neighbors of a certain state.
+	 */
 	protected int countSurroundingNeighborsOfType(Cell[][] neighborhood, String state) {
 		int ret = 0;
 		for (int row = 0; row < neighborhood.length; row++) {
@@ -99,10 +105,20 @@ public abstract class Rules {
 		return ret;
 	}
 	
+	/**
+	 * Creates a default cell specific to the simulation.
+	 * @param row: row of the cell.
+	 * @param col: column of the cell.
+	 * @return a cell of a default state specific to the simulation.
+	 */
 	public Cell createDefaultCell(int row, int col) {
 		return createCell(getDefault(), row, col);
 	}
 	
+	/**
+	 * Returns the default state of the simulation.
+	 * @return default state of the simulation.
+	 */
 	protected abstract String getDefault();
 	
 	/**
@@ -217,6 +233,12 @@ public abstract class Rules {
 		}
 	}
 	
+	/**
+	 * Checks if the cell is the last one in the grid.
+	 * @param cell: cell to check.
+	 * @param grid: simulation grid.
+	 * @return true if it is the last cell; false otherwise.
+	 */
 	protected boolean isLastCellInGrid(Cell cell, Grid grid) {
 		int offset = 1;
 		if (grid.hasBeenResizedThisStep()) {

@@ -65,6 +65,9 @@ public class SugarScapeReproductionPreset extends SugarScapeRules{
 		return generateRandom(max - min) + min;
 	}
 
+	/**
+	 * Creates agent specific to the reproduction preset.
+	 */
 	@Override
 	protected SugarScapeAgent createPresetAgent(int row, int col) {
 		return new ReproductionSugarScapeAgent(generateRandom(getMyAgentSugarLimit()) + 1, generateRandom(getMyAgentMetabolismLimit()) + 1, generateRandom(getMyAgentVisionLimit()) + 1, row, col, generateRandom(NUM_GENDERS - 1),

@@ -283,14 +283,34 @@ public class Ant {
 		followFoodPheromones(neighborhood, directions);
 	}
 	
+	/**
+	 * If the ant has reached HOME, turns towards a direction in search of food.
+	 * @param cell: cell the ant is on.
+	 * @param neighborhood: cell the ant is on and surrounding 8 cells.
+	 * @param directions: directions to check for pheromones in the order that they should be checked.
+	 */
 	private void pivotAtHome(ForagingAntsCell cell, ForagingAntsCell[][] neighborhood, List<Integer[]> directions) {
 		pivotDirection(HOME, FOOD, cell, neighborhood, directions);
 	}
 	
+	/**
+	 * If the ant has reached FOOD, turns towards a direction in search of home.
+	 * @param cell: cell the ant is on.
+	 * @param neighborhood: cell the ant is on and surrounding 8 cells.
+	 * @param directions: directions to check for pheromones in the order that they should be checked.
+	 */
 	private void pivotAtFood(ForagingAntsCell cell, ForagingAntsCell[][] neighborhood, List<Integer[]> directions) {
 		pivotDirection(FOOD, HOME, cell, neighborhood, directions);
 	}
 	
+	/**
+	 * If the ant has reached either HOME or FOOD, turns towards a direction in search of the opposite.
+	 * @param sourceType: type of cell the ant is on (either HOME or FOOD)
+	 * @param pheromoneType: type of cell the ant wants to follow (e.g. if at HOME, then FOOD).
+	 * @param cell: cell the ant is on.
+	 * @param neighborhood: cell the ant is on and surrounding 8 cells.
+	 * @param directions: directions to check for pheromones in the order that they should be checked.
+	 */
 	private void pivotDirection(String sourceType, String pheromoneType, ForagingAntsCell cell, ForagingAntsCell[][] neighborhood, List<Integer[]> directions) {
 		if (cell.at(sourceType)) {
 			ForagingAntsCell nextLocation = findNextLocation(pheromoneType, neighborhood, directions);

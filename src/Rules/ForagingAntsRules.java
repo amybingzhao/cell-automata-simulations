@@ -112,6 +112,11 @@ public class ForagingAntsRules extends Rules {
 		}
 	}
 
+	/**
+	 * Converts a generic Cell[][] to a ForagingAntsCell[][].
+	 * @param neighborhood: Cell[][] to convert.
+	 * @return ForagingAntsCell[][] version of neighborhood.
+	 */
 	private ForagingAntsCell[][] convertToForagingAntsCellNeighborhood(Cell[][] neighborhood) {
 		ForagingAntsCell[][] foragingAntsNeighborhood = new ForagingAntsCell[neighborhood.length][neighborhood[0].length];
 		for (int row = 0; row < neighborhood.length; row++) {
@@ -121,6 +126,7 @@ public class ForagingAntsRules extends Rules {
 		}
 		return foragingAntsNeighborhood;
 	}
+	
 	/**
 	 * Gets the directions that the ant should check with the forward directions at the front end of the list.
 	 * @param ant: ant being handled currently.
@@ -135,7 +141,6 @@ public class ForagingAntsRules extends Rules {
 				directions.add(myDirections.get(i));
 			}
 		}
-		
 		return directions;
 	}
 	

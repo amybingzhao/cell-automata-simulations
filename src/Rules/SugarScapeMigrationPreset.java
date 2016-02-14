@@ -30,6 +30,9 @@ public class SugarScapeMigrationPreset extends SugarScapeRules {
 		// None.
 	}
 
+	/**
+	 * Creates agent specific to thie Migration preset.
+	 */
 	@Override
 	protected SugarScapeAgent createPresetAgent(int row, int col) {
 		return new StandardSugarScapeAgent(generateRandom(getMyAgentSugarLimit()) + 1, generateRandom(getMyAgentMetabolismLimit()) + 1, generateRandom(getMyAgentVisionLimit()) + 1, row, col);

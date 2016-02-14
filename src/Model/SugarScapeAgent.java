@@ -95,7 +95,13 @@ public abstract class SugarScapeAgent {
 		return neighbors;
 	}
 	
-
+	/**
+	 * Checks the neighbors in one direction (left, right, up, or down) for unoccupied neighboring cells.
+	 * @param neighbors: list of neighbors to add onto.
+	 * @param offset: +1 or -1 for which relative direction to look in.
+	 * @param rowOrCol: ROW or COL depending on whether offseting current row or current column.
+	 * @param grid: simulation grid.
+	 */
 	protected void checkNeighborsInOneDirection(List<SugarScapeCell> neighbors, int offset, String rowOrCol, Grid grid) {
 		for (int distance = 1; distance <= myVision; distance++) {
 			int row = myRow;

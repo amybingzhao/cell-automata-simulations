@@ -37,9 +37,15 @@ public class ForagingAntsCell extends Cell {
 		myHomePheromones = 0;
 	}
 
+	/**
+	 * Checks if the cell is a type of source (either HOME or FOOD).
+	 * @param sourceType: sourceType to compare the cell to.
+	 * @return true if current cell is equal to the sourceType; false otherwise.
+	 */
 	public boolean at(String sourceType) {
 		return getCurState().equals(sourceType);
 	}
+	
 	/**
 	 * Gets number of ants currently on this cell.
 	 * @return number of ants in this cell.

@@ -14,6 +14,12 @@ public class Cell {
 	private int myNextCol;
 	private static final int NULL = -1;
 	
+	/**
+	 * Constructs a cell with the given initial state and position.
+	 * @param initialState: initial state of the cell.
+	 * @param row: row of the cell.
+	 * @param col: column of the cell.
+	 */
 	public Cell(String initialState, int row, int col) {
 		myCurState = initialState;
 		myCurRow = row;

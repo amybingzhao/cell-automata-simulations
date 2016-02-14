@@ -147,13 +147,22 @@ public abstract class Grid {
 		return (row >= 0 && row < myRows && col >= 0 && col < myCols);
 	}
 
+	/**
+	 * Gets the side length of the neighbor grid.
+	 * @return the side length of the neighbor grid.
+	 */
 	protected int getNeighborGridSideLength() {
 		return myNeighborGridSideLength;
 	}
 	
+	/**
+	 * Gets the number of rows or columns to add to the current number of rows or columns when the grid is resized.
+	 * @return the number of rows or columns to add to the current number of rows or columns when the grid is resized.
+	 */
 	protected int getNumRowsColsToExpand() {
 		return myNumRowsColsToExpand;
 	}
+	
 	/**
 	 * Gets this grid.
 	 * @return myGrid.
