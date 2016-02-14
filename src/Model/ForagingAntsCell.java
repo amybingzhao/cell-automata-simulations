@@ -24,7 +24,7 @@ public class ForagingAntsCell extends Cell {
 	public ForagingAntsCell(String initialState, int row, int col, int numTotalAnts) {
 		super(initialState, row, col);
 		myAnts = new ArrayList<Ant>();
-		if (getCurState().equals(HOME)) {
+		if (initialState.equals(HOME)) {
 			myNumAnts = numTotalAnts;
 			for (int i = 0; i < numTotalAnts; i++) {
 				myAnts.add(new Ant());

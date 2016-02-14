@@ -88,24 +88,23 @@ public class Simulation {
 
 	/**
 	 * 
-	 * @param myFile
-	 * @return returns whether or not xml file is properly formatted
+	 * @param myFile input file to be parsed
+	 * @return boolean of returns whether or not xml file has been parsed and data loaded
+	 * 
 	 */
 	public boolean useParser(File file) {
 		parser = new XMLParser(this);
 		if (!parser.parse(file))
 			return false;
-		loadFromXML(file);
+		xmlFile = file;
+		loadFromXML();
 		return true;
 	}
 
 	/**
-	 * Method that loads XML with the parser and then sets instance variables If
-	 * passed null, that means restart
+	 * Method that loads information from current parser
 	 */
-	public void loadFromXML(File file) {
-		if (file != null)
-			xmlFile = file;
+	public void loadFromXML() {
 		inputgrid = parser.getGrid();
 		rows = inputgrid[1].length;
 		cols = rows;
@@ -115,7 +114,7 @@ public class Simulation {
 		myRules.initGrid(myGrid, inputgrid);
 		loaded = true;
 	}
-
+	
 	/**
 	 * Sets the grid instance variable to be the correct instance of the Grid
 	 * abstract class
