@@ -274,14 +274,16 @@ public class CSView {
 	 * Enables and disables buttons as necessary
 	 */
 	private void enableButtons(){
-		for(String k: buttonMap.keySet()){
-			buttonMap.get(k).setDisable(mySimulation.getRules() == null);
-		}
+		buttonMap.get("Start").setDisable(mySimulation.getRules() == null || mySimulation.getRunning());
+		buttonMap.get("Stop").setDisable(mySimulation.getRules() == null || !mySimulation.getRunning());
+		buttonMap.get("Step").setDisable(mySimulation.getRules() == null);
 		buttonMap.get("Speed Up").setDisable(mySimulation.getRules() == null || mySimulation.getSpeed() >= 20);
 		buttonMap.get("Slow Down").setDisable(mySimulation.getRules() == null || mySimulation.getSpeed() <= 1);
 		buttonMap.get("Generate XML").setDisable(false);
-		buttonMap.get("Reset").setDisable(mySimulation.getXML() == null);
 		buttonMap.get("Load XML").setDisable(false);
+		buttonMap.get("Reset").setDisable(mySimulation.getXML() == null);
+		buttonMap.get("Save").setDisable(mySimulation.getRules() == null);
+		buttonMap.get("Config").setDisable(mySimulation.getRules() == null);
 		
 	}
 	

@@ -256,6 +256,13 @@ public class Simulation {
 	public void setRunning(boolean b) {
 		running = b;
 	}
+	
+	/**
+	 * @return returns whether or not simulation is running
+	 */
+	public boolean getRunning(){
+		return running;
+	}
 
 	/**
 	 * @return returns the grid that this simulation is using
