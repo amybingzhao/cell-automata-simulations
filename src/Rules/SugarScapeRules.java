@@ -11,7 +11,6 @@ import java.util.ResourceBundle;
 
 import Model.Cell;
 import Model.Grid;
-import Model.ReproductionSugarScapeAgent;
 import Model.SugarScapeAgent;
 import Model.SugarScapeCell;
 

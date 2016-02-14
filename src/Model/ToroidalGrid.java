@@ -1,3 +1,8 @@
+/**
+ * @author Blake Kaplan
+ * Defines the variables and methods for each toroidal grid object
+ */
+
 package Model;
 
 public class ToroidalGrid extends Grid{
@@ -9,6 +14,11 @@ public class ToroidalGrid extends Grid{
 		myGrid = this.getGrid();
 	}
 	
+	/**
+	 * Uses mod to wrap out of bounds cells.
+	 * @param num: row or col
+	 * @return mod'd row or col
+	 */
 	public int getModLocation(int num){
 		
 		int modNum = num % (myGrid.length);
@@ -19,6 +29,9 @@ public class ToroidalGrid extends Grid{
 		
 	}
 	
+	/**
+	 * Gets the wrapped cell.
+	 */
 	public Cell getCell(int row, int col){
 		
 		int x = getModLocation(row);
@@ -27,6 +40,9 @@ public class ToroidalGrid extends Grid{
 		
 	}
 
+	/**
+	 * Gets a toroidal neighborhood.
+	 */
 	@Override
 	public Cell[][] getNeighborhood(int row, int col, int numNeighbors) {
 		

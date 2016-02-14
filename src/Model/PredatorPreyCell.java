@@ -10,7 +10,6 @@ public class PredatorPreyCell extends Cell {
 	private int myEnergy;
 	private int myInitialSharkEnergy;
 	private static final String SHARK = "SHARK";
-	private static final String FISH = "FISH";
 	private static final String WATER = "WATER";
 
 	public PredatorPreyCell(String initialState, int row, int col, int initialEnergy) {
