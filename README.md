@@ -74,6 +74,8 @@ We have included pregenerated test files in our data folder
   * ForagingAntsInf7.xml
 
 * Sugar Scape
+  * SSMigrationSt10.xml
+  * SSReproductionSt5.xml
 
 * Other
   * WrongFileType.txt (Demonstrates Wrong File Type Error Checking)
@@ -96,7 +98,7 @@ We have included pregenerated test files in our data folder
 
 **Interesting Information:** None
 
-**Known Bugs:** File generation for ForagingAnts requires non-automated editing to add a home cell
+**Known Bugs:** File generation for ForagingAnts requires non-automated editing to add a home cell, toroidal and infinite grids do not work for sugar scape simulations.
 
 **Extra Features:**
 * Toroidal Grid
