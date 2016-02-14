@@ -14,20 +14,24 @@ import javafx.scene.control.Cell;
 public class Ant {
 	private static final int NUM_FORWARD_NEIGHBORS = 3;
 	private boolean hasFood;
+	private boolean arrivedAtFood;
 	private int myDirectionRow;
 	private int myDirectionCol;
 	private static final String FOOD = "FOOD";
 	private static final String HOME = "HOME";
 	private static final int NUM_NEIGHBORS_PER_SIDE = 3;
 	private boolean hasMovedThisTurn;
+	private ForagingAntsCell myCurCell;
 	
 	/**
 	 * Constructs an ant, initializing it as not yet moved, having no food, and orienting it in a random direction.
 	 */
-	public Ant() {
+	public Ant(ForagingAntsCell curCell) {
 		hasFood = false;
+		arrivedAtFood = false;
 		hasMovedThisTurn = false;
 		setRandomDirection();
+		myCurCell = curCell;
 	}
 	
 	/**
@@ -55,10 +59,34 @@ public class Ant {
 	}
 	
 	/**
+	 * Sets the arrivedAtFood flag.
+	 * @param bool: true if arrived at food; false otherwise.
+	 */
+	public void setArrivedAtFood(boolean bool) {
+		arrivedAtFood = bool;
+	}
+	
+	/**
+	 * Checks whether ant has just arrived at a food source.
+	 * @return true if ant just arrived at food source; false otherwise.
+	 */
+	public boolean arrivedAtFood() {
+		return arrivedAtFood;
+	}
+	
+	/**
 	 * Sets the hasFood flag to true to show that the ant got food.
 	 */
 	public void gotFood() {
 		hasFood = true;
+	}
+	
+	/**
+	 * Get the cell the ant is currently on.
+	 * @return
+	 */
+	public ForagingAntsCell getCurCell() {
+		return myCurCell;
 	}
 	
 	/**
@@ -75,10 +103,9 @@ public class Ant {
 	 * @param direction: integer array with index 0 holding the row and index 1 holding the column towards which the ant is
 	 * 		facing in a 3x3 grid of it and its neighbors.
 	 */
-	public void setDirection(ForagingAntsCell curLocation, ForagingAntsCell nextLocation) {
-		int[] relativeNextLocation = new int[]{nextLocation.getCurRow() - curLocation.getCurRow() + 1, nextLocation.getCurCol() - curLocation.getCurCol() + 1};
-		myDirectionRow = relativeNextLocation[0];
-		myDirectionCol = relativeNextLocation[1];
+	public void setDirection(int[] direction) {
+		myDirectionRow = direction[0];
+		myDirectionCol = direction[1];
 	}
 
 	/**
@@ -91,6 +118,7 @@ public class Ant {
 		if (nextLocation.isFood()) {
 			System.out.println("found da food stuffsz");
 			hasFood = true;
+			arrivedAtFood = true;
 		}
 	}
 	
@@ -109,9 +137,8 @@ public class Ant {
 		
 		dropPheromones(type, curLocation);
 
-		System.out.println("Next: " + nextLocation);
 		if (nextLocation != null) {
-			setDirection(curLocation, nextLocation); 
+			setDirection(findRelativeDirectionWithinNeighborhood(neighborhood, nextLocation)); 
 			moveToNextLocation(curLocation, nextLocation);
 		}
 		
@@ -126,6 +153,7 @@ public class Ant {
 	private void moveToNextLocation(ForagingAntsCell curLocation, ForagingAntsCell nextLocation) {
 		curLocation.removeAnt(this);
 		nextLocation.addAnt(this);
+		myCurCell = nextLocation;
 		setHasMovedThisTurn(true);
 	}
 	
@@ -249,8 +277,10 @@ public class Ant {
 	public void dropPheromones(String oppositeType, ForagingAntsCell cell) {
 		if (oppositeType.equals(HOME)) {
 			cell.increaseFoodPheromones();
+			cell.resetFoodPheromoneRecency();
 		} else {
 			cell.increaseHomePheromones();
+			cell.resetHomePheromoneRecency();
 		}
 	}
 
@@ -320,7 +350,7 @@ public class Ant {
 		if (cell.at(sourceType)) {
 			ForagingAntsCell nextLocation = findNextLocation(pheromoneType, neighborhood, directions);
 			if (nextLocation != null) {
-				setDirection(cell, nextLocation);
+				setDirection(findRelativeDirectionWithinNeighborhood(neighborhood, nextLocation));
 			}
 		}
 	}
@@ -334,8 +364,34 @@ public class Ant {
 	 */
 	private ForagingAntsCell findNextLocation(String pheromoneType, ForagingAntsCell[][] neighborhood, List<Integer[]> directions) {
 		Map<ForagingAntsCell, Integer> weights = assignWeights(FOOD, neighborhood, directions);
+		ForagingAntsCell nextLocation = pickWeightedRandomCell(weights);
+		if (nextLocation != null) {
+			setDirection(findRelativeDirectionWithinNeighborhood(neighborhood, nextLocation));
+		}
 		return pickWeightedRandomCell(weights);
 	}
+
+	/**
+	 * Finds the direction that the ant is facing given its next location.
+	 * @param neighborhood: neighborhood surrounding the cell the ant is in.
+	 * @param nextLocation: location to move to.
+	 * @return int array holding the row direction at index 0 and column direction at index 1.
+	 */
+	private int[] findRelativeDirectionWithinNeighborhood(ForagingAntsCell[][] neighborhood, ForagingAntsCell nextLocation) {
+		int[] dir = new int[2];
+		for (int row = 0; row < neighborhood.length; row++) {
+			for (int col = 0; col < neighborhood[0].length; col++) {
+				if (neighborhood[row][col] != null) {
+					if (neighborhood[row][col].equals(nextLocation)) {
+						dir[0] = row;
+						dir[1] = col;
+					}
+				}
+			}
+		}
+		return dir;
+	}
+	
 	/**
 	 * Sets a random direction for the ant's orientation within a neighbors grid. (Cannot be [1, 1] as that is the current
 	 * cell itself).

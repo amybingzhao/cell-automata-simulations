@@ -78,18 +78,19 @@ public class ForagingAntsRules extends Rules {
 		}
 		
 		if (isLastCellInGrid(cell, grid)) {
-			resetAllAntHasMovedFlags(grid);
+			resetAllAntHasMovedFlagsAndIncrementPheromoneRecency(grid);
 		}
 	}
 	
 	/**
-	 * Resets hasMoved flags for all ants at the end of each step.
+	 * Resets hasMoved flags for all ants at the end of each step and increments the recency counter for pheromones of all cells.
 	 * @param grid: simulation grid.
 	 */
-	private void resetAllAntHasMovedFlags(Grid grid) {
+	private void resetAllAntHasMovedFlagsAndIncrementPheromoneRecency(Grid grid) {
 		for (int row = 0; row < grid.getNumRows(); row++) {
 			for (int col = 0; col < grid.getNumCols(); col++) {
 				ForagingAntsCell cell = (ForagingAntsCell) grid.getCell(row, col);
+				cell.incrementPheromoneRecency();
 				if (cell.getNumAnts() > 0) {
 					List<Ant> ants = cell.getAnts();
 					for (int i = 0; i < ants.size(); i++) {
@@ -114,6 +115,11 @@ public class ForagingAntsRules extends Rules {
 			ant.returnToNest(cell, foragingAntsNeighborhood, directions);
 		} else {
 			ant.findFoodSource(cell, foragingAntsNeighborhood, directions);
+			if (ant.arrivedAtFood()) {
+				ant.getCurCell().loseFood();
+				addCellToBeUpdated(ant.getCurCell());
+				ant.setArrivedAtFood(false);
+			}
 		}
 	}
 
