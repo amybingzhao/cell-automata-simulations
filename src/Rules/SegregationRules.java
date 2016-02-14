@@ -9,18 +9,24 @@ package Rules;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
+import java.util.ResourceBundle;
+
 import Model.Cell;
 import Model.Grid;
 import Model.StandardCell;
 
 public class SegregationRules extends Rules {
-
-	private static final int NUM_NEIGHBORS = 8;
-	private static final String EMPTY = "EMPTY";
-	private static final int MY_CELL_ROW = 1;
-	private static final int MY_CELL_COL = 1;
-	private static final String DEFAULT_STATE = EMPTY;
+	public static final String DEFAULT_RESOURCE = "Rules/SegregationRules";
+	private ResourceBundle myResource = ResourceBundle.getBundle(DEFAULT_RESOURCE);
+	private int NUM_NEIGHBORS = Integer.parseInt(myResource.getString("NumNeighbors"));
+	private String EMPTY = myResource.getString("Empty");
+	private String RED = myResource.getString("Red");
+	private String BLUE = myResource.getString("Blue");
+	private int MY_CELL_ROW = Integer.parseInt(myResource.getString("MyCellRow"));
+	private int MY_CELL_COL = Integer.parseInt(myResource.getString("MyCellCol"));
+	private String DEFAULT_STATE = myResource.getString("DefaultState");
 	private ArrayList<Cell> toBeMoved;
 	private Queue<Cell> emptyCellList;
 	private double myThreshold;
@@ -87,7 +93,8 @@ public class SegregationRules extends Rules {
 	 */
 	private void handleAgentCell(Cell cell, Grid grid) {
 		Cell[][] neighborhood = grid.getNeighborhood(cell.getCurRow(), cell.getCurCol(), NUM_NEIGHBORS);
-		if (!satisfiedWithNeighbors (neighborhood)) {
+		double percentageSame = percentageSameNeighbors(neighborhood);
+		if (percentageSame < myThreshold && percentageSame != 0.0) {
 			toBeMoved.add(cell);
 		}
 	}
@@ -97,35 +104,12 @@ public class SegregationRules extends Rules {
 	 * @param neighborhood: 3x3 array of Cells with the Cell of interest in the center and its neighbors surrounding it.
 	 * @return true if satisfied; false if dissatisfied.
 	 */
-	private boolean satisfiedWithNeighbors(Cell[][] neighborhood) {
-		int numNeighbors = 0;
-		int numSameNeighbors = 0;
+	private double percentageSameNeighbors(Cell[][] neighborhood) {
 		String myCellState = neighborhood[MY_CELL_ROW][MY_CELL_COL].getCurState();
+		int numNeighbors = countSurroundingNeighborsOfType(neighborhood, RED) + countSurroundingNeighborsOfType(neighborhood, BLUE);
+		int numSameNeighbors = countSurroundingNeighborsOfType(neighborhood, myCellState);
 		
-		for (int row = 0; row < neighborhood.length; row++) {
-			for (int col = 0; col < neighborhood[row].length; col++) {
-				if (neighborhood[row][col] != null) {
-					if (row != MY_CELL_ROW || col != MY_CELL_COL) {
-						String neighborState = neighborhood[row][col].getCurState();
-						if (!neighborState.equals(EMPTY)) {
-							numNeighbors++;
-							if (neighborhood[row][col].getCurState().equals(myCellState)) {
-								numSameNeighbors++;
-							}
-						}
-					}
-				}
-			}
-		}
-		return ((((double) numSameNeighbors)/((double) numNeighbors)*100 >= myThreshold) || numNeighbors == 0);
-	}
-
-	/**
-	 * Creates a Standard Cell for this simulation.
-	 */
-	@Override
-	protected Cell createCell(String initialState, int row, int col) {
-		return new StandardCell(initialState, row, col);
+		return ((double) numSameNeighbors)/((double) numNeighbors)*100;
 	}
 	
 	/**
@@ -139,8 +123,8 @@ public class SegregationRules extends Rules {
 	 * Gets the parameters for the Segregation simulation.
 	 */
 	@Override
-	public ArrayList<String> getParameters() {
-		ArrayList<String> parameters = new ArrayList<String>();
+	public List<String> getParameters() {
+		List<String> parameters = new ArrayList<String>();
 		parameters.add("Threshold:" + myThreshold);
 		return parameters;
 	}

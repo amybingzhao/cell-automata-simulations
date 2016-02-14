@@ -1,9 +1,13 @@
+/**
+ * @author Amy Zhao
+ * @author Blake Kaplan
+ * Defines the variables and methods for a standard grid object.
+ */
+
 package Model;
 
 public class StandardGrid extends Grid{
 	
-	private static final int NEIGHBOR_GRID_SIDE_LENGTH = 3;
-
 	public StandardGrid(int rows, int cols, String[][] initialStates) {
 		super(rows, cols, initialStates);
 	}
@@ -15,7 +19,8 @@ public class StandardGrid extends Grid{
 	 * @param numNeighbors: number of neighbors to get based on simulation type (4 or 8).
 	 */
 	public Cell[][] getNeighborhood(int row, int col, int numNeighbors) {
-		Cell[][] neighborhood = new Cell[NEIGHBOR_GRID_SIDE_LENGTH][NEIGHBOR_GRID_SIDE_LENGTH];
+		Cell[][] neighborhood = new Cell[getNeighborGridSideLength()][getNeighborGridSideLength()];
+		
 		if (numNeighbors == 4) {
 			int[] rowDirections = new int[]{-1, 0, 1, 0};
 			int[] colDirections = new int[]{0, 1, 0, -1};

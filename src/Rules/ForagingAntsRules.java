@@ -1,7 +1,14 @@
+/**
+ * @author Amy Zhao
+ * Defines the variables and methods for each rules object for the Foraging Ants simulation.
+ */
+
 package Rules;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
+
 import Model.Cell;
 import Model.ForagingAntsCell;
 import Model.Grid;
@@ -9,9 +16,10 @@ import Model.Ant;
 
 public class ForagingAntsRules extends Rules {
 	private int numTotalAnts;
-	private static final String GROUND = "GROUND";
-	private static final String DEFAULT_STATE = GROUND;
-	private static final int NUM_NEIGHBORS = 8;
+	public static final String DEFAULT_RESOURCE = "Rules/ForagingAntsRules";
+	private ResourceBundle myResource = ResourceBundle.getBundle(DEFAULT_RESOURCE);
+	private String DEFAULT_STATE = myResource.getString("DefaultState");
+	private int NUM_NEIGHBORS = Integer.parseInt(myResource.getString("NumNeighbors"));
 	private static final Integer[] NORTH = new Integer[]{0, 1};
 	private static final Integer[] SOUTH = new Integer[]{2, 1};
 	private static final Integer[] WEST = new Integer[]{1, 0};
@@ -70,18 +78,19 @@ public class ForagingAntsRules extends Rules {
 		}
 		
 		if (isLastCellInGrid(cell, grid)) {
-			resetAllAntHasMovedFlags(grid);
+			resetAllAntHasMovedFlagsAndIncrementPheromoneRecency(grid);
 		}
 	}
 	
 	/**
-	 * Resets hasMoved flags for all ants at the end of each step.
+	 * Resets hasMoved flags for all ants at the end of each step and increments the recency counter for pheromones of all cells.
 	 * @param grid: simulation grid.
 	 */
-	private void resetAllAntHasMovedFlags(Grid grid) {
+	private void resetAllAntHasMovedFlagsAndIncrementPheromoneRecency(Grid grid) {
 		for (int row = 0; row < grid.getNumRows(); row++) {
 			for (int col = 0; col < grid.getNumCols(); col++) {
 				ForagingAntsCell cell = (ForagingAntsCell) grid.getCell(row, col);
+				cell.incrementPheromoneRecency();
 				if (cell.getNumAnts() > 0) {
 					List<Ant> ants = cell.getAnts();
 					for (int i = 0; i < ants.size(); i++) {
@@ -106,9 +115,19 @@ public class ForagingAntsRules extends Rules {
 			ant.returnToNest(cell, foragingAntsNeighborhood, directions);
 		} else {
 			ant.findFoodSource(cell, foragingAntsNeighborhood, directions);
+			if (ant.arrivedAtFood()) {
+				ant.getCurCell().loseFood();
+				addCellToBeUpdated(ant.getCurCell());
+				ant.setArrivedAtFood(false);
+			}
 		}
 	}
 
+	/**
+	 * Converts a generic Cell[][] to a ForagingAntsCell[][].
+	 * @param neighborhood: Cell[][] to convert.
+	 * @return ForagingAntsCell[][] version of neighborhood.
+	 */
 	private ForagingAntsCell[][] convertToForagingAntsCellNeighborhood(Cell[][] neighborhood) {
 		ForagingAntsCell[][] foragingAntsNeighborhood = new ForagingAntsCell[neighborhood.length][neighborhood[0].length];
 		for (int row = 0; row < neighborhood.length; row++) {
@@ -116,9 +135,9 @@ public class ForagingAntsRules extends Rules {
 				foragingAntsNeighborhood[row][col] = (ForagingAntsCell) neighborhood[row][col];
 			}
 		}
-		
 		return foragingAntsNeighborhood;
 	}
+	
 	/**
 	 * Gets the directions that the ant should check with the forward directions at the front end of the list.
 	 * @param ant: ant being handled currently.
@@ -133,7 +152,6 @@ public class ForagingAntsRules extends Rules {
 				directions.add(myDirections.get(i));
 			}
 		}
-		
 		return directions;
 	}
 	
@@ -196,8 +214,8 @@ public class ForagingAntsRules extends Rules {
 	 * Gets the parameters for this simulation.
 	 */
 	@Override
-	public ArrayList<String> getParameters() {
-		ArrayList<String> parameters = new ArrayList<String>();
+	public List<String> getParameters() {
+		List<String> parameters = new ArrayList<String>();
 		parameters.add("TotalNumAnts:" + numTotalAnts);
 		return parameters;
 	}
