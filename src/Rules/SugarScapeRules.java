@@ -28,6 +28,7 @@ public abstract class SugarScapeRules extends Rules {
 	private String DEFAULT_STATE = myResource.getString("DefaultState");
 	
 	public SugarScapeRules(int sugarGrowBackRate, int sugarGrowBackInterval, int maxSugarCapacity, int sugarLimit, int visionLimit, int metabolismLimit) {
+		System.out.println("Sugar grow back interval: " + sugarGrowBackInterval);
 		mySugarGrowBackRate = sugarGrowBackRate;
 		mySugarGrowBackInterval = sugarGrowBackInterval;
 		mySugarGrowBackCountdown = sugarGrowBackInterval;
@@ -83,6 +84,7 @@ public abstract class SugarScapeRules extends Rules {
 			SugarScapeAgent agent = cell.getAgent();
 			if (agent.hasNotMoved()) {
 				SugarScapeCell nextPatch = agent.findNextPatch(grid);
+				applyExtraPresetRules(cell, grid); // is this the right place?
 				if (nextPatch != null) {
 					agent.moveToPatch(cell, nextPatch);
 					nextPatch.setNextState("OCCUPIED");
@@ -90,12 +92,11 @@ public abstract class SugarScapeRules extends Rules {
 					addCellToBeUpdated(nextPatch);
 					addCellToBeUpdated(cell);
 				}
-				applyExtraPresetRules(cell, grid); // is this the right place?
 			}
 		}
 		
 		if (isLastCellInGrid(cell, grid)) {
-			System.out.println("sugar growback countdown: " + mySugarGrowBackCountdown);
+			resetAgentMovement(grid);
 			if (canGrowSugarBack()) {
 				growBackSugarInCells(grid);
 			} else {
@@ -109,11 +110,23 @@ public abstract class SugarScapeRules extends Rules {
 	 * @param grid: simulation grid.
 	 */
 	private void growBackSugarInCells(Grid grid) {
+		System.out.println("tryna grow back sugar");
 		for (int row = 0; row < grid.getNumRows(); row++) {
 			for (int col = 0; col < grid.getNumCols(); col++) {
 				SugarScapeCell cell = (SugarScapeCell) grid.getCell(row, col);
 				cell.addSugar(mySugarGrowBackRate);
 				addCellToBeUpdated(cell);
+			}
+		}
+	}
+	
+	private void resetAgentMovement(Grid grid) {
+		for (int row = 0; row < grid.getNumRows(); row++) {
+			for (int col = 0; col < grid.getNumCols(); col++) {
+				SugarScapeCell cell = (SugarScapeCell) grid.getCell(row, col);
+				if (cell.hasAgent()) {
+					cell.getAgent().resetAgentMovement();
+				}
 			}
 		}
 	}
@@ -124,7 +137,6 @@ public abstract class SugarScapeRules extends Rules {
 	 */
 	private boolean canGrowSugarBack() {
 		if (mySugarGrowBackCountdown == 0) {
-			System.out.println("hello");
 			mySugarGrowBackCountdown = mySugarGrowBackInterval;
 			return true;
 		} else {

@@ -49,8 +49,6 @@ public abstract class SugarScapeAgent {
 	public SugarScapeCell findNextPatch(Grid grid) {
 		List<SugarScapeCell> neighbors = getViableNeighbors(grid);
 		SugarScapeCell nextPatch = compareViableNeighbors(neighbors, grid);
-//		System.out.println("my loc: (" + myRow + ", " + myCol + ")");
-	//	System.out.println("next: (" + nextPatch.getCurRow() + ", " + nextPatch.getCurCol() + ")");
 		return nextPatch;
 	}
 	
@@ -104,7 +102,7 @@ public abstract class SugarScapeAgent {
 	 * Checks the neighbors in one direction (left, right, up, or down) for unoccupied neighboring cells.
 	 * @param neighbors: list of neighbors to add onto.
 	 * @param offset: +1 or -1 for which relative direction to look in.
-	 * @param rowOrCol: ROW or COL depending on whether offseting current row or current column.
+	 * @param rowOrCol: ROW or COL depending on whether offsetting current row or current column.
 	 * @param grid: simulation grid.
 	 */
 	protected void checkNeighborsInOneDirection(List<SugarScapeCell> neighbors, int offset, String rowOrCol, Grid grid) {
@@ -116,8 +114,8 @@ public abstract class SugarScapeAgent {
 			} else {
 				col = myCol + offset * distance;
 			}
-			if (viableNeighbor(row, myCol, grid)) {
-				neighbors.add((SugarScapeCell) grid.getCell(row, myCol));
+			if (viableNeighbor(row, col, grid)) {
+				neighbors.add((SugarScapeCell) grid.getCell(row, col));
 			}
 		}
 	}
@@ -148,9 +146,7 @@ public abstract class SugarScapeAgent {
 	 */
 	private SugarScapeCell compareViableNeighbors(List<SugarScapeCell> neighbors, Grid grid) {
 		SugarScapeCell patchToMoveTo = null;
-	//	System.out.println(neighbors);
 		List<SugarScapeCell> highestSugarNeighbors = getHighestSugar(neighbors);
-	//	System.out.println("size: " + highestSugarNeighbors.size());
 		if (highestSugarNeighbors.size() > 0) {
 			patchToMoveTo = getClosestNeighbor(highestSugarNeighbors, grid);
 		}
@@ -166,7 +162,6 @@ public abstract class SugarScapeAgent {
 	private List<SugarScapeCell> getHighestSugar(List<SugarScapeCell> neighbors) {
 		List<SugarScapeCell> highestSugarNeighbors = new ArrayList<SugarScapeCell>();
 		int maxSugar = 0;
-		
 		for (int i = 0; i < neighbors.size(); i++) {
 			SugarScapeCell neighbor = neighbors.get(i);
 			if (neighbor.getMySugarAmount() > maxSugar) {
@@ -179,7 +174,6 @@ public abstract class SugarScapeAgent {
 				highestSugarNeighbors.add(neighbors.get(j));
 			}
 		}
-		
 		return highestSugarNeighbors;
 	}
 	
@@ -271,5 +265,9 @@ public abstract class SugarScapeAgent {
 	 */
 	public boolean hasNotMoved() {
 		return hasMoved == false;
+	}
+	
+	public void resetAgentMovement() {
+		hasMoved = false;
 	}
 }
