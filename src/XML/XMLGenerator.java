@@ -253,6 +253,19 @@ public class XMLGenerator {
 				myCells.appendChild(myCell);
 			}
 		}
+		
+		if (myStack.isEmpty()) return myCells;
+ 		Random myRandom = new Random();
+ 		String statesString = myRulesResources.getString(rule);
+ 		String[] states = statesString.split(",");
+ 		while(!myStack.isEmpty()){
+ 			String[] coordinates = myStack.pop().split(",");
+ 			int row = Integer.parseInt(coordinates[0]);
+ 			int col = Integer.parseInt(coordinates[1]);
+ 			Element myCell = makeCellEntry(row, col, states[myRandom.nextInt(states.length)]);
+ 			myCells.appendChild(myCell);
+ 		}
+ 			
 		return myCells;
 	}
 
@@ -368,9 +381,7 @@ public class XMLGenerator {
 
 	public static void main(String[] args) {
 		HashMap<String, Double> myMap = new HashMap<String, Double>();
-		myMap.put("TREE", 90.0);
-		myMap.put("BURNING", .25);
 		XMLGenerator myGenerator = new XMLGenerator(myMap);
-		myGenerator.generateFile(40, "PredatorPrey", "SegregationTor40.xml", "Toroidal");
+		myGenerator.generateFile(3, "ForagingAnts", "ForagingAnts3.xml", "Standard");
 	}
 }

@@ -8,10 +8,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
+
 import Controller.Simulation;
-import Model.Grid;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import Rules.ForagingAntsRules;
+import Rules.SugarScapeRules;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -22,12 +22,10 @@ import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -53,6 +51,7 @@ public class CSView {
 	private Color borderColor;
 	
 	//UI Metrics
+	private int boardPixelSize;
 	private int uiWidth;
 	
 	//resources
@@ -72,7 +71,6 @@ public class CSView {
 		loadResources(myViewResources);
 		borderColor = Color.BLACK;
 		buttonMap = new HashMap<String, Button>();
-		myBB = new BoardBuilder(this, mySimulation);
 	}
 	
 	/**
@@ -80,6 +78,7 @@ public class CSView {
 	 * @param r
 	 */
 	private void loadResources(ResourceBundle r){
+		boardPixelSize = Integer.parseInt(myViewResources.getString("BoardPixelSize"));
 		uiWidth= Integer.parseInt(myViewResources.getString("UIWidth"));
 	}
 	
@@ -113,7 +112,7 @@ public class CSView {
 		//add board
 		HBox spHBox = new HBox(5);
 		myBoardGroup = new Group();
-		myBoardGroup.getChildren().add(myBB.getBackground());
+		myBoardGroup.getChildren().add(getBackground());
 		
 		ScrollPane sp = new ScrollPane();
 		sp.setContent(myBoardGroup);
@@ -152,6 +151,19 @@ public class CSView {
 	    lineChart.setLegendSide(Side.RIGHT);
 	    lineChart.setTitle("Cells");
 	    vbox.getChildren().add(lineChart);
+	}
+	
+
+	/**
+	 * Generates the background rectangle for the board
+	 * @return a Rectangle object
+	 */
+	protected Rectangle getBackground(){
+		Rectangle boardBackground = new Rectangle();
+		boardBackground.setFill(Color.WHITE);
+		boardBackground.setWidth(boardPixelSize);
+		boardBackground.setHeight(boardPixelSize);
+		return boardBackground;
 	}
 	
 	
@@ -268,6 +280,7 @@ public class CSView {
 		buttonMap.get("Speed Up").setDisable(mySimulation.getRules() == null || mySimulation.getSpeed() >= 20);
 		buttonMap.get("Slow Down").setDisable(mySimulation.getRules() == null || mySimulation.getSpeed() <= 1);
 		buttonMap.get("Generate XML").setDisable(false);
+		buttonMap.get("Reset").setDisable(mySimulation.getXML() == null);
 		buttonMap.get("Load XML").setDisable(false);
 		
 	}
@@ -281,11 +294,25 @@ public class CSView {
 		fileChooser.setTitle("Load XML File");
 		File file = fileChooser.showOpenDialog(myStage);
 		if(file != null){
-			if(!mySimulation.useParser(file)) return;
-			stateColorMap = new HashMap<String, Color>(mySimulation.getRules().getMyStatesColors());
-			myTitleDisplay.setText("Current Simulation: " + mySimulation.getRules().toString());
-			setupUI();
+			if(mySimulation.useParser(file)){
+				stateColorMap = new HashMap<String, Color>(mySimulation.getRules().getMyStatesColors());
+				myTitleDisplay.setText("Current Simulation: " + mySimulation.getRules().toString());
+				myBB = selectBoardBuilder();
+				setupUI();
+			}
 		}
+	}
+	
+	private BoardBuilder selectBoardBuilder(){
+		BoardBuilder bb;
+		if(mySimulation.getRules() instanceof ForagingAntsRules){
+			bb = new ForagingAntsBoardBuilder(this, mySimulation);
+		} else if (mySimulation.getRules() instanceof SugarScapeRules) {
+			bb = new StandardBoardBuilder(this, mySimulation);
+		} else {
+			bb = new StandardBoardBuilder(this, mySimulation);
+		}
+		return bb;
 	}
 	
 	/**
@@ -308,14 +335,12 @@ public class CSView {
 	}
 	
 	/**
-	 * Handles reset Button press
+	 * Handles reset Button press by reinitializing from existing xml file
 	 */
 	private void resetPressed(){
-		if(mySimulation.getXML() != null){
-			mySimulation.setRunning(false);
-			mySimulation.loadFromXML(null);
-			setupUI();
-		}
+		mySimulation.setRunning(false);
+		mySimulation.loadFromXML();
+		setupUI();
 	}
 	
 	/**

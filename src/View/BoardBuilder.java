@@ -9,7 +9,7 @@ import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-public class BoardBuilder {
+public abstract class BoardBuilder {
 	/*
 	 * Class is responsible for:
 	 * building the board
@@ -18,21 +18,21 @@ public class BoardBuilder {
 	 * only rebuild if 1) its infinite mode and 2) size changes
 	 */
 	
-	private Rectangle[][] myBoard;
+	protected Rectangle[][] myBoard;
 	
 	//UI Metrics
-	private int boardPixelSize;
-	private int cellPixelSize;
-	private int borderPixelSize;
-	private int maxCellsDisplayed;
-	private int myGridWidth;
-	private int myGridHeight;
+	protected int boardPixelSize;
+	protected int cellPixelSize;
+	protected int borderPixelSize;
+	protected int maxCellsDisplayed;
+	protected int myGridWidth;
+	protected int myGridHeight;
 	
 	public static final String DEFAULT_VIEW_RESOURCE = "View/View";
-	private ResourceBundle myViewResources;
+	protected ResourceBundle myViewResources;
 	
-	private CSView myView;
-	private Simulation mySimulation;
+	protected CSView myView;
+	protected Simulation mySimulation;
 	
 	public BoardBuilder(CSView view, Simulation sim){
 		myView = view;
@@ -49,19 +49,6 @@ public class BoardBuilder {
 		borderPixelSize = Integer.parseInt(myViewResources.getString("DefaultBorderPixelSize"));
 		maxCellsDisplayed = Integer.parseInt(myViewResources.getString("DefaultMaxCellsDisplayed"));
 	}
-	
-	/**
-	 * Generates the background rectangle for the board
-	 * @return a Rectangle object
-	 */
-	protected Rectangle getBackground(){
-		Rectangle boardBackground = new Rectangle();
-		boardBackground.setFill(Color.WHITE);
-		boardBackground.setWidth(boardPixelSize);
-		boardBackground.setHeight(boardPixelSize);
-		return boardBackground;
-	}
-	
 	
 	/**
 	 * builds board by adding rectangles, with the size and quantity based on xml input
@@ -82,49 +69,127 @@ public class BoardBuilder {
 	 * Builds a board onto the current board group if necessary (if board size changes)
 	 * @param myBoardGroup
 	 */
-	private void buildBoard(Group myBoardGroup){
-		cellPixelSize = (boardPixelSize / Math.min(maxCellsDisplayed, Math.max(myGridWidth, myGridHeight))) - 2 * borderPixelSize;
-		myBoardGroup.getChildren().clear();
-		myBoard = new Rectangle[myGridWidth][myGridHeight];
-		Grid grid = mySimulation.getGrid();
-		for (int r = 0; r < grid.getNumRows(); r++) {
-			for (int c = 0; c < grid.getNumCols(); c++) {
-				Rectangle bg = new Rectangle();
-				bg.setLayoutY(r * (cellPixelSize + (2 * borderPixelSize)));
-				bg.setLayoutX(c * (cellPixelSize + (2 * borderPixelSize)));
-				bg.setWidth(cellPixelSize + (2 * borderPixelSize));
-				bg.setHeight(cellPixelSize + (2 * borderPixelSize));
-				bg.setFill(myView.getBorderColor());
-				
-				Rectangle rect = new Rectangle();
-				rect.setLayoutY((r * (cellPixelSize + (2 * borderPixelSize))) + borderPixelSize);
-				rect.setLayoutX((c * (cellPixelSize + (2 * borderPixelSize))) + borderPixelSize);
-				rect.setWidth(cellPixelSize);
-				rect.setHeight(cellPixelSize);
-				int x = r; //java 8 MADE me do it Professor!
-				int y = c; //"effectively final" and whatnot.
-				rect.setOnMouseClicked(e -> myView.respondToMouse(x, y)); 
-				myBoard[r][c] = rect;
-				myBoardGroup.getChildren().addAll(bg,rect);
-			}
-		}
-	}
+//	private void buildBoard(Group myBoardGroup){
+//		cellPixelSize = (boardPixelSize / Math.min(maxCellsDisplayed, Math.max(myGridWidth, myGridHeight))) - 2 * borderPixelSize;
+//		myBoardGroup.getChildren().clear();
+//		myBoard = new Rectangle[myGridHeight][myGridWidth];
+//		Grid grid = mySimulation.getGrid();
+//		for (int r = 0; r < grid.getNumRows(); r++) {
+//			for (int c = 0; c < grid.getNumCols(); c++) {
+//				Rectangle bg = new Rectangle();
+//				bg.setLayoutY(r * (cellPixelSize + (2 * borderPixelSize)));
+//				bg.setLayoutX(c * (cellPixelSize + (2 * borderPixelSize)));
+//				bg.setWidth(cellPixelSize + (2 * borderPixelSize));
+//				bg.setHeight(cellPixelSize + (2 * borderPixelSize));
+//				bg.setFill(myView.getBorderColor());
+//				
+//				Rectangle rect = new Rectangle();
+//				rect.setLayoutY((r * (cellPixelSize + (2 * borderPixelSize))) + borderPixelSize);
+//				rect.setLayoutX((c * (cellPixelSize + (2 * borderPixelSize))) + borderPixelSize);
+//				rect.setWidth(cellPixelSize);
+//				rect.setHeight(cellPixelSize);
+//				int x = r; //java 8 MADE me do it Professor!
+//				int y = c; //"effectively final" and whatnot.
+//				rect.setOnMouseClicked(e -> myView.respondToMouse(x, y)); 
+//				myBoard[r][c] = rect;
+//				myBoardGroup.getChildren().addAll(bg,rect);
+//			}
+//		}
+//	}
+	
+	protected abstract void buildBoard(Group myBoardGroup);
 	
 	/**
 	 * Displays the grid to the board based on the state of each of its cells
 	 */
-	private void displayGridToBoard(){
-		Grid grid = mySimulation.getGrid();
-		for(int r = 0; r < grid.getNumRows(); r++){
-			for(int c = 0; c < grid.getNumCols(); c++){
-				myBoard[r][c].setFill(myView.getStateColorMap().get(grid.getCell(r,c).getCurState()));
-			}
-		}
-	}
+//	private void displayGridToBoard(){
+//		Grid grid = mySimulation.getGrid();
+//		for(int r = 0; r < grid.getNumRows(); r++){
+//			for(int c = 0; c < grid.getNumCols(); c++){
+//				myBoard[r][c].setFill(myView.getStateColorMap().get(grid.getCell(r,c).getCurState()));
+//			}
+//		}
+//	}
+	
+	protected abstract void displayGridToBoard();
 	
 	protected void setBorderPixelSize(int size){
 		borderPixelSize = size;
 	}
 	
-	
+	protected Rectangle[][] getMyBoard() {
+		return myBoard;
+	}
+
+	protected void setMyBoard(Rectangle[][] myBoard) {
+		this.myBoard = myBoard;
+	}
+
+	protected int getBoardPixelSize() {
+		return boardPixelSize;
+	}
+
+	protected void setBoardPixelSize(int boardPixelSize) {
+		this.boardPixelSize = boardPixelSize;
+	}
+
+	protected int getCellPixelSize() {
+		return cellPixelSize;
+	}
+
+	protected void setCellPixelSize(int cellPixelSize) {
+		this.cellPixelSize = cellPixelSize;
+	}
+
+	protected int getMaxCellsDisplayed() {
+		return maxCellsDisplayed;
+	}
+
+	protected void setMaxCellsDisplayed(int maxCellsDisplayed) {
+		this.maxCellsDisplayed = maxCellsDisplayed;
+	}
+
+	protected int getMyGridWidth() {
+		return myGridWidth;
+	}
+
+	protected void setMyGridWidth(int myGridWidth) {
+		this.myGridWidth = myGridWidth;
+	}
+
+	protected int getMyGridHeight() {
+		return myGridHeight;
+	}
+
+	protected void setMyGridHeight(int myGridHeight) {
+		this.myGridHeight = myGridHeight;
+	}
+
+	protected ResourceBundle getMyViewResources() {
+		return myViewResources;
+	}
+
+	protected void setMyViewResources(ResourceBundle myViewResources) {
+		this.myViewResources = myViewResources;
+	}
+
+	protected CSView getMyView() {
+		return myView;
+	}
+
+	protected void setMyView(CSView myView) {
+		this.myView = myView;
+	}
+
+	protected Simulation getMySimulation() {
+		return mySimulation;
+	}
+
+	protected void setMySimulation(Simulation mySimulation) {
+		this.mySimulation = mySimulation;
+	}
+
+	protected int getBorderPixelSize() {
+		return borderPixelSize;
+	}
 }
