@@ -7,6 +7,7 @@ package XML;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -28,18 +29,25 @@ import Model.Cell;
 
 public class XMLGenerator {
 
+	private static final String CELLS = "Cells";
+	private static final String CELL = "Cell";
+	private static final String OUT_OF_BOUNDS = "OutOfBounds";
+	private static final String CONFIG = "Config";
 	private DocumentBuilderFactory myFactory;
 	private DocumentBuilder myBuilder;
 	private Document myDocument;
 	private static final String RULES_PROPERTIES = "Rules/Rules";
+	private static final String XML_PROPERTIES = "XML/XML";
 	private ResourceBundle myRulesResources;
 	private Map<String, Double> stateWeights;
 	private boolean weighted;
 	private Stack<String> myStack;
 	private Simulation mySimulation;
+	private ResourceBundle XMLResources;
 
 	public XMLGenerator() {
 		myRulesResources = ResourceBundle.getBundle(RULES_PROPERTIES);
+		XMLResources = ResourceBundle.getBundle(XML_PROPERTIES);
 		try {
 			myFactory = DocumentBuilderFactory.newInstance();
 			myBuilder = myFactory.newDocumentBuilder();
@@ -78,17 +86,17 @@ public class XMLGenerator {
 	 * @param numCells
 	 *            The number of cells to be randomly generated
 	 */
-	public void generateFile(int sideLength, String rules, String fileName, String gridType) {
+	public void generateFile(int row, int col, String rules, String fileName, String gridType) {
 
 		myDocument = myBuilder.newDocument();
 		Element myRoot = myDocument.createElement("Simulation");
 		myDocument.appendChild(myRoot);
-		myRoot.appendChild(getConfig(sideLength, gridType));
+		myRoot.appendChild(getConfig(row, col, gridType));
 		myRoot.appendChild(getRules(rules, promptForParameters(rules)));
 		if (weighted) {
-			myRoot.appendChild(createWeightedRandomCells(sideLength, rules + "States"));
+			myRoot.appendChild(createWeightedRandomCells(row, col, rules + "States"));
 		} else {
-			myRoot.appendChild(createRandomCells(sideLength, rules + "States"));
+			myRoot.appendChild(createRandomCells(row, col, rules + "States"));
 		}
 		createFile(new File("data/" + fileName));
 
@@ -103,20 +111,27 @@ public class XMLGenerator {
 	 *            The number of columns in the grid
 	 * @return An element containing the data to be put in the file
 	 */
-	public Element getConfig(int sideLength, String gridType) {
+	public Element getConfig(int row, int col, String gridType) {
 
-		Element configElement = myDocument.createElement("Config");
-		Element myRows = myDocument.createElement("Rows");
-		myRows.appendChild(myDocument.createTextNode("" + sideLength));
-		Element myCols = myDocument.createElement("Columns");
-		myCols.appendChild(myDocument.createTextNode("" + sideLength));
-		Element myGrid = myDocument.createElement("GridType");
-		myGrid.appendChild(myDocument.createTextNode("" + gridType));
-		configElement.appendChild(myRows);
-		configElement.appendChild(myCols);
-		configElement.appendChild(myGrid);
-
+		List<String> inputs = new ArrayList<String>();
+		inputs.addAll(Arrays.asList("" + row, "" + col, gridType));
+		String[] params = XMLResources.getString(CONFIG).split(",");
+		Element configElement = createEntry(CONFIG, params, inputs);
 		return configElement;
+	}
+
+	public Element createEntry(String parent, String[] childrenElements, List<String> inputs) {
+		Element myElement = myDocument.createElement(parent);
+		try {
+			for (int i = 0; i < childrenElements.length; i++) {
+				Element newElement = myDocument.createElement(childrenElements[i]);
+				newElement.appendChild(myDocument.createTextNode(inputs.get(i)));
+				myElement.appendChild(newElement);
+			}
+		} catch (Exception e) {
+			mySimulation.displayAlert(OUT_OF_BOUNDS);
+		}
+		return myElement;
 	}
 
 	/**
@@ -174,18 +189,23 @@ public class XMLGenerator {
 	 *            An arraylist of potential cell states
 	 * @return An Element to be included in the XML file
 	 */
-	public Element createRandomCells(int sideLength, String rule) {
-		String statesString = myRulesResources.getString(rule);
-		String[] states = statesString.split(",");
-		Element myCells = myDocument.createElement("Cells");
+	public Element createRandomCells(int rows, int cols, String rule) {
+		String[] states = getStates(rule);
+		Element myCells = myDocument.createElement(CELLS);
 		Random myRandom = new Random();
-		for (int row = 0; row < sideLength; row++) {
-			for (int col = 0; col < sideLength; col++) {
+		for (int row = 0; row < rows; row++) {
+			for (int col = 0; col < cols; col++) {
 				Element myCell = makeCellEntry(row, col, states[(myRandom.nextInt(states.length))]);
 				myCells.appendChild(myCell);
 			}
 		}
 		return myCells;
+	}
+
+	private String[] getStates(String rule) {
+		String statesString = myRulesResources.getString(rule);
+		String[] states = statesString.split(",");
+		return states;
 	}
 
 	/**
@@ -197,8 +217,7 @@ public class XMLGenerator {
 	 *            The name of the rule to be applied
 	 */
 	public void fillMap(String rule) {
-		String statesString = myRulesResources.getString(rule);
-		String[] states = statesString.split(",");
+		String[] states = getStates(rule);
 		double sum = 0;
 		ArrayList<String> statesNotIncluded = new ArrayList<String>();
 		for (String state : states) {
@@ -219,10 +238,10 @@ public class XMLGenerator {
 	 * @param sideLength
 	 *            The length of a side of the grid
 	 */
-	public void fillStack(int sideLength) {
+	public void fillStack(int rows, int cols) {
 		myStack = new Stack<String>();
-		for (int row = 0; row < sideLength; row++) {
-			for (int col = 0; col < sideLength; col++) {
+		for (int row = 0; row < rows; row++) {
+			for (int col = 0; col < cols; col++) {
 				myStack.push(row + "," + col);
 			}
 		}
@@ -239,17 +258,17 @@ public class XMLGenerator {
 	 *            The name of the rule to be applied
 	 * @return A JavaFX element containing the weighted cells
 	 */
-	public Element createWeightedRandomCells(int sideLength, String rule) {
+	public Element createWeightedRandomCells(int rows, int cols, String rule) {
 		fillMap(rule);
-		fillStack(sideLength);
-		Element myCells = myDocument.createElement("Cells");
+		fillStack(rows, cols);
+		Element myCells = myDocument.createElement(CELLS);
 		for (String state : stateWeights.keySet()) {
-			int numCells = (int) Math.round(((stateWeights.get(state) / 100) * (sideLength * sideLength)));
+			int numCells = (int) Math.round(((stateWeights.get(state) / 100) * (rows * cols)));
 			for (int i = 0; i < numCells && !myStack.isEmpty(); i++) {
 				String[] coordinates = myStack.pop().split(",");
-				int row = Integer.parseInt(coordinates[0]);
-				int col = Integer.parseInt(coordinates[1]);
-				Element myCell = makeCellEntry(row, col, state);
+				int myRow = Integer.parseInt(coordinates[0]);
+				int myCol = Integer.parseInt(coordinates[1]);
+				Element myCell = makeCellEntry(myRow, myCol, state);
 				myCells.appendChild(myCell);
 			}
 		}
@@ -287,15 +306,15 @@ public class XMLGenerator {
 	 *            The file to be saved to
 	 */
 
-	public void save(String rulesType, int sideLength, Cell[][] gameGrid, ArrayList<String> params, File myFile,
+	public void save(String rulesType, int rows, int cols, Cell[][] gameGrid, ArrayList<String> params, File myFile,
 			String gridType) {
 		myDocument = myBuilder.newDocument();
-		Element saveConfig = getConfig(sideLength, gridType);
+		Element saveConfig = getConfig(rows, cols, gridType);
 		Element saveRules = getRules(rulesType, params);
-		Element saveCells = myDocument.createElement("Cells");
-		for (int row = 0; row < gameGrid.length; row++) {
-			for (int col = 0; col < gameGrid[row].length; col++) {
-				Element myCell = makeCellEntry(row, col, gameGrid[row][col].getCurState());
+		Element saveCells = myDocument.createElement(CELLS);
+		for (int myRow = 0; myRow < rows; myRow++) {
+			for (int myCol = 0; myCol < cols; myCol++) {
+				Element myCell = makeCellEntry(myRow, myCol, gameGrid[myRow][myCol].getCurState());
 				saveCells.appendChild(myCell);
 			}
 		}
@@ -343,17 +362,13 @@ public class XMLGenerator {
 	 * @return The cell XML element
 	 */
 	Element makeCellEntry(int row, int col, String state) {
-		Element myCell = myDocument.createElement("Cell");
-		Element xElement = myDocument.createElement("X");
-		xElement.appendChild(myDocument.createTextNode("" + row));
-		Element yElement = myDocument.createElement("Y");
-		yElement.appendChild(myDocument.createTextNode("" + col));
-		Element stateElement = myDocument.createElement("State");
-		stateElement.appendChild(myDocument.createTextNode(state));
-		myCell.appendChild(xElement);
-		myCell.appendChild(yElement);
-		myCell.appendChild(stateElement);
+
+		String[] params = XMLResources.getString(CELL).split(",");
+		List<String> inputs = new ArrayList<String>();
+		inputs.addAll(Arrays.asList("" + row, "" + col, state));
+		Element myCell = createEntry(CELL, params, inputs);
 		return myCell;
+
 	}
 
 	/**
@@ -382,6 +397,6 @@ public class XMLGenerator {
 	public static void main(String[] args) {
 		HashMap<String, Double> myMap = new HashMap<String, Double>();
 		XMLGenerator myGenerator = new XMLGenerator(myMap);
-		myGenerator.generateFile(3, "ForagingAnts", "ForagingAnts3.xml", "Standard");
+		myGenerator.generateFile(20, 20, "Fire", "FireTor20.xml", "Toroidal");
 	}
 }
