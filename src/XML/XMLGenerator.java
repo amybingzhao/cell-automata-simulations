@@ -26,6 +26,7 @@ import org.w3c.dom.*;
 
 import Controller.Simulation;
 import Model.Cell;
+import javafx.stage.FileChooser;
 
 public class XMLGenerator {
 
@@ -89,19 +90,20 @@ public class XMLGenerator {
 	 * @param numCells
 	 *            The number of cells to be randomly generated
 	 */
-	public void generateFile(int row, int col, String rules, String fileName, String gridType) {
+	public void generateFile(int row, int col, String rules, String gridType, List<String> parameters, File file) {
 
 		myDocument = myBuilder.newDocument();
 		Element myRoot = myDocument.createElement("Simulation");
 		myDocument.appendChild(myRoot);
 		myRoot.appendChild(getConfig(row, col, gridType));
-		myRoot.appendChild(getRules(rules, promptForParameters(rules)));
+		myRoot.appendChild(getRules(rules, parameters));
 		if (weighted) {
 			myRoot.appendChild(createWeightedRandomCells(row, col, rules + "States"));
 		} else {
 			myRoot.appendChild(createRandomCells(row, col, rules + "States"));
 		}
-		createFile(new File("data/" + fileName));
+//		createFile(new File("data/" + fileName));
+		createFile(file);
 
 	}
 
@@ -386,7 +388,6 @@ public class XMLGenerator {
 			DOMSource mySource = new DOMSource(myDocument);
 			StreamResult myResult = new StreamResult(myFile);
 			myTransformer.transform(mySource, myResult);
-			System.out.println("DONE");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -434,9 +435,10 @@ public class XMLGenerator {
 
 	public static void main(String[] args) {
 		HashMap<String, Double> myMap = new HashMap<String, Double>();
-		myMap.put("BURNING", 0.25);
-		myMap.put("TREE", 90.0);
+		String rule = "Fire";
 		XMLGenerator myGenerator = new XMLGenerator(myMap);
-		myGenerator.generateFile(40, 40, "Fire", "FireSt40.xml", "Standard");
+		List<String> params = myGenerator.promptForParameters(rule);
+		
+//		myGenerator.generateFile(40, 40, rule, "FireSt40.xml", "Standard", params);
 	}
 }

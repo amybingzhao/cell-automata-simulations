@@ -1,5 +1,7 @@
 package View;
 
+import com.sun.org.apache.xerces.internal.util.SynchronizedSymbolTable;
+
 import Controller.Simulation;
 import Model.Grid;
 import Model.SugarScapeCell;
@@ -66,12 +68,12 @@ public class SugarScapeBoardBuilder extends BoardBuilder {
 			for(int c = 0; c < grid.getNumCols(); c++){
 				Color sugaramountcolor = sugarColor((SugarScapeCell) grid.getCell(r, c), myView.getStateColorMap().get("OCCUPIED"));
 				myBoard[r][c].setFill(sugaramountcolor);
-				
 				Color cellcolor = myView.getStateColorMap().get(grid.getCell(r,c).getCurState());
 				if(grid.getCell(r, c).getCurState().equals(mySimulation.getRules().getDefault())){
 					myCircles[r][c].setFill(sugaramountcolor);
+				} else {
+					myCircles[r][c].setFill(cellcolor);
 				}
-				myCircles[r][c].setFill(cellcolor);
 			}
 		}
 	}
@@ -81,10 +83,10 @@ public class SugarScapeBoardBuilder extends BoardBuilder {
 	 * @return
 	 */
 	private Color sugarColor(SugarScapeCell cell, Color cellcolor){
-		int mysugar = cell.getMySugarAmount();
-		int maxsugar = ((SugarScapeRules) mySimulation.getRules()).getMyMaxCellSugarCapacity();
+		double mysugar = cell.getMySugarAmount();
+		double maxsugar = ((SugarScapeRules) mySimulation.getRules()).getMyMaxCellSugarCapacity();
 		double ratio = mysugar/maxsugar;
-		Color color = cellcolor.deriveColor(0, 0.5 * ratio, 1, 1);
+		Color color = cellcolor.deriveColor(0, 0.9 * ratio, 1, 1);
 		return color;
 	}
 
