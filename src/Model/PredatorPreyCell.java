@@ -1,7 +1,7 @@
 /**
  * @author Amy Zhao
  * @author Austin Wu
- * The class responsible for the cell objects used in the Predatory Prey simulation
+ * The class responsible for the cell objects used in the Predator Prey simulation
  */
 
 package Model;

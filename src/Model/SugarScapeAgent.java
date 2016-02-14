@@ -1,3 +1,8 @@
+/**
+ * @author Amy Zhao
+ * Defines the variables and methods for each sugar scape agent object
+ */
+
 package Model;
 
 import java.util.ArrayList;
@@ -11,6 +16,8 @@ public abstract class SugarScapeAgent {
 	private int myCol;	
 	private boolean hasMoved;
 	private static final int INIT_SUGAR_MIN = 5;
+	private static final String ROW = "ROW";
+	private static final String COL = "COL";
 	
 	/**
 	 * Constructs a sugar scape agent with an initial amount of sugar, a random metabolism within the limit of the simulation,
@@ -86,44 +93,33 @@ public abstract class SugarScapeAgent {
 	 */
 	protected List<SugarScapeCell> getViableNeighbors(Grid grid) {
 		List<SugarScapeCell> neighbors = new ArrayList<SugarScapeCell>();
-		int row;
-		int col;
-		// left
-		for (int distance = 1; distance <= myVision; distance++) {
-			row = myRow;
-			col = myCol - distance;
-			if (viableNeighbor(row, col, grid)) {
-				neighbors.add((SugarScapeCell) grid.getCell(row, col));
-			}
-		}
-		
-		// right
-		for (int distance = 1; distance <= myVision; distance++) {
-			row = myRow;
-			col = myCol + distance;
-			if (viableNeighbor(row, col, grid)) {
-				neighbors.add((SugarScapeCell) grid.getCell(row, col));
-			}
-		}
-		
-		// up
-		for (int distance = 1; distance <= myVision; distance++) {
-			row = myRow - distance;
-			col = myCol;
-			if (viableNeighbor(row, col, grid)) {
-				neighbors.add((SugarScapeCell) grid.getCell(row, col));
-			}
-		}
-		
-		//down
-		for (int distance = 1; distance <= myVision; distance++) {
-			row = myRow + distance;
-			col = myCol;
-			if (viableNeighbor(row, col, grid)) {
-				neighbors.add((SugarScapeCell) grid.getCell(row, col));
-			}
-		}
+		checkNeighborsInOneDirection(neighbors, 1, ROW, grid);
+		checkNeighborsInOneDirection(neighbors, -1, ROW, grid);
+		checkNeighborsInOneDirection(neighbors, 1, COL, grid);
+		checkNeighborsInOneDirection(neighbors, -1, COL, grid);
 		return neighbors;
+	}
+	
+	/**
+	 * Checks the neighbors in one direction (left, right, up, or down) for unoccupied neighboring cells.
+	 * @param neighbors: list of neighbors to add onto.
+	 * @param offset: +1 or -1 for which relative direction to look in.
+	 * @param rowOrCol: ROW or COL depending on whether offseting current row or current column.
+	 * @param grid: simulation grid.
+	 */
+	protected void checkNeighborsInOneDirection(List<SugarScapeCell> neighbors, int offset, String rowOrCol, Grid grid) {
+		for (int distance = 1; distance <= myVision; distance++) {
+			int row = myRow;
+			int col = myCol;
+			if (rowOrCol.equals(ROW)) {
+				row = myRow + offset * distance;
+			} else {
+				col = myCol + offset * distance;
+			}
+			if (viableNeighbor(row, myCol, grid)) {
+				neighbors.add((SugarScapeCell) grid.getCell(row, myCol));
+			}
+		}
 	}
 	
 	/**

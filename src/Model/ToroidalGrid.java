@@ -3,12 +3,10 @@ package Model;
 public class ToroidalGrid extends Grid{
 
 	Cell[][] myGrid;
-	private static final int NEIGHBOR_GRID_SIDE_LENGTH = 3;
 	
 	public ToroidalGrid(int rows, int cols, String[][] initialStates) {
 		super(rows, cols, initialStates);
 		myGrid = this.getGrid();
-		// TODO Auto-generated constructor stub
 	}
 	
 	public int getModLocation(int num){
@@ -32,7 +30,7 @@ public class ToroidalGrid extends Grid{
 	@Override
 	public Cell[][] getNeighborhood(int row, int col, int numNeighbors) {
 		
-		Cell[][] myNeighborhood = new Cell[NEIGHBOR_GRID_SIDE_LENGTH][NEIGHBOR_GRID_SIDE_LENGTH];
+		Cell[][] myNeighborhood = new Cell[getNeighborGridSideLength()][getNeighborGridSideLength()];
 		myNeighborhood[0][0] = getCell(row - 1, col - 1);
 		myNeighborhood[0][1] = getCell(row - 1, col);
 		myNeighborhood[0][2] = getCell(row - 1, col + 1);

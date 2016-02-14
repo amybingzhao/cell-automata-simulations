@@ -6,16 +6,19 @@
 package Rules;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.ResourceBundle;
 import Model.Cell;
 import Model.Grid;
-import Model.StandardCell;
 
 public class FireRules extends Rules {
-	private static final int NUM_NEIGHBORS = 4;
-	private static final String EMPTY = "EMPTY";
-	private static final String TREE = "TREE";
-	private static final String BURNING = "BURNING";
-	private static final String DEFAULT_STATE = TREE;
+	public static final String DEFAULT_RESOURCE = "Rules/FireRules";
+	private ResourceBundle myResource = ResourceBundle.getBundle(DEFAULT_RESOURCE);
+	private int NUM_NEIGHBORS = Integer.parseInt(myResource.getString("NumNeighbors"));
+	private String EMPTY = myResource.getString("Empty");
+	private String TREE = myResource.getString("Tree");
+	private String BURNING = myResource.getString("Burning");
+	private String DEFAULT_STATE = myResource.getString("DefaultState");
 	private double myProbCatch;
 
 	public FireRules(double probCatch) {
@@ -115,14 +118,6 @@ public class FireRules extends Rules {
 	}
 
 	/**
-	 * Creates a Standard Cell for this simulation.
-	 */
-	@Override
-	protected Cell createCell(String initialState, int row, int col) {
-		return new StandardCell(initialState, row, col);
-	}
-
-	/**
 	 * Description of the simulation.
 	 */
 	public String toString() {
@@ -133,8 +128,8 @@ public class FireRules extends Rules {
 	 * Gets the parameters for the Fire simulation.
 	 */
 	@Override
-	public ArrayList<String> getParameters() {
-		ArrayList<String> parameters = new ArrayList<String>();
+	public List<String> getParameters() {
+		List<String> parameters = new ArrayList<String>();
 		parameters.add("ProbCatch:" + myProbCatch);
 		return parameters;
 	}

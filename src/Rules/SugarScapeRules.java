@@ -1,14 +1,23 @@
+/**
+ * @author Amy Zhao
+ * Defines the basic variables and methods for each rules object for the Sugar Scape simulation.
+ */
+
 package Rules;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.ResourceBundle;
 
 import Model.Cell;
 import Model.Grid;
+import Model.ReproductionSugarScapeAgent;
 import Model.SugarScapeAgent;
 import Model.SugarScapeCell;
 
 public abstract class SugarScapeRules extends Rules {
-	
+	public static final String DEFAULT_RESOURCE = "Rules/SugarScapeRules";
+	private ResourceBundle myResource = ResourceBundle.getBundle(DEFAULT_RESOURCE);
 	private int mySugarGrowBackRate;
 	private int mySugarGrowBackInterval;
 	private int mySugarGrowBackCountdown;
@@ -16,7 +25,7 @@ public abstract class SugarScapeRules extends Rules {
 	private int myAgentSugarLimit;
 	private int myAgentVisionLimit;
 	private int myAgentMetabolismLimit;
-	private static final String DEFAULT_STATE = "NONE";
+	private String DEFAULT_STATE = myResource.getString("DefaultState");
 	
 	public SugarScapeRules(int sugarGrowBackRate, int sugarGrowBackInterval, int maxSugarCapacity, int sugarLimit, int visionLimit, int metabolismLimit) {
 		mySugarGrowBackRate = sugarGrowBackRate;
@@ -29,10 +38,18 @@ public abstract class SugarScapeRules extends Rules {
 	}
 	
 	/**
-	 * Creates an instance of the cell required for the particular simulation.
+	 * Creates a cell for the reproduction simulation and initializes an agent if the cell is occupied.
 	 */
 	@Override
-	protected abstract Cell createCell(String initialState, int row, int col);
+	protected Cell createCell(String initialState, int row, int col) {
+		SugarScapeAgent agent = null;
+		if (initialState.equals("OCCUPIED")) {
+			agent = createPresetAgent(row, col);
+		}
+		return new SugarScapeCell(initialState, row, col, getMyMaxCellSugarCapacity(), agent);
+	}
+	
+	protected abstract SugarScapeAgent createPresetAgent(int row, int col);
 	
 	/**
 	 * Sets the interval for sugar to grow back for this simulation.
@@ -127,8 +144,8 @@ public abstract class SugarScapeRules extends Rules {
 	 * Gets the parameters of the simulation.
 	 */
 	@Override
-	public ArrayList<String> getParameters() {
-		ArrayList<String> parameters = new ArrayList<String>();
+	public List<String> getParameters() {
+		List<String> parameters = new ArrayList<String>();
 		parameters.add("SugarGrowBackInterval:" + mySugarGrowBackInterval);
 		parameters.add("SugarGrowBackCountdown:" + mySugarGrowBackCountdown);
 		parameters.add("MaxCellSugarCapacity:" + myMaxCellSugarCapacity);
