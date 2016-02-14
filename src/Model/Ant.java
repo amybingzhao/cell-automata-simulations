@@ -233,7 +233,6 @@ public class Ant {
 
 		for (int i = 0; i < forwardDirections.size(); i++) {
 			Integer[] dirToCheck = forwardDirections.get(i);
-
 			ForagingAntsCell neighbor = neighborhood[dirToCheck[0]][dirToCheck[1]];
 			if (neighbor != null) {
 				if (neighbor.isFull()) {
