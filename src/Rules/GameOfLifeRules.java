@@ -9,19 +9,30 @@ package Rules;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.ResourceBundle;
+
 import Model.Cell;
 import Model.Grid;
 import Model.StandardCell;
 
 public class GameOfLifeRules extends Rules {
-	private static final int NUM_NEIGHBORS = 8;
-	private static final String DEAD = "DEAD";
-	private static final String ALIVE = "ALIVE";
-	private static final String DEFAULT_STATE = DEAD;
-	private static final int MY_CELL_ROW = 1;
-	private static final int MY_CELL_COL = 1;
-	private static final List<Integer> NUM_ALLOWABLE_LIVE_NEIGHBORS = new ArrayList<Integer>(Arrays.asList(2, 3));
-	private static final int NUM_NEIGHBORS_NEEDED_TO_REPRODUCE = 3;
+	public static final String DEFAULT_RESOURCE = "Rules/GameOfLifeRules";
+	private ResourceBundle myResource = ResourceBundle.getBundle(DEFAULT_RESOURCE);
+	private int NUM_NEIGHBORS = Integer.parseInt(myResource.getString("NumNeighbors"));
+	private String DEAD = myResource.getString("Dead");
+	private String ALIVE = myResource.getString("Alive");
+	private String DEFAULT_STATE = myResource.getString("DefaultState");
+	private int MY_CELL_ROW = Integer.parseInt(myResource.getString("MyCellRow"));
+	private int MY_CELL_COL = Integer.parseInt(myResource.getString("MyCellCol"));
+	private List<Integer> NUM_ALLOWABLE_LIVE_NEIGHBORS = new ArrayList<Integer>();
+	private int NUM_NEIGHBORS_NEEDED_TO_REPRODUCE = Integer.parseInt(myResource.getString("NumNeighborsNeededToReproduce"));
+	
+	public GameOfLifeRules() {
+		String[] allowableNeighbors = myResource.getString("NumAllowableLiveNeighbors").split(",");
+		for (int i = 0; i < allowableNeighbors.length; i++) {
+			NUM_ALLOWABLE_LIVE_NEIGHBORS.add(Integer.parseInt(allowableNeighbors[i]));
+		}	
+	}
 	
 	/**
 	 * Apply the rules of the Game of Life simulation to a Cell based on its state.
@@ -45,21 +56,7 @@ public class GameOfLifeRules extends Rules {
 	 * @return number of live neighbors.
 	 */
 	private int countNumLiveNeighbors(Cell[][] neighborhood) {
-		int numNeighbors = 0;
-		
-		for (int row = 0; row < neighborhood.length; row++) {
-			for (int col = 0; col < neighborhood[row].length; col++) {
-				if (neighborhood[row][col] != null) {
-					if (row != MY_CELL_ROW || col != MY_CELL_COL) {
-						if (neighborhood[row][col].getCurState().equals(ALIVE)) {
-							numNeighbors++;
-						}
-					}
-				}
-			}
-		}
-		
-		return numNeighbors;
+		return countSurroundingNeighborsOfType(neighborhood, ALIVE);
 	}
 
 	/**
@@ -87,14 +84,6 @@ public class GameOfLifeRules extends Rules {
 	}
 
 	/**
-	 * Creates a Standard Cell for this simulation.
-	 */
-	@Override
-	protected Cell createCell(String initialState, int row, int col) {
-		return new StandardCell(initialState, row, col);
-	}
-	
-	/**
 	 * Description of Game of Life simulation.
 	 */
 	public String toString(){
@@ -105,8 +94,8 @@ public class GameOfLifeRules extends Rules {
 	 * Parameters for Game of Life simulation.
 	 */
 	@Override
-	public ArrayList<String> getParameters() {
-		ArrayList<String> parameters = new ArrayList<String>();
+	public List<String> getParameters() {
+		List<String> parameters = new ArrayList<String>();
 		return parameters;
 	}
 	

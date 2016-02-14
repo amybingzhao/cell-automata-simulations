@@ -1,3 +1,8 @@
+/**
+ * @author Amy Zhao
+ * Defines the variables and methods for a cell object for the Foraging Ants simulation.
+ */
+
 package Model;
 
 import java.util.ArrayList;
@@ -12,7 +17,13 @@ public class ForagingAntsCell extends Cell {
 	private static final String HOME = "HOME";
 	private static final String OBSTACLE = "OBSTACLE";
 	private static final String FOOD = "FOOD";
+	private static final String GROUND = "GROUND";
 	private static final int MAX_ANT_PER_CELL = 10;
+	private int myFoodAmount;
+	private static final int INIT_FOOD_AMOUNT = 5;
+	private int myFoodPheromoneRecency;
+	private int myHomePheromoneRecency;
+	private static final int RESET_PHEROMONE_INTERVAL = 5;
 	
 	/**
 	 * Constructs a ForagingAntsCell, initializing all ants to start at HOME.
@@ -27,16 +38,51 @@ public class ForagingAntsCell extends Cell {
 		if (initialState.equals(HOME)) {
 			myNumAnts = numTotalAnts;
 			for (int i = 0; i < numTotalAnts; i++) {
-				myAnts.add(new Ant());
+				myAnts.add(new Ant(this));
 			}
 		} else {
 			myNumAnts = 0;
 		}
+		
+		if (initialState.equals(FOOD)) {
+			myFoodAmount = INIT_FOOD_AMOUNT;
+		} else {
+			myFoodAmount = 0;
+		}
+		
 		myMaxNumAnts = MAX_ANT_PER_CELL;
 		myFoodPheromones = 0;
 		myHomePheromones = 0;
 	}
 
+	/**
+	 * Checks if the cell is a type of source (either HOME or FOOD).
+	 * @param sourceType: sourceType to compare the cell to.
+	 * @return true if current cell is equal to the sourceType; false otherwise.
+	 */
+	public boolean at(String sourceType) {
+		return getCurState().equals(sourceType);
+	}
+
+	public void resetHomePheromoneRecency() {
+		myHomePheromoneRecency = 0;
+	}
+	
+	public void resetFoodPheromoneRecency() {
+		myFoodPheromoneRecency = 0;
+	}
+	
+	public void incrementPheromoneRecency() {
+		myHomePheromoneRecency++;
+		myFoodPheromoneRecency++;
+		if (myHomePheromoneRecency == RESET_PHEROMONE_INTERVAL) {
+			myHomePheromones = 0;
+		}
+		if (myFoodPheromoneRecency == RESET_PHEROMONE_INTERVAL) {
+			myFoodPheromones = 0;
+		}
+	}
+	
 	/**
 	 * Gets number of ants currently on this cell.
 	 * @return number of ants in this cell.
@@ -137,6 +183,18 @@ public class ForagingAntsCell extends Cell {
 	}
 	
 	/**
+	 * If an ant comes to this cell, decrement amount of food. If no more food left, change to ground cell.
+	 */
+	public void loseFood() {
+		if (getCurState().equals(FOOD)) {
+			myFoodAmount--;
+			if (myFoodAmount <= 0) {
+				setNextState(GROUND);
+			}
+		}
+	}
+	
+	/**
 	 * Checks if this cell is the home.
 	 * @return true if this cell is the home; false otherwise.
 	 */
@@ -150,6 +208,6 @@ public class ForagingAntsCell extends Cell {
 	public String toString() {
 		return ("Cell row: " + this.getCurRow() + ", col: " + this.getCurCol() + "\n" + 
 				"\t num Ants: " + myNumAnts + "\n\tnum food pheromones: " + myFoodPheromones
-				+ ", num home pheromones: " + myHomePheromones + "\n");
+				+ ", num home pheromones: " + myHomePheromones + ", num food left: " + myFoodAmount + "\n");
 	}
 }

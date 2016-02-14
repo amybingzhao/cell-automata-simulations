@@ -65,12 +65,12 @@ public class ForagingAntsBoardBuilder extends BoardBuilder{
 	 * Displays the grid to the board based on the state of each of its cells
 	 */
 	protected void displayGridToBoard(){
-		Grid grid = getMySimulation().getGrid();
+		Grid grid = mySimulation.getGrid();
 		for(int r = 0; r < grid.getNumRows(); r++){
 			for(int c = 0; c < grid.getNumCols(); c++){
-				Color cellcolor = getMyView().getStateColorMap().get(grid.getCell(r,c).getCurState());
+				Color cellcolor = myView.getStateColorMap().get(grid.getCell(r,c).getCurState());
 				myBoard[r][c].setFill(cellcolor);
-				ForagingAntsCell ant = (ForagingAntsCell) getMySimulation().getGrid().getCell(r, c);
+				ForagingAntsCell ant = (ForagingAntsCell) mySimulation.getGrid().getCell(r, c);
 				antcounts[r][c].setText(Integer.toString(ant.getNumAnts()));
 				antcounts[r][c].setTextFill(cellcolor.invert());
 			}

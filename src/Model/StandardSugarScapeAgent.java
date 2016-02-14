@@ -1,3 +1,8 @@
+/**
+ * @author Amy Zhao
+ * Defines the variables and methods for a standard sugar scape agent object.
+ */
+
 package Model;
 
 public class StandardSugarScapeAgent extends SugarScapeAgent {
