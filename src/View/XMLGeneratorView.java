@@ -282,7 +282,7 @@ public class XMLGeneratorView {
 		String gridtypes = (String) configmap.get("GridTypes").getValue();
 		List<String> params = new ArrayList<String>();
 		for(String k: customparamsmap.keySet()){
-			params.add(customparamsmap.get(k).getText());
+			params.add(k + ":" + customparamsmap.get(k).getText());
 		}
 		
 		FileChooser myFileChooser = new FileChooser();
@@ -292,5 +292,6 @@ public class XMLGeneratorView {
 		if(myFile != null){
 			generator.generateFile(sideLength, sideLength, rules, gridtypes, params, myFile);
 		}
+		stage.close();
 	}
 }
