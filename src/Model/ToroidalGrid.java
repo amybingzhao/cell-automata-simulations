@@ -1,3 +1,6 @@
+// This entire file is part of my masterpiece.
+// Blake Kaplan
+
 /**
  * @author Blake Kaplan
  * Defines the variables and methods for each toroidal grid object
@@ -21,7 +24,7 @@ public class ToroidalGrid extends Grid{
 	 */
 	public int getModLocation(int num){
 		
-		int modNum = num % (myGrid.length);
+		int modNum = num % myGrid.length;
 		if (modNum < 0){
 			modNum += myGrid.length;
 		}

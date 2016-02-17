@@ -1,3 +1,6 @@
+// This entire file is part of my masterpiece.
+// Blake Kaplan
+
 package View;
 
 import java.util.ResourceBundle;
@@ -7,17 +10,10 @@ import javafx.scene.Group;
 import javafx.scene.shape.Rectangle;
 
 public abstract class BoardBuilder {
-	/*
-	 * Class is responsible for:
-	 * building the board
-	 * displaying the board
-	 * takes in the current view object
-	 * only rebuild if 1) its infinite mode and 2) size changes
-	 */
-	
+	private static final String DEFAULT_MAX_CELLS_DISPLAYED = "DefaultMaxCellsDisplayed";
+	private static final String DEFAULT_BORDER_PIXEL_SIZE = "DefaultBorderPixelSize";
+	private static final String BOARD_PIXEL_SIZE = "BoardPixelSize";
 	protected Rectangle[][] myBoard;
-	
-	//UI Metrics
 	protected int boardPixelSize;
 	protected int cellPixelSize;
 	protected int borderPixelSize;
@@ -42,9 +38,9 @@ public abstract class BoardBuilder {
 	}
 	
 	private void loadResources(ResourceBundle r){
-		boardPixelSize = Integer.parseInt(myViewResources.getString("BoardPixelSize"));
-		borderPixelSize = Integer.parseInt(myViewResources.getString("DefaultBorderPixelSize"));
-		maxCellsDisplayed = Integer.parseInt(myViewResources.getString("DefaultMaxCellsDisplayed"));
+		boardPixelSize = Integer.parseInt(r.getString(BOARD_PIXEL_SIZE));
+		borderPixelSize = Integer.parseInt(r.getString(DEFAULT_BORDER_PIXEL_SIZE));
+		maxCellsDisplayed = Integer.parseInt(r.getString(DEFAULT_MAX_CELLS_DISPLAYED));
 	}
 	
 	/**
@@ -66,7 +62,7 @@ public abstract class BoardBuilder {
 		return borderPixelSize;
 	}
 
-	protected void setBorderPixelSize(int borderPixelSize) {
+	protected void setBorderPixelSize(int newBorderPixelSize) {
 		this.borderPixelSize = borderPixelSize;
 	}
 
