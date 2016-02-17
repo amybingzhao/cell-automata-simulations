@@ -1,3 +1,5 @@
+// This entire file is part of my masterpiece.
+// Austin Wu
 package View;
 
 import java.util.ResourceBundle;
@@ -5,15 +7,9 @@ import java.util.ResourceBundle;
 import Controller.Simulation;
 import javafx.scene.Group;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 
 public abstract class BoardBuilder {
-	/*
-	 * Class is responsible for:
-	 * building the board
-	 * displaying the board
-	 * takes in the current view object
-	 * only rebuild if 1) its infinite mode and 2) size changes
-	 */
 	
 	protected Rectangle[][] myBoard;
 	
@@ -31,20 +27,45 @@ public abstract class BoardBuilder {
 	protected CSView myView;
 	protected Simulation mySimulation;
 	
+	/**
+	 * Loads instance variables
+	 * @param view view this BoardBuilder is to be linked to
+	 * @param sim simulation this BoardBuilder is to be linked to
+	 */
 	public BoardBuilder(CSView view, Simulation sim){
 		myView = view;
 		mySimulation = sim;
 		myViewResources = ResourceBundle.getBundle(DEFAULT_VIEW_RESOURCE);
-		myGridWidth = 0;
-		myGridHeight = 0;
 		loadResources(myViewResources);
 		
 	}
 	
-	private void loadResources(ResourceBundle r){
-		boardPixelSize = Integer.parseInt(myViewResources.getString("BoardPixelSize"));
-		borderPixelSize = Integer.parseInt(myViewResources.getString("DefaultBorderPixelSize"));
-		maxCellsDisplayed = Integer.parseInt(myViewResources.getString("DefaultMaxCellsDisplayed"));
+	/**
+	 * Builds a board onto the given Group, will resize if necessary
+	 * @param myBoardGroup Group to build nodes onto to create the board
+	 */
+	protected abstract void buildBoard(Group myBoardGroup);
+	
+	/**
+	 * Displays the current grid of cells to the board
+	 */
+	protected abstract void displayGridToBoard();
+	
+	/**
+	 * Creates a new rectangle with dimensions and locations specified by param
+	 * @param layouty y coord of rectangle
+	 * @param layoutx x coord of rectangle 
+	 * @param width width of rectangle
+	 * @param height height of rectangle
+	 * @return
+	 */
+	protected Rectangle createRectangle(int layouty, int layoutx, int width, int height){
+		Rectangle rect = new Rectangle();
+		rect.setLayoutY(layouty);
+		rect.setLayoutX(layoutx);
+		rect.setHeight(width);
+		rect.setWidth(height);
+		return rect;
 	}
 	
 	/**
@@ -62,17 +83,30 @@ public abstract class BoardBuilder {
 		displayGridToBoard();
 	}
 
+	/**
+	 * 
+	 * @return Returns the border width in pixels
+	 */
 	protected int getBorderPixelSize() {
 		return borderPixelSize;
 	}
 
+	/**
+	 * 
+	 * @param borderPixelSize changes the border width in pixels to this int argument
+	 */
 	protected void setBorderPixelSize(int borderPixelSize) {
 		this.borderPixelSize = borderPixelSize;
 	}
-
-	protected abstract void buildBoard(Group myBoardGroup);
-	
-	protected abstract void displayGridToBoard();
 	
 
+	/**
+	 * Loads resources from a resource bundle
+	 * @param r resource bundle to be loaded from
+	 */
+	private void loadResources(ResourceBundle r){
+		boardPixelSize = Integer.parseInt(myViewResources.getString("BoardPixelSize"));
+		borderPixelSize = Integer.parseInt(myViewResources.getString("DefaultBorderPixelSize"));
+		maxCellsDisplayed = Integer.parseInt(myViewResources.getString("DefaultMaxCellsDisplayed"));
+	}
 }

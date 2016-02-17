@@ -1,3 +1,5 @@
+// This entire file is part of my masterpiece.
+// Austin Wu
 package View;
 
 import Controller.Simulation;
@@ -18,45 +20,28 @@ public class ForagingAntsBoardBuilder extends BoardBuilder{
 	}
 
 	/**
-	 * Builds a board onto the current board group if necessary (if board size changes)
-	 * @param myBoardGroup
+	 * Builds a board onto the given Group, will resize if necessary
+	 * @param myBoardGroup Group to build nodes onto to create the board
 	 */
 	protected void buildBoard(Group myBoardGroup){
-		cellPixelSize = (boardPixelSize / Math.min(maxCellsDisplayed, Math.max(myGridWidth, myGridHeight))) - 2 * borderPixelSize;
 		myBoardGroup.getChildren().clear();
 		myBoard = new Rectangle[myGridHeight][myGridWidth];
 		antcounts = new Label[myGridWidth][myGridHeight];
 		Grid grid = mySimulation.getGrid();
+		
+		cellPixelSize = (boardPixelSize / Math.min(maxCellsDisplayed, Math.max(myGridWidth, myGridHeight))) - 2 * borderPixelSize;
+		int bgsize = cellPixelSize + (2 * borderPixelSize);
+		
 		for (int r = 0; r < grid.getNumRows(); r++) {
 			for (int c = 0; c < grid.getNumCols(); c++) {
-				Rectangle bg = new Rectangle();
-				bg.setLayoutY(r * (cellPixelSize + (2 * borderPixelSize)));
-				bg.setLayoutX(c * (cellPixelSize + (2 * borderPixelSize)));
-				bg.setWidth(cellPixelSize + (2 * borderPixelSize));
-				bg.setHeight(cellPixelSize + (2 * borderPixelSize));
+				Rectangle bg = createRectangle(r*bgsize, c*bgsize, bgsize, bgsize);
 				bg.setFill(myView.getBorderColor());
-				
-				Label antcount = new Label();
-				antcount.setFont(new Font("Arial", 15));
-				antcount.setLayoutY((r * (cellPixelSize + (2 * borderPixelSize))) + borderPixelSize);
-				antcount.setLayoutX((c * (cellPixelSize + (2 * borderPixelSize))) + borderPixelSize);
-				antcount.setMaxWidth(cellPixelSize);
-				antcount.setMaxHeight(cellPixelSize);
-				/*
-				 * make numbers more visible, centered, and dynamic size 
-				 */
-				antcounts[r][c] = antcount;
-				
-				Rectangle rect = new Rectangle();
-				rect.setLayoutY((r * (cellPixelSize + (2 * borderPixelSize))) + borderPixelSize);
-				rect.setLayoutX((c * (cellPixelSize + (2 * borderPixelSize))) + borderPixelSize);
-				rect.setWidth(cellPixelSize);
-				rect.setHeight(cellPixelSize);
-				int x = r; //java 8 MADE me do it Professor!
-				int y = c; //"effectively final" and whatnot.
-				rect.setOnMouseClicked(e -> myView.respondToMouse(x, y)); 
-				myBoard[r][c] = rect;
-				myBoardGroup.getChildren().addAll(bg,rect, antcount);
+				antcounts[r][c] = buildLabel(r,c, bgsize);
+				myBoard[r][c] = createRectangle((r * bgsize) + borderPixelSize, (c * bgsize) + borderPixelSize, cellPixelSize, cellPixelSize);
+				int x = r; 
+				int y = c; 
+				myBoard[r][c].setOnMouseClicked(e -> myView.respondToMouse(x, y)); 
+				myBoardGroup.getChildren().addAll(bg,myBoard[r][c], antcounts[r][c]);
 			}
 		}
 	}
@@ -77,5 +62,18 @@ public class ForagingAntsBoardBuilder extends BoardBuilder{
 		}
 	}
 	
-	
+	/**
+	 * Builds and positions a label at the given location and size
+	 * @param r row of the label
+	 * @param c col of the label
+	 * @param bgsize size of the label's background
+	 * @return
+	 */
+	private Label buildLabel(int r, int c, int bgsize){
+		Label antcount = new Label();
+		antcount.setFont(new Font("Arial", 14));
+		antcount.setLayoutY((r * bgsize) + borderPixelSize);
+		antcount.setLayoutX((c * bgsize) + borderPixelSize);
+		return antcount;
+	}
 }

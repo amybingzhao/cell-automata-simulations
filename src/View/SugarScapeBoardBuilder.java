@@ -1,15 +1,17 @@
+// This entire file is part of my masterpiece.
+// Austin Wu
 package View;
-
-import com.sun.org.apache.xerces.internal.util.SynchronizedSymbolTable;
 
 import Controller.Simulation;
 import Model.Grid;
 import Model.SugarScapeCell;
 import Rules.SugarScapeRules;
 import javafx.scene.Group;
+import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 
 public class SugarScapeBoardBuilder extends BoardBuilder {
 
@@ -20,41 +22,29 @@ public class SugarScapeBoardBuilder extends BoardBuilder {
 	}
 	
 	/**
-	 * Builds a board onto the current board group if necessary (if board size changes)
-	 * @param myBoardGroup
+	 * Builds a board onto the given Group, will resize if necessary
+	 * @param myBoardGroup Group to build nodes onto to create the board
 	 */
-	protected void buildBoard(Group myBoardGroup){
-		cellPixelSize = (boardPixelSize / Math.min(maxCellsDisplayed, Math.max(myGridWidth, myGridHeight))) - 2 * borderPixelSize;
+		protected void buildBoard(Group myBoardGroup){
 		myBoardGroup.getChildren().clear();
 		myBoard = new Rectangle[myGridHeight][myGridWidth];
 		myCircles = new Circle[myGridHeight][myGridWidth];
 		Grid grid = mySimulation.getGrid();
+		
+		cellPixelSize = (boardPixelSize / Math.min(maxCellsDisplayed, Math.max(myGridWidth, myGridHeight))) - 2 * borderPixelSize;
+		int bgsize = cellPixelSize + (2 * borderPixelSize);
 		for (int r = 0; r < grid.getNumRows(); r++) {
 			for (int c = 0; c < grid.getNumCols(); c++) {
-				Rectangle bg = new Rectangle();
-				bg.setLayoutY(r * (cellPixelSize + (2 * borderPixelSize)));
-				bg.setLayoutX(c * (cellPixelSize + (2 * borderPixelSize)));
-				bg.setWidth(cellPixelSize + (2 * borderPixelSize));
-				bg.setHeight(cellPixelSize + (2 * borderPixelSize));
+				Rectangle bg = createRectangle(r*bgsize, c*bgsize, bgsize, bgsize);
 				bg.setFill(myView.getBorderColor());
 				
-				Circle cir = new Circle();
-				cir.setCenterY(((double) r + .5) * (cellPixelSize + (2 * borderPixelSize)));
-				cir.setCenterX(((double) c + .5) * (cellPixelSize + (2 * borderPixelSize)));
-				cir.setRadius(cellPixelSize/4);
-				cir.setFill(myView.getBorderColor());
-				myCircles[r][c] = cir;
+				myCircles[r][c] = buildCircle(r, c, bgsize);
 				
-				Rectangle rect = new Rectangle();
-				rect.setLayoutY((r * (cellPixelSize + (2 * borderPixelSize))) + borderPixelSize);
-				rect.setLayoutX((c * (cellPixelSize + (2 * borderPixelSize))) + borderPixelSize);
-				rect.setWidth(cellPixelSize);
-				rect.setHeight(cellPixelSize);
-				int x = r; //java 8 MADE me do it Professor!
-				int y = c; //"effectively final" and whatnot.
-				rect.setOnMouseClicked(e -> myView.respondToMouse(x, y)); 
-				myBoard[r][c] = rect;
-				myBoardGroup.getChildren().addAll(bg,rect, cir);
+				myBoard[r][c] = createRectangle((r * bgsize) + borderPixelSize, (c * bgsize) + borderPixelSize, cellPixelSize, cellPixelSize);
+				int x = r; 
+				int y = c; 
+				myBoard[r][c].setOnMouseClicked(e -> myView.respondToMouse(x, y)); 
+				myBoardGroup.getChildren().addAll(bg,myBoard[r][c], myCircles[r][c]);
 			}
 		}
 	}
@@ -86,8 +76,26 @@ public class SugarScapeBoardBuilder extends BoardBuilder {
 		double mysugar = cell.getMySugarAmount();
 		double maxsugar = ((SugarScapeRules) mySimulation.getRules()).getMyMaxCellSugarCapacity();
 		double ratio = mysugar/maxsugar;
-		Color color = cellcolor.deriveColor(0, 0.9 * ratio, 1, 1);
+		Color color = cellcolor.deriveColor(0, 0.8 * ratio, 1, 1);
 		return color;
 	}
+	
+	/**
+	 * Builds and positions a circle at the given location and size
+	 * @param r row of the label
+	 * @param c col of the label
+	 * @param bgsize size of the label's background
+	 * @return
+	 */
+	private Circle buildCircle(int r, int c, int bgsize){
+		Circle cir = new Circle();
+		cir.setCenterY(((double) r + .5) * bgsize);
+		cir.setCenterX(((double) c + .5) * bgsize);
+		cir.setRadius(cellPixelSize/4);
+		cir.setFill(myView.getBorderColor());
+		return cir;
+	}
+	
+	
 
 }

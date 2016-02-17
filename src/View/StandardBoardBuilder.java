@@ -1,14 +1,10 @@
+// This entire file is part of my masterpiece.
+// Austin Wu
 package View;
 
-import java.util.Map;
-import java.util.ResourceBundle;
-
 import Controller.Simulation;
-import Model.ForagingAntsCell;
 import Model.Grid;
 import javafx.scene.Group;
-import javafx.scene.control.Label;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 public class StandardBoardBuilder extends BoardBuilder{
@@ -16,36 +12,33 @@ public class StandardBoardBuilder extends BoardBuilder{
 		super(view, sim);
 	}
 	
+	/**
+	 * Builds a board onto the given Group, will resize if necessary
+	 * @param myBoardGroup Group to build nodes onto to create the board
+	 */
 	protected void buildBoard(Group myBoardGroup){
-		cellPixelSize = (boardPixelSize / Math.min(maxCellsDisplayed, Math.max(myGridWidth, myGridHeight))) - 2 * borderPixelSize;
 		myBoardGroup.getChildren().clear();
 		myBoard = new Rectangle[myGridHeight][myGridWidth];
 		Grid grid = mySimulation.getGrid();
+		
+		cellPixelSize = (boardPixelSize / Math.min(maxCellsDisplayed, Math.max(myGridWidth, myGridHeight))) - 2 * borderPixelSize;
+		int bgsize = cellPixelSize + (2 * borderPixelSize);
 		for (int r = 0; r < grid.getNumRows(); r++) {
 			for (int c = 0; c < grid.getNumCols(); c++) {
-				Rectangle bg = new Rectangle();
-				bg.setLayoutY(r * (cellPixelSize + (2 * borderPixelSize)));
-				bg.setLayoutX(c * (cellPixelSize + (2 * borderPixelSize)));
-				bg.setWidth(cellPixelSize + (2 * borderPixelSize));
-				bg.setHeight(cellPixelSize + (2 * borderPixelSize));
+				Rectangle bg = createRectangle(r*bgsize, c*bgsize, bgsize, bgsize);
 				bg.setFill(myView.getBorderColor());
 				
-				Rectangle rect = new Rectangle();
-				rect.setLayoutY((r * (cellPixelSize + (2 * borderPixelSize))) + borderPixelSize);
-				rect.setLayoutX((c * (cellPixelSize + (2 * borderPixelSize))) + borderPixelSize);
-				rect.setWidth(cellPixelSize);
-				rect.setHeight(cellPixelSize);
-				int x = r; //java 8 MADE me do it Professor!
-				int y = c; //"effectively final" and whatnot.
-				rect.setOnMouseClicked(e -> myView.respondToMouse(x, y)); 
-				myBoard[r][c] = rect;
-				myBoardGroup.getChildren().addAll(bg,rect);
+				myBoard[r][c] = createRectangle((r * bgsize) + borderPixelSize, (c * bgsize) + borderPixelSize, cellPixelSize, cellPixelSize);
+				int x = r; 
+				int y = c; 
+				myBoard[r][c].setOnMouseClicked(e -> myView.respondToMouse(x, y)); 
+				myBoardGroup.getChildren().addAll(bg,myBoard[r][c]);
 			}
 		}
 	}
 	
 	/**
-	 * Displays the grid to the board based on the state of each of its cells
+	 * Displays the current grid of cells to the board
 	 */
 	protected void displayGridToBoard(){
 		Grid grid = mySimulation.getGrid();
