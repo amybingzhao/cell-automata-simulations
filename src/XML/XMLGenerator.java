@@ -1,6 +1,9 @@
 // This entire file is part of my masterpiece.
 // Blake Kaplan
 
+//Functions exhibit generalized functionality to eliminate duplicated code
+//Functionality adapted for many purposes
+
 /**
  * @author Blake Kaplan
  * Generates XML files to be used to initialize simulations
@@ -33,6 +36,7 @@ import javafx.stage.FileChooser;
 
 public class XMLGenerator {
 
+	private static final String STATES = "States";
 	private static final String PARAMETERS = "Parameters";
 	private static final String NAME = "Name";
 	private static final String GAME = "Game";
@@ -101,11 +105,10 @@ public class XMLGenerator {
 		myRoot.appendChild(getConfig(row, col, gridType));
 		myRoot.appendChild(getRules(rules, parameters));
 		if (weighted) {
-			myRoot.appendChild(createWeightedRandomCells(row, col, rules + "States"));
+			myRoot.appendChild(createWeightedRandomCells(row, col, rules + STATES));
 		} else {
-			myRoot.appendChild(createRandomCells(row, col, rules + "States"));
+			myRoot.appendChild(createRandomCells(row, col, rules + STATES));
 		}
-//		createFile(new File("data/" + fileName));
 		createFile(file);
 
 	}
@@ -408,9 +411,7 @@ public class XMLGenerator {
 	 * @return The cell XML element
 	 */
 	Element makeCellEntry(int row, int col, String state) {
-
 		return makeElement(row, col, state, CELL);
-
 	}
 
 	/**
@@ -434,12 +435,5 @@ public class XMLGenerator {
 		}
 		myScanner.close();
 		return parameters;
-	}
-
-	public static void main(String[] args) {
-		HashMap<String, Double> myMap = new HashMap<String, Double>();
-		String rule = "Fire";
-		XMLGenerator myGenerator = new XMLGenerator(myMap);
-		List<String> params = myGenerator.promptForParameters(rule);
 	}
 }

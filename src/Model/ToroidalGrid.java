@@ -1,6 +1,9 @@
 // This entire file is part of my masterpiece.
 // Blake Kaplan
 
+//Concise code that extends the Grid abstract class
+//Uses modulus calculations to implement toroidal logic 
+
 /**
  * @author Blake Kaplan
  * Defines the variables and methods for each toroidal grid object
