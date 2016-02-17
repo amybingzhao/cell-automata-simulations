@@ -1,3 +1,6 @@
+// This entire file is part of my masterpiece.
+// Blake Kaplan
+
 /**
  * @author Blake Kaplan
  * Generates XML files to be used to initialize simulations
@@ -438,7 +441,5 @@ public class XMLGenerator {
 		String rule = "Fire";
 		XMLGenerator myGenerator = new XMLGenerator(myMap);
 		List<String> params = myGenerator.promptForParameters(rule);
-		
-//		myGenerator.generateFile(40, 40, rule, "FireSt40.xml", "Standard", params);
 	}
 }
