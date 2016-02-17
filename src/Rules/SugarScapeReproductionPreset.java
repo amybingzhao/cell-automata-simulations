@@ -58,18 +58,8 @@ public class SugarScapeReproductionPreset extends SugarScapeRules{
 		SugarScapeCell childCell = curAgent.getEmptyNeighbor(grid);
 		if (childCell != null) {
 			childCell.setAgent(new ReproductionSugarScapeAgent(sugarForChild, generateRandom(getMyAgentMetabolismLimit()), generateRandom(getMyAgentVisionLimit()), childCell.getCurRow(), childCell.getCurCol(), generateRandom(NUM_GENDERS - 1),
-				generateLimitedRandom(MAX_AGE_MAX, MAX_AGE_MIN), FERTILITY_MIN, FERTILITY_MAX));
+				generateRandomWithinBounds(MAX_AGE_MIN, MAX_AGE_MAX), FERTILITY_MIN, FERTILITY_MAX));
 		}
-	}
-	
-	/**
-	 * Generates a random number between (min, max).
-	 * @param max: maximum number.
-	 * @param min: minimum number.
-	 * @return random neighbor within the limits.
-	 */
-	private int generateLimitedRandom(int max, int min) {
-		return generateRandom(max - min) + min;
 	}
 
 	/**
@@ -78,7 +68,7 @@ public class SugarScapeReproductionPreset extends SugarScapeRules{
 	@Override
 	protected SugarScapeAgent createPresetAgent(int row, int col) {
 		return new ReproductionSugarScapeAgent(generateRandom(getMyAgentSugarLimit()) + 1, generateRandom(getMyAgentMetabolismLimit()) + 1, generateRandom(getMyAgentVisionLimit()) + 1, row, col, generateRandom(NUM_GENDERS),
-				generateLimitedRandom(MAX_AGE_MAX, MAX_AGE_MIN), FERTILITY_MIN, FERTILITY_MAX);
+				generateRandomWithinBounds(MAX_AGE_MIN, MAX_AGE_MAX), FERTILITY_MIN, FERTILITY_MAX);
 	
 	}
 

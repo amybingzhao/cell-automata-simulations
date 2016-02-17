@@ -1,3 +1,8 @@
+// This entire file is part of my masterpiece.
+// Amy Zhao (abz3)
+
+// Subclass to demonstrate use of the abstract Rules base class.
+
 /**
  * @author Amy Zhao
  * @author Austin Wu
@@ -16,16 +21,16 @@ import Model.Grid;
 public class GameOfLifeRules extends Rules {
 	public static final String DEFAULT_RESOURCE = "Rules/GameOfLifeRules";
 	private ResourceBundle myResource = ResourceBundle.getBundle(DEFAULT_RESOURCE);
-	private int NUM_NEIGHBORS = Integer.parseInt(myResource.getString("NumNeighbors"));
+	private int numNeighborsToCheck = Integer.parseInt(myResource.getString("NumNeighbors"));
 	private String DEAD = myResource.getString("Dead");
 	private String ALIVE = myResource.getString("Alive");
-	private List<Integer> NUM_ALLOWABLE_LIVE_NEIGHBORS = new ArrayList<Integer>();
-	private int NUM_NEIGHBORS_NEEDED_TO_REPRODUCE = Integer.parseInt(myResource.getString("NumNeighborsNeededToReproduce"));
+	private List<Integer> numAllowableLiveNeighbors = new ArrayList<Integer>();
+	private int numNeighborsNeededToReproduce = Integer.parseInt(myResource.getString("NumNeighborsNeededToReproduce"));
 	
 	public GameOfLifeRules() {
 		String[] allowableNeighbors = myResource.getString("NumAllowableLiveNeighbors").split(",");
 		for (int i = 0; i < allowableNeighbors.length; i++) {
-			NUM_ALLOWABLE_LIVE_NEIGHBORS.add(Integer.parseInt(allowableNeighbors[i]));
+			numAllowableLiveNeighbors.add(Integer.parseInt(allowableNeighbors[i]));
 		}	
 	}
 	
@@ -35,7 +40,7 @@ public class GameOfLifeRules extends Rules {
 	@Override
 	public void applyRulesToCell(Cell cell, Grid grid) {
 		String curState = cell.getCurState();
-		Cell[][] neighborhood = grid.getNeighborhood(cell.getCurRow(), cell.getCurCol(), NUM_NEIGHBORS);
+		Cell[][] neighborhood = grid.getNeighborhood(cell.getCurRow(), cell.getCurCol(), numNeighborsToCheck);
 		int numLiveNeighbors = countNumLiveNeighbors(neighborhood);
 		
 		if (curState.equals(DEAD)) {
@@ -60,7 +65,7 @@ public class GameOfLifeRules extends Rules {
 	 * @param numLiveNeighbors: number of live neighbors the cell has.
 	 */
 	private void handleAliveCells(Cell cell, int numLiveNeighbors) {
-		if (!NUM_ALLOWABLE_LIVE_NEIGHBORS.contains(numLiveNeighbors)) {
+		if (!numAllowableLiveNeighbors.contains(numLiveNeighbors)) {
 			cell.setNextState(DEAD);
 			addCellToBeUpdated(cell);
 		}
@@ -72,7 +77,7 @@ public class GameOfLifeRules extends Rules {
 	 * @param numLiveNeighbors: number of live neighbors the cell has.
 	 */
 	private void handleDeadCells(Cell cell, int numLiveNeighbors) {
-		if (numLiveNeighbors == NUM_NEIGHBORS_NEEDED_TO_REPRODUCE) {
+		if (numLiveNeighbors == numNeighborsNeededToReproduce) {
 			cell.setNextState(ALIVE);
 			addCellToBeUpdated(cell);
 		}
@@ -82,7 +87,7 @@ public class GameOfLifeRules extends Rules {
 	 * Description of Game of Life simulation.
 	 */
 	public String toString(){
-		return "Game Of Life";
+		return "Game Of Life: simulates effects of over- and underpopulation.";
 	}
 
 	/**

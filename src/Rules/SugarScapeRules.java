@@ -7,7 +7,6 @@ package Rules;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ResourceBundle;
 
 import Model.Cell;
 import Model.Grid;
@@ -15,7 +14,6 @@ import Model.SugarScapeAgent;
 import Model.SugarScapeCell;
 
 public abstract class SugarScapeRules extends Rules {
-	public static final String DEFAULT_RESOURCE = "Rules/SugarScapeRules";
 	private int mySugarGrowBackRate;
 	private int mySugarGrowBackInterval;
 	private int mySugarGrowBackCountdown;
