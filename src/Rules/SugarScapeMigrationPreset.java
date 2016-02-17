@@ -35,7 +35,7 @@ public class SugarScapeMigrationPreset extends SugarScapeRules {
 	}
 
 	/**
-	 * Creates agent specific to thie Migration preset.
+	 * Creates agent specific to this Migration preset.
 	 */
 	@Override
 	protected SugarScapeAgent createPresetAgent(int row, int col) {

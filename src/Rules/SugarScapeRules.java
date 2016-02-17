@@ -16,7 +16,6 @@ import Model.SugarScapeCell;
 
 public abstract class SugarScapeRules extends Rules {
 	public static final String DEFAULT_RESOURCE = "Rules/SugarScapeRules";
-	private ResourceBundle myResource = ResourceBundle.getBundle(DEFAULT_RESOURCE);
 	private int mySugarGrowBackRate;
 	private int mySugarGrowBackInterval;
 	private int mySugarGrowBackCountdown;
@@ -24,10 +23,8 @@ public abstract class SugarScapeRules extends Rules {
 	private int myAgentSugarLimit;
 	private int myAgentVisionLimit;
 	private int myAgentMetabolismLimit;
-	private String DEFAULT_STATE = myResource.getString("DefaultState");
 	
 	public SugarScapeRules(int sugarGrowBackRate, int sugarGrowBackInterval, int maxSugarCapacity, int sugarLimit, int visionLimit, int metabolismLimit) {
-		System.out.println("Sugar grow back interval: " + sugarGrowBackInterval);
 		mySugarGrowBackRate = sugarGrowBackRate;
 		mySugarGrowBackInterval = sugarGrowBackInterval;
 		mySugarGrowBackCountdown = sugarGrowBackInterval;
@@ -109,7 +106,6 @@ public abstract class SugarScapeRules extends Rules {
 	 * @param grid: simulation grid.
 	 */
 	private void growBackSugarInCells(Grid grid) {
-		System.out.println("tryna grow back sugar");
 		for (int row = 0; row < grid.getNumRows(); row++) {
 			for (int col = 0; col < grid.getNumCols(); col++) {
 				SugarScapeCell cell = (SugarScapeCell) grid.getCell(row, col);
@@ -235,12 +231,5 @@ public abstract class SugarScapeRules extends Rules {
 	 */
 	public void setMyAgentVisionLimit(int myAgentVisionLimit) {
 		this.myAgentVisionLimit = myAgentVisionLimit;
-	}
-	
-	/**
-	 * Returns the default state for this simulation.
-	 */
-	public String getDefault() {
-		return DEFAULT_STATE;
 	}
 }
