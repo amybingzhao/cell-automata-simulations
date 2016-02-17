@@ -1,6 +1,3 @@
-// This entire file is part of my masterpiece.
-// Blake Kaplan
-
 package View;
 
 import java.util.ResourceBundle;
