@@ -41,7 +41,7 @@ public abstract class SugarScapeRules extends Rules {
 	 * Creates a cell for the reproduction simulation and initializes an agent if the cell is occupied.
 	 */
 	@Override
-	protected Cell createCell(String initialState, int row, int col) {
+	public Cell createCell(String initialState, int row, int col) {
 		SugarScapeAgent agent = null;
 		if (initialState.equals("OCCUPIED")) {
 			agent = createPresetAgent(row, col);
@@ -240,7 +240,6 @@ public abstract class SugarScapeRules extends Rules {
 	/**
 	 * Returns the default state for this simulation.
 	 */
-	@Override
 	public String getDefault() {
 		return DEFAULT_STATE;
 	}

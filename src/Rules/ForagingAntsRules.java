@@ -18,7 +18,6 @@ public class ForagingAntsRules extends Rules {
 	private int numTotalAnts;
 	public static final String DEFAULT_RESOURCE = "Rules/ForagingAntsRules";
 	private ResourceBundle myResource = ResourceBundle.getBundle(DEFAULT_RESOURCE);
-	private String DEFAULT_STATE = myResource.getString("DefaultState");
 	private int NUM_NEIGHBORS = Integer.parseInt(myResource.getString("NumNeighbors"));
 	private static final Integer[] NORTH = new Integer[]{0, 1};
 	private static final Integer[] SOUTH = new Integer[]{2, 1};
@@ -55,7 +54,7 @@ public class ForagingAntsRules extends Rules {
 	 * Creates a ForagingAntsCell for use by this simulation.
 	 */
 	@Override
-	protected Cell createCell(String initialState, int row, int col) {
+	public Cell createCell(String initialState, int row, int col) {
 		return new ForagingAntsCell(initialState, row, col, numTotalAnts);
 	}
 
@@ -218,13 +217,5 @@ public class ForagingAntsRules extends Rules {
 		List<String> parameters = new ArrayList<String>();
 		parameters.add("TotalNumAnts:" + numTotalAnts);
 		return parameters;
-	}
-	
-	/**
-	 * Default state for a cell in this simulation.
-	 */
-	@Override
-	public String getDefault() {
-		return DEFAULT_STATE;
 	}
 }

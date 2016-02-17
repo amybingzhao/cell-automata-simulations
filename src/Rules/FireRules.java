@@ -18,7 +18,6 @@ public class FireRules extends Rules {
 	private String EMPTY = myResource.getString("Empty");
 	private String TREE = myResource.getString("Tree");
 	private String BURNING = myResource.getString("Burning");
-	private String DEFAULT_STATE = myResource.getString("DefaultState");
 	private double myProbCatch;
 
 	public FireRules(double probCatch) {
@@ -133,13 +132,4 @@ public class FireRules extends Rules {
 		parameters.add("ProbCatch:" + myProbCatch);
 		return parameters;
 	}
-
-	/**
-	 * Returns default state for the Fire simulation.
-	 */
-	@Override
-	public String getDefault() {
-		return DEFAULT_STATE;
-	}
-
 }

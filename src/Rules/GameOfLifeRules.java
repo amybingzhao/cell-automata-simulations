@@ -19,7 +19,6 @@ public class GameOfLifeRules extends Rules {
 	private int NUM_NEIGHBORS = Integer.parseInt(myResource.getString("NumNeighbors"));
 	private String DEAD = myResource.getString("Dead");
 	private String ALIVE = myResource.getString("Alive");
-	private String DEFAULT_STATE = myResource.getString("DefaultState");
 	private List<Integer> NUM_ALLOWABLE_LIVE_NEIGHBORS = new ArrayList<Integer>();
 	private int NUM_NEIGHBORS_NEEDED_TO_REPRODUCE = Integer.parseInt(myResource.getString("NumNeighborsNeededToReproduce"));
 	
@@ -93,14 +92,5 @@ public class GameOfLifeRules extends Rules {
 	public List<String> getParameters() {
 		List<String> parameters = new ArrayList<String>();
 		return parameters;
-	}
-	
-	/**
-	 * Gets the default state for the Game of Life simulation.
-	 */
-	@Override
-	public String getDefault() {
-		return DEFAULT_STATE;
-	}
-	
+	}	
 }

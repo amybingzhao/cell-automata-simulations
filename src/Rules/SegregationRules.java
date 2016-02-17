@@ -25,7 +25,6 @@ public class SegregationRules extends Rules {
 	private String BLUE = myResource.getString("Blue");
 	private int MY_CELL_ROW = Integer.parseInt(myResource.getString("MyCellRow"));
 	private int MY_CELL_COL = Integer.parseInt(myResource.getString("MyCellCol"));
-	private String DEFAULT_STATE = myResource.getString("DefaultState");
 	private ArrayList<Cell> toBeMoved;
 	private Queue<Cell> emptyCellList;
 	private double myThreshold;
@@ -126,13 +125,5 @@ public class SegregationRules extends Rules {
 		List<String> parameters = new ArrayList<String>();
 		parameters.add("Threshold:" + myThreshold);
 		return parameters;
-	}
-	
-	/**
-	 * Returns the default state for the Segregation simulation.
-	 */
-	@Override
-	public String getDefault() {
-		return DEFAULT_STATE;
 	}
 }

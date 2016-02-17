@@ -21,7 +21,6 @@ public class PredatorPreyRules extends Rules {
 	private String FISH = myResource.getString("Fish");
 	private String SHARK = myResource.getString("Shark");
 	private String WATER = myResource.getString("Water");
-	private String DEFAULT_STATE = myResource.getString("DefaultState");
 	private int myInitialSharkEnergy;
 	private int mySharkReproductionTime;
 	private int myFishReproductionTime;
@@ -280,7 +279,7 @@ public class PredatorPreyRules extends Rules {
 	 * Creates a PredatorPreyCell for the Predator Prey simulation.
 	 */
 	@Override
-	protected Cell createCell(String initialState, int row, int col) {
+	public Cell createCell(String initialState, int row, int col) {
 		return new PredatorPreyCell(initialState, row, col, myInitialSharkEnergy);
 	}
 
@@ -309,13 +308,5 @@ public class PredatorPreyRules extends Rules {
 		parameters.add("SharkReproductionTime:" + mySharkReproductionTime);
 		parameters.add("FishReproductionTime:" + myFishReproductionTime);
 		return parameters;
-	}
-	
-	/**
-	 * Gets the default state for the Predator Prey simulation.
-	 */
-	@Override
-	public String getDefault() {
-		return DEFAULT_STATE;
 	}
 }

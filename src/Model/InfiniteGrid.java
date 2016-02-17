@@ -90,7 +90,7 @@ public class InfiniteGrid extends Grid {
 	 */
 	private void addTopOrBotLayer(Cell[][] grid, int row) {
 		for (int col = 0; col < grid[0].length; col++) {
-			grid[row][col] = myRules.createDefaultCell(row, col);
+			grid[row][col] = myRules.createCell(myRules.getDefault(), row, col);
 		}
 	}
 
@@ -101,7 +101,7 @@ public class InfiniteGrid extends Grid {
 	 */
 	private void addLeftOrRightLayer(Cell[][] grid, int col) {
 		for (int row = 0; row < grid.length; row++) {
-			grid[row][col] = myRules.createDefaultCell(row, col);
+			grid[row][col] = myRules.createCell(myRules.getDefault(), row, col);
 		}
 	}
 }

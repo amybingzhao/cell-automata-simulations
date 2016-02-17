@@ -24,8 +24,9 @@ public abstract class Rules {
 
 	public static final String DEFAULT_RULES_RESOURCE = "Rules/Rules";
 	private ResourceBundle myRulesResources;
-	private int MY_CELL_ROW;
-	private int MY_CELL_COL;
+	private int myCellRow;
+	private int myCellCol;
+	private String myDefaultState;
 	
 	/**
 	 * Helper method that applies the specified rules to each method in the grid
@@ -68,8 +69,9 @@ public abstract class Rules {
 			Color color = Color.web(colors[i]);
 			myStatesColors.put(states[i], color);
 		}
-		MY_CELL_ROW = Integer.parseInt(myRulesResources.getString("MyCellRow"));
-		MY_CELL_COL = Integer.parseInt(myRulesResources.getString("MyCellCol"));
+		myDefaultState = myRulesResources.getString(ruleName + "DefaultState");
+		myCellRow = Integer.parseInt(myRulesResources.getString("MyCellRow"));
+		myCellCol = Integer.parseInt(myRulesResources.getString("MyCellCol"));
 	}
 	
 	/**
@@ -79,9 +81,18 @@ public abstract class Rules {
 	 * @param col: column of the initial location of the Cell.
 	 * @return
 	 */
-	protected Cell createCell(String initialState, int row, int col) {
+	public Cell createCell(String initialState, int row, int col) {
 		return new StandardCell(initialState, row, col);
 	}
+	
+	/**
+	 * Returns the default state of the simulation.
+	 * @return default state of the simulation.
+	 */
+	public String getDefault() {
+		return myDefaultState;
+	}
+	
 	
 	/**
 	 * Counts the number of neighbors of a certain state.
@@ -94,7 +105,7 @@ public abstract class Rules {
 		for (int row = 0; row < neighborhood.length; row++) {
 			for (int col = 0; col < neighborhood[row].length; col++) {
 				if (neighborhood[row][col] != null) {
-					if (row != MY_CELL_ROW || col != MY_CELL_COL) {
+					if (row != myCellRow || col != myCellCol) {
 						if (neighborhood[row][col].getCurState().equals(state)) {
 							ret++;
 						}
@@ -104,22 +115,6 @@ public abstract class Rules {
 		}
 		return ret;
 	}
-	
-	/**
-	 * Creates a default cell specific to the simulation.
-	 * @param row: row of the cell.
-	 * @param col: column of the cell.
-	 * @return a cell of a default state specific to the simulation.
-	 */
-	public Cell createDefaultCell(int row, int col) {
-		return createCell(getDefault(), row, col);
-	}
-	
-	/**
-	 * Returns the default state of the simulation.
-	 * @return default state of the simulation.
-	 */
-	public abstract String getDefault();
 	
 	/**
 	 * Rules for each simulation to be implemented by simulation-specific subclasses.
