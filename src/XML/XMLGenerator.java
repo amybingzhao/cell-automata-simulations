@@ -1,9 +1,3 @@
-// This entire file is part of my masterpiece.
-// Blake Kaplan
-
-//Functions exhibit generalized functionality to eliminate duplicated code
-//Functionality adapted for many purposes
-
 /**
  * @author Blake Kaplan
  * Generates XML files to be used to initialize simulations
@@ -14,14 +8,12 @@ package XML;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.Scanner;
-import java.util.Stack;
 import javax.xml.parsers.*;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
@@ -29,14 +21,11 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.*;
-
 import Controller.Simulation;
 import Model.Cell;
-import javafx.stage.FileChooser;
 
 public class XMLGenerator {
 
-	private static final String STATES = "States";
 	private static final String PARAMETERS = "Parameters";
 	private static final String NAME = "Name";
 	private static final String GAME = "Game";
@@ -50,11 +39,10 @@ public class XMLGenerator {
 	private static final String RULES_PROPERTIES = "Rules/Rules";
 	private static final String XML_PROPERTIES = "XML/XML";
 	private ResourceBundle myRulesResources;
-	private Map<String, Double> stateWeights;
-	private boolean weighted;
-	private Stack<String> myStack;
 	private Simulation mySimulation;
 	private ResourceBundle XMLResources;
+	private boolean weighted;
+	private WeightedGenerator myWeightedGenerator;
 
 	public XMLGenerator() {
 		myRulesResources = ResourceBundle.getBundle(RULES_PROPERTIES);
@@ -71,7 +59,7 @@ public class XMLGenerator {
 
 	public XMLGenerator(Map<String, Double> myWeights) {
 		this();
-		stateWeights = myWeights;
+		myWeightedGenerator = new WeightedGenerator(myWeights);
 		weighted = true;
 	}
 
@@ -105,12 +93,38 @@ public class XMLGenerator {
 		myRoot.appendChild(getConfig(row, col, gridType));
 		myRoot.appendChild(getRules(rules, parameters));
 		if (weighted) {
-			myRoot.appendChild(createWeightedRandomCells(row, col, rules + STATES));
+			myRoot.appendChild(myWeightedGenerator.createWeightedRandomCells(row, col, rules + "States"));
 		} else {
-			myRoot.appendChild(createRandomCells(row, col, rules + STATES));
+			myRoot.appendChild(createRandomCells(row, col, rules + "States"));
 		}
 		createFile(file);
+	}
 
+	/**
+	 * Randomly generates a provided number of cells based on the provided
+	 * states and grid size
+	 * 
+	 * @param numCells
+	 *            The desired number of generated cells
+	 * @param rows
+	 *            The number of rows in the grid
+	 * @param cols
+	 *            The number of columns in the grid
+	 * @param states
+	 *            An arraylist of potential cell states
+	 * @return An Element to be included in the XML file
+	 */
+	public Element createRandomCells(int rows, int cols, String rule) {
+		String[] states = getStates(rule);
+		Element myCells = myDocument.createElement(CELLS);
+		Random myRandom = new Random();
+		for (int row = 0; row < rows; row++) {
+			for (int col = 0; col < cols; col++) {
+				Element myCell = makeCellEntry(row, col, states[(myRandom.nextInt(states.length))]);
+				myCells.appendChild(myCell);
+			}
+		}
+		return myCells;
 	}
 
 	public Element makeElement(int row, int col, String item, String key) {
@@ -200,32 +214,7 @@ public class XMLGenerator {
 		return paramElement;
 	}
 
-	/**
-	 * Randomly generates a provided number of cells based on the provided
-	 * states and grid size
-	 * 
-	 * @param numCells
-	 *            The desired number of generated cells
-	 * @param rows
-	 *            The number of rows in the grid
-	 * @param cols
-	 *            The number of columns in the grid
-	 * @param states
-	 *            An arraylist of potential cell states
-	 * @return An Element to be included in the XML file
-	 */
-	public Element createRandomCells(int rows, int cols, String rule) {
-		String[] states = getStates(rule);
-		Element myCells = myDocument.createElement(CELLS);
-		Random myRandom = new Random();
-		for (int row = 0; row < rows; row++) {
-			for (int col = 0; col < cols; col++) {
-				Element myCell = makeCellEntry(row, col, states[(myRandom.nextInt(states.length))]);
-				myCells.appendChild(myCell);
-			}
-		}
-		return myCells;
-	}
+	
 
 	/**
 	 * Returns a list of the states for a particular type of rules
@@ -234,109 +223,10 @@ public class XMLGenerator {
 	 *            The type of rules to get the states for
 	 * @return A string array of containing the states for the rule type
 	 */
-	private String[] getStates(String rule) {
+	public String[] getStates(String rule) {
 		String statesString = myRulesResources.getString(rule);
 		String[] states = statesString.split(",");
 		return states;
-	}
-
-	/**
-	 * Completes the stateWeights map, adding in states for which no desired
-	 * percentage was provided. The remaining percentage is split evenly among
-	 * unprovided states.
-	 * 
-	 * @param rule
-	 *            The name of the rule to be applied
-	 */
-	public void fillMap(String rule) {
-		String[] states = getStates(rule);
-		double sum = 0;
-		ArrayList<String> statesNotIncluded = new ArrayList<String>();
-		for (String state : states) {
-			if (stateWeights.containsKey(state)) {
-				sum += (int) Math.round(stateWeights.get(state));
-			} else {
-				statesNotIncluded.add(state);
-			}
-		}
-		for (String state : statesNotIncluded) {
-			stateWeights.put(state, (100 - sum) / statesNotIncluded.size());
-		}
-	}
-
-	/**
-	 * Pushes all possible row, column locations to the stack and shuffles them
-	 * 
-	 * @param sideLength
-	 *            The length of a side of the grid
-	 */
-	public void fillStack(int rows, int cols) {
-		myStack = new Stack<String>();
-		for (int row = 0; row < rows; row++) {
-			for (int col = 0; col < cols; col++) {
-				myStack.push(row + "," + col);
-			}
-		}
-		Collections.shuffle(myStack);
-	}
-
-	/**
-	 * Creates a weighted cell state simulation setup where the percentages of
-	 * cells follow data provided in a HashMap given to one of the constructors
-	 * 
-	 * @param sideLength
-	 *            The length of a side of the grid
-	 * @param rule
-	 *            The name of the rule to be applied
-	 * @return A JavaFX element containing the weighted cells
-	 */
-	public Element createWeightedRandomCells(int rows, int cols, String rule) {
-		fillMap(rule);
-		fillStack(rows, cols);
-		Element myCells = myDocument.createElement(CELLS);
-		for (String state : stateWeights.keySet()) {
-			int numCells = (int) Math.round(((stateWeights.get(state) / 100) * (rows * cols)));
-			for (int i = 0; i < numCells && !myStack.isEmpty(); i++) {
-				myCells.appendChild(getCoordinates(state, rule));
-			}
-		}
-
-		if (myStack.isEmpty())
-			return myCells;
-
-		while (!myStack.isEmpty()) {
-			myCells.appendChild(getCoordinates(null, rule));
-		}
-
-		return myCells;
-	}
-
-	/**
-	 * Creates a cell element for a given state and rule at a location taken
-	 * from the stack
-	 * 
-	 * @param state
-	 *            A cell state
-	 * @param rule
-	 *            The type of the rule for the current simulation
-	 * @return An cell DOM element
-	 */
-	public Element getCoordinates(String state, String rule) {
-		String coordinates = myStack.pop();
-		int[] myCoordinates = new int[2];
-		String[] inputData = coordinates.split(",");
-		Element myCell;
-		myCoordinates[0] = Integer.parseInt(inputData[0]);
-		myCoordinates[1] = Integer.parseInt(inputData[1]);
-		if (state == null) {
-			Random myRandom = new Random();
-			String statesString = myRulesResources.getString(rule);
-			String[] states = statesString.split(",");
-			myCell = makeCellEntry(myCoordinates[0], myCoordinates[1], states[myRandom.nextInt(states.length)]);
-		} else {
-			myCell = makeCellEntry(myCoordinates[0], myCoordinates[1], state);
-		}
-		return myCell;
 	}
 
 	/**
@@ -411,7 +301,9 @@ public class XMLGenerator {
 	 * @return The cell XML element
 	 */
 	Element makeCellEntry(int row, int col, String state) {
+
 		return makeElement(row, col, state, CELL);
+
 	}
 
 	/**
@@ -435,5 +327,9 @@ public class XMLGenerator {
 		}
 		myScanner.close();
 		return parameters;
+	}
+	
+	public String getRulesResource(String rule){
+		return myRulesResources.getString(rule);
 	}
 }
